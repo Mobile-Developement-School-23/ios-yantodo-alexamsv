@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		339600822A48623D00725B0E /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600812A48623D00725B0E /* ToDoItem.swift */; };
+		339600842A48627600725B0E /* ToDoItemExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600832A48627600725B0E /* ToDoItemExtension.swift */; };
+		339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600852A4862B300725B0E /* DateFormatterExtension.swift */; };
 		33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F132A46EC2B00D4E63C /* AppDelegate.swift */; };
 		33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */; };
 		33E33F182A46EC2B00D4E63C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F172A46EC2B00D4E63C /* ViewController.swift */; };
@@ -35,6 +38,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		339600812A48623D00725B0E /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
+		339600832A48627600725B0E /* ToDoItemExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemExtension.swift; sourceTree = "<group>"; };
+		339600852A4862B300725B0E /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
 		33E33F102A46EC2B00D4E63C /* YanDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YanDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33E33F132A46EC2B00D4E63C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -74,6 +80,48 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3396007C2A4861B100725B0E /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				33E33F1C2A46EC2D00D4E63C /* Assets.xcassets */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
+		3396007D2A4861C000725B0E /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				339600832A48627600725B0E /* ToDoItemExtension.swift */,
+				339600852A4862B300725B0E /* DateFormatterExtension.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		3396007E2A4861CF00725B0E /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				33E33F172A46EC2B00D4E63C /* ViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		3396007F2A4861E900725B0E /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				339600812A48623D00725B0E /* ToDoItem.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		339600802A4861F100725B0E /* Delegates */ = {
+			isa = PBXGroup;
+			children = (
+				33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */,
+				33E33F132A46EC2B00D4E63C /* AppDelegate.swift */,
+			);
+			path = Delegates;
+			sourceTree = "<group>";
+		};
 		33E33F072A46EC2B00D4E63C = {
 			isa = PBXGroup;
 			children = (
@@ -97,10 +145,11 @@
 		33E33F122A46EC2B00D4E63C /* YanDo */ = {
 			isa = PBXGroup;
 			children = (
-				33E33F132A46EC2B00D4E63C /* AppDelegate.swift */,
-				33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */,
-				33E33F172A46EC2B00D4E63C /* ViewController.swift */,
-				33E33F1C2A46EC2D00D4E63C /* Assets.xcassets */,
+				339600802A4861F100725B0E /* Delegates */,
+				3396007F2A4861E900725B0E /* Model */,
+				3396007E2A4861CF00725B0E /* ViewControllers */,
+				3396007D2A4861C000725B0E /* Extensions */,
+				3396007C2A4861B100725B0E /* Assets */,
 				33E33F1E2A46EC2D00D4E63C /* LaunchScreen.storyboard */,
 				33E33F212A46EC2D00D4E63C /* Info.plist */,
 			);
@@ -256,6 +305,9 @@
 			files = (
 				33E33F182A46EC2B00D4E63C /* ViewController.swift in Sources */,
 				33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */,
+				339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */,
+				339600822A48623D00725B0E /* ToDoItem.swift in Sources */,
+				339600842A48627600725B0E /* ToDoItemExtension.swift in Sources */,
 				33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
