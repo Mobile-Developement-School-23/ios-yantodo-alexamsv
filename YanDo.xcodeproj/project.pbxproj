@@ -11,9 +11,11 @@
 		339600842A48627600725B0E /* ToDoItemExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600832A48627600725B0E /* ToDoItemExtension.swift */; };
 		339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600852A4862B300725B0E /* DateFormatterExtension.swift */; };
 		339600882A4862E800725B0E /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600872A4862E800725B0E /* FileCache.swift */; };
+		3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600892A48648B00725B0E /* TaskScreenViewController.swift */; };
+		3396008C2A4864BB00725B0E /* ViewElementsForTaskScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396008B2A4864BB00725B0E /* ViewElementsForTaskScreen.swift */; };
 		33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F132A46EC2B00D4E63C /* AppDelegate.swift */; };
 		33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */; };
-		33E33F182A46EC2B00D4E63C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F172A46EC2B00D4E63C /* ViewController.swift */; };
+		33E33F182A46EC2B00D4E63C /* MainScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F172A46EC2B00D4E63C /* MainScreenViewController.swift */; };
 		33E33F1D2A46EC2D00D4E63C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33E33F1C2A46EC2D00D4E63C /* Assets.xcassets */; };
 		33E33F202A46EC2D00D4E63C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 33E33F1E2A46EC2D00D4E63C /* LaunchScreen.storyboard */; };
 		33E33F2B2A46EC2D00D4E63C /* YanDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F2A2A46EC2D00D4E63C /* YanDoTests.swift */; };
@@ -43,10 +45,12 @@
 		339600832A48627600725B0E /* ToDoItemExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemExtension.swift; sourceTree = "<group>"; };
 		339600852A4862B300725B0E /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
 		339600872A4862E800725B0E /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
+		339600892A48648B00725B0E /* TaskScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskScreenViewController.swift; sourceTree = "<group>"; };
+		3396008B2A4864BB00725B0E /* ViewElementsForTaskScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewElementsForTaskScreen.swift; sourceTree = "<group>"; };
 		33E33F102A46EC2B00D4E63C /* YanDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YanDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33E33F132A46EC2B00D4E63C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		33E33F172A46EC2B00D4E63C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		33E33F172A46EC2B00D4E63C /* MainScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenViewController.swift; sourceTree = "<group>"; };
 		33E33F1C2A46EC2D00D4E63C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		33E33F1F2A46EC2D00D4E63C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		33E33F212A46EC2D00D4E63C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -102,7 +106,9 @@
 		3396007E2A4861CF00725B0E /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				33E33F172A46EC2B00D4E63C /* ViewController.swift */,
+				33E33F172A46EC2B00D4E63C /* MainScreenViewController.swift */,
+				339600892A48648B00725B0E /* TaskScreenViewController.swift */,
+				3396008B2A4864BB00725B0E /* ViewElementsForTaskScreen.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -306,11 +312,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33E33F182A46EC2B00D4E63C /* ViewController.swift in Sources */,
+				33E33F182A46EC2B00D4E63C /* MainScreenViewController.swift in Sources */,
 				33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */,
 				339600882A4862E800725B0E /* FileCache.swift in Sources */,
 				339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */,
+				3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */,
 				339600822A48623D00725B0E /* ToDoItem.swift in Sources */,
+				3396008C2A4864BB00725B0E /* ViewElementsForTaskScreen.swift in Sources */,
 				339600842A48627600725B0E /* ToDoItemExtension.swift in Sources */,
 				33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */,
 			);
