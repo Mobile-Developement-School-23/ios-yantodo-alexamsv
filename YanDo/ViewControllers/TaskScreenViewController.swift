@@ -10,11 +10,11 @@ import UIKit
 class TaskScreenViewController: UIViewController {
     
     let fileCache = FileCache()
-    let fc = FileCache()
-    let fileName = "STestFile"
+    let fileName = "MyFile"
     var correctId = ""
     
     let contentView = UIView()
+    let scrollView = UIScrollView()
     let elements = ViewElementsForTaskScreen()
     
     let leftNavButton = UIBarButtonItem(title: "Отменить")
@@ -62,13 +62,11 @@ class TaskScreenViewController: UIViewController {
                 print(FileCacheErrors.failedToExtractData)
                 
             }
-            
         }
         
     }
     
     func loadItem() {
-        
         do {
             try fileCache.toDoItemsFromJsonFile(file: fileName)
             
@@ -108,23 +106,6 @@ class TaskScreenViewController: UIViewController {
         }
         
     }
-    
-   @objc func deleteButtonTapped() {
-        fileCache.deleteToDoItem(itemsID: correctId)
-       
-        // пересохраняю файл уже без элемента
-       do {
-           try fileCache.saveJsonToDoItemInFile(file: fileName)
-           cancelButtonTapped()
-           
-       } catch {
-           print(FileCacheErrors.failedToExtractData)
-           
-       }
-        // выхожу
-        cancelButtonTapped()
-    }
-    
     
     // importance
     
@@ -211,6 +192,7 @@ class TaskScreenViewController: UIViewController {
     
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         selectDate(date: sender.date)
+        calendarManager()
     }
     
     func selectDate(date: Date) {
@@ -227,11 +209,25 @@ class TaskScreenViewController: UIViewController {
     
     //delete
 
+    @objc func deleteButtonTapped() {
+         fileCache.deleteToDoItem(itemsID: correctId)
+        
+         // пересохраняю файл уже без элемента
+        do {
+            try fileCache.saveJsonToDoItemInFile(file: fileName)
+            cancelButtonTapped()
+            
+        } catch {
+            print(FileCacheErrors.failedToExtractData)
+            
+        }
+         // выхожу
+         cancelButtonTapped()
+     }
     
     // MARK: views settings
     
     func viewSettings() {
-        let scrollView = UIScrollView()
         
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -276,7 +272,9 @@ class TaskScreenViewController: UIViewController {
         // Сохранить
         rightNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "TertiaryLabel")!, NSAttributedString.Key.font: UIFont(name: "SFProText-Regular", size: 17)!], for: .normal)
         rightNavButton.target = self
+        
         rightNavButton.action = #selector(saveButtonTapped)
+        rightNavButton.isEnabled = false
         
         navigationItem.rightBarButtonItem = rightNavButton
     }

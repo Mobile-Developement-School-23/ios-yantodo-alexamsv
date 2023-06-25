@@ -123,11 +123,13 @@ class ViewElementsForTaskScreen {
         return arr
     }()
     
+    
     let segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl()
         segmentedControl.insertSegment(with: UIImage(named: "segmentedImage0")?.withRenderingMode(.alwaysOriginal), at: 0, animated: true)
-        segmentedControl.insertSegment(with: UIImage(named: "segmentedImage1")?.withRenderingMode(.alwaysOriginal), at: 1, animated: false)
+        segmentedControl.insertSegment(withTitle: "нет", at: 1, animated: true)
         segmentedControl.insertSegment(with: UIImage(named: "segmentedImage2")?.withRenderingMode(.alwaysOriginal), at: 2, animated: true)
+        
         segmentedControl.selectedSegmentIndex = 1
         
         segmentedControl.heightAnchor.constraint(equalToConstant: 36 / Aligners.modelHight * Aligners.height).isActive = true
@@ -177,9 +179,12 @@ class ViewElementsForTaskScreen {
         let nextDate = Calendar.current.date(byAdding: dateComponents, to: currentDate)
         picker.setDate(nextDate ?? currentDate, animated: false)
         
+        // Выключаем возможность выбора даты в прошлом
+        picker.minimumDate = currentDate
+        
         return picker
     }()
-    
+
     let dividers: [UIView] = {
         var arr = [UIView]()
         

@@ -18,6 +18,8 @@ extension TaskScreenViewController: UITextViewDelegate {
             
             elements.deleteButton.setTitleColor(UIColor(named: "TertiaryLabel"), for: .normal)
             elements.deleteButton.removeTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+            
+            rightNavButton.isEnabled = false
         }
         else {
             elements.placeholder.isHidden = true
@@ -26,6 +28,8 @@ extension TaskScreenViewController: UITextViewDelegate {
             
             elements.deleteButton.setTitleColor(UIColor(named: "RedColor"), for: .normal)
             elements.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+            
+            rightNavButton.isEnabled = true
         }
         
         // Обновление размера и оформления
@@ -35,5 +39,4 @@ extension TaskScreenViewController: UITextViewDelegate {
     }
     
 }
-
 
