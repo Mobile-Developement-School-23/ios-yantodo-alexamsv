@@ -13,12 +13,14 @@ class TaskScreenViewController: UIViewController {
     let fileName = "MyFile"
     var correctId = ""
     
-    let contentView = UIView()
-    let scrollView = UIScrollView()
+    let contentView = UIScrollView()
     let elements = ViewElementsForTaskScreen()
+    
+    var settingsZoneHeight = 168 / Aligners.modelHight * Aligners.height
     
     let leftNavButton = UIBarButtonItem(title: "Отменить")
     let rightNavButton = UIBarButtonItem(title: "Сохранить")
+    let toggle = UISwitch()
     
     private var showCalendarLabel = false
     private var showCalendarView = false
@@ -29,8 +31,9 @@ class TaskScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor(named: "PrimaryBack")
         
+        view.backgroundColor = UIColor(named: "PrimaryBack")
+                
         viewSettings()
         navBarSettings()
         textPanelSettings()
@@ -41,6 +44,11 @@ class TaskScreenViewController: UIViewController {
     }
     
     // MARK: objc methods
+    
+    //keyboard
+    @objc func doneButtonTapped() {
+        view.endEditing(true)
+    }
     
      // navigation
     @objc func cancelButtonTapped() {
@@ -62,47 +70,6 @@ class TaskScreenViewController: UIViewController {
                 print(FileCacheErrors.failedToExtractData)
                 
             }
-        }
-        
-    }
-    
-    func loadItem() {
-        do {
-            try fileCache.toDoItemsFromJsonFile(file: fileName)
-            
-            // изменение вида
-            rightNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "BlueColor")!, NSAttributedString.Key.font: UIFont(name: "SFProText-Regular", size: 17)!], for: .normal)
-            
-            elements.deleteButton.setTitleColor(UIColor(named: "RedColor"), for: .normal)
-            elements.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-        }
-        catch {
-            print(FileCacheErrors.fileNotFound)
-            
-        }
-        
-        if let item = fileCache.itemsCollection.first {
-            // убираем placeholder
-            elements.placeholder.isHidden = true
-            
-            // достаем нужные значения
-            correctId = item.value.id
-            elements.textView.text = item.value.text
-            
-            let index: Int = {
-                var i = 1
-                if item.value.importance == .low { i = 0 }
-                if item.value.importance == .high { i = 2 }
-                return i
-            }()
-            elements.segmentedControl.selectedSegmentIndex = index
-            
-            if let date = item.value.deadline {
-                dateManager()
-                elements.calendar.setDate(date, animated: true)
-                selectDate(date: date)
-            }
-            
         }
         
     }
@@ -163,6 +130,8 @@ class TaskScreenViewController: UIViewController {
         showCalendarView.toggle()
         
         if showCalendarView && showCalendarLabel {
+            updateScrollViewContentSize(by: settingsZoneHeight)
+            
             elements.verticalStackView.addArrangedSubview(elements.dividers[ind])
             elements.verticalStackView.addArrangedSubview(elements.calendar)
             elements.calendar.addTarget(self, action: #selector(datePickerValueChanged(_:)), for: .valueChanged)
@@ -175,7 +144,8 @@ class TaskScreenViewController: UIViewController {
             }, completion: nil)
 
         } else {
-            // Удаляем календарь и разделитель с анимацией
+            updateScrollViewContentSize(by: settingsZoneHeight - elements.calendar.frame.height)
+            // удаление элементов с анимацией
             UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveEaseOut, animations: {
                 self.elements.calendar.alpha = 0.0
             }, completion: { _ in
@@ -193,18 +163,6 @@ class TaskScreenViewController: UIViewController {
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         selectDate(date: sender.date)
         calendarManager()
-    }
-    
-    func selectDate(date: Date) {
-        deadlineDate = date
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ru_RU")
-        
-        dateFormatter.dateFormat = "dd MMMM yyyy"
-        var nextDateFormatted = dateFormatter.string(from: date)
-        if nextDateFormatted.hasPrefix("0") {nextDateFormatted.removeFirst()} // если число с 1 по 9 включительно
-        elements.calendarButton.setTitle(nextDateFormatted, for: .normal)
     }
     
     //delete
@@ -228,25 +186,15 @@ class TaskScreenViewController: UIViewController {
     // MARK: views settings
     
     func viewSettings() {
-        
-        view.addSubview(scrollView)
-        scrollView.addSubview(contentView)
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.showsVerticalScrollIndicator = false
+        view.addSubview(contentView)
         contentView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            
-            contentView.heightAnchor.constraint(greaterThanOrEqualTo: scrollView.heightAnchor)
+            contentView.topAnchor.constraint(equalTo: view.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
     }
@@ -279,14 +227,58 @@ class TaskScreenViewController: UIViewController {
         navigationItem.rightBarButtonItem = rightNavButton
     }
     
+    func loadItem() {
+        do {
+            try fileCache.toDoItemsFromJsonFile(file: fileName)
+        }
+        catch {
+            print(FileCacheErrors.fileNotFound)
+            
+        }
+        
+        if let item = fileCache.itemsCollection.first {
+            // изменение вида
+            elements.placeholder.isHidden = true
+            componentsOn()
+            
+            // достаем нужные значения
+            correctId = item.value.id
+            elements.textView.text = item.value.text
+            
+            let lines = item.value.text.components(separatedBy: "\n").count
+            // еще изменение вида (высота предстваления)
+            var size = settingsZoneHeight + Double(CGFloat(lines * 22) / Aligners.modelHight * Aligners.height)
+            // продолжаем достовать значения
+            
+            let index: Int = {
+                var i = 1
+                if item.value.importance == .low { i = 0 }
+                if item.value.importance == .high { i = 2 }
+                return i
+            }()
+            
+            elements.segmentedControl.selectedSegmentIndex = index
+            
+            if let date = item.value.deadline {
+                toggle.setOn(true, animated: true)
+                dateManager()
+                elements.calendar.setDate(date, animated: true)
+                selectDate(date: date)
+                size += elements.calendar.frame.height
+                size += 32 / Aligners.modelHight * Aligners.height
+            }
+            
+            updateScrollViewContentSize(by: size)
+            
+        }
+        
+    }
+    
     func textPanelSettings() {
         let container = elements.textFieldContainer
         contentView.addSubview(container)
         container.addSubview(elements.textView)
         container.addSubview(elements.placeholder)
-        
-        elements.textView.delegate = self
-        elements.textView.isScrollEnabled = false
         
         NSLayoutConstraint.activate([
             container.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16 / Aligners.modelHight * Aligners.height),
@@ -299,6 +291,19 @@ class TaskScreenViewController: UIViewController {
             elements.textView.topAnchor.constraint(equalTo: container.topAnchor, constant: 17 / Aligners.modelHight * Aligners.height),
             elements.textView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -17 / Aligners.modelHight * Aligners.height)
         ])
+        
+        //keyboard
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(doneButtonTapped))
+        
+        toolbar.items = [flexibleSpace, doneButton]
+        
+        elements.textView.delegate = self
+        elements.textView.inputAccessoryView = toolbar
+        elements.textView.isScrollEnabled = false
     }
 
     
@@ -326,7 +331,6 @@ class TaskScreenViewController: UIViewController {
         segmentedCtrl.addTarget(self, action: #selector(segmentedControlValueChanged(_:)), for: .valueChanged)
         
         
-        let toggle = UISwitch()
         toggle.addTarget(self, action: #selector(dateManager), for: .valueChanged)
         
         actors.append(segmentedCtrl)
@@ -352,6 +356,18 @@ class TaskScreenViewController: UIViewController {
         
     }
     
+    func selectDate(date: Date) {
+        deadlineDate = date
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ru_RU")
+        
+        dateFormatter.dateFormat = "dd MMMM yyyy"
+        var nextDateFormatted = dateFormatter.string(from: date)
+        if nextDateFormatted.hasPrefix("0") {nextDateFormatted.removeFirst()} // если число с 1 по 9 включительно
+        elements.calendarButton.setTitle(nextDateFormatted, for: .normal)
+    }
+    
     func deletePanelSettings() {
         contentView.addSubview(elements.deleteButton)
         elements.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
@@ -363,3 +379,5 @@ class TaskScreenViewController: UIViewController {
     }
     
 }
+
+

@@ -9,34 +9,59 @@ import UIKit
 
 
 extension TaskScreenViewController: UITextViewDelegate {
-    func textViewDidChange(_ textView: UITextView) {
-        
-        if textView.text.isEmpty {
-            elements.placeholder.isHidden = false
-            
-            rightNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "TertiaryLabel")!, NSAttributedString.Key.font: UIFont(name: "SFProText-Regular", size: 17)!], for: .normal)
-            
-            elements.deleteButton.setTitleColor(UIColor(named: "TertiaryLabel"), for: .normal)
-            elements.deleteButton.removeTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-            
-            rightNavButton.isEnabled = false
+    
+    func updateScrollViewContentSize(by height: Double) {
+        let contentHeight = contentView.subviews.reduce(0) { maxHeight, view in
+            let viewMaxY = view.frame.maxY
+            return max(maxHeight, viewMaxY)
         }
-        else {
-            elements.placeholder.isHidden = true
-            
-            rightNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "BlueColor")!, NSAttributedString.Key.font: UIFont(name: "SFProText-Regular", size: 17)!], for: .normal)
-            
-            elements.deleteButton.setTitleColor(UIColor(named: "RedColor"), for: .normal)
-            elements.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
-            
-            rightNavButton.isEnabled = true
-        }
-        
-        // Обновление размера и оформления
-        let size = textView.sizeThatFits(CGSize(width: textView.frame.width, height: CGFloat.greatestFiniteMagnitude))
-        elements.textFieldContainer.frame.size.height = size.height + (17 / Aligners.modelHight * Aligners.height) + (17 / Aligners.modelHight * Aligners.height)
-        textView.frame.size.height = size.height
+        let finalContentSize = CGSize(width: contentView.frame.width, height: contentHeight + height)
+        contentView.contentSize = finalContentSize
     }
     
+    func textViewDidChange(_ textView: UITextView) {
+        updateScrollViewContentSize(by: settingsZoneHeight)
+        // обновление вида
+        if textView.text.isEmpty {
+            componentsOff()
+        }
+        else {
+            componentsOn()
+            scrollToVisible()
+        }
+    }
+    
+    private func scrollToVisible() {
+        let contentHeight = contentView.contentSize.height
+        let visibleHeight = contentView.bounds.height
+        
+        // Прокрутка до видимой области
+        if contentHeight > visibleHeight {
+            let rect = CGRect(x: 0, y: contentHeight - visibleHeight, width: 1, height: visibleHeight)
+            contentView.scrollRectToVisible(rect, animated: true)
+        }
+    }
+    
+    
+    func componentsOff() {
+        elements.placeholder.isHidden = false
+        
+        rightNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "TertiaryLabel")!, NSAttributedString.Key.font: UIFont(name: "SFProText-Regular", size: 17)!], for: .normal)
+        
+        elements.deleteButton.setTitleColor(UIColor(named: "TertiaryLabel"), for: .normal)
+        elements.deleteButton.removeTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+        
+        rightNavButton.isEnabled = false
+    }
+    
+    func componentsOn() {
+        elements.placeholder.isHidden = true
+        
+        rightNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "BlueColor")!, NSAttributedString.Key.font: UIFont(name: "SFProText-Regular", size: 17)!], for: .normal)
+        
+        elements.deleteButton.setTitleColor(UIColor(named: "RedColor"), for: .normal)
+        elements.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+        
+        rightNavButton.isEnabled = true
+    }
 }
-
