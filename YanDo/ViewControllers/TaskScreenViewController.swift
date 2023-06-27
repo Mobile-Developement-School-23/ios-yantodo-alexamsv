@@ -16,7 +16,7 @@ class TaskScreenViewController: UIViewController {
     let contentView = UIScrollView()
     let elements = ViewElementsForTaskScreen()
     
-    var settingsZoneHeight = 168 / Aligners.modelHight * Aligners.height
+    var settingsZoneHeight = 148 / Aligners.modelHight * Aligners.height
     
     let leftNavButton = UIBarButtonItem(title: "Отменить")
     let rightNavButton = UIBarButtonItem(title: "Сохранить")
@@ -130,7 +130,7 @@ class TaskScreenViewController: UIViewController {
         showCalendarView.toggle()
         
         if showCalendarView && showCalendarLabel {
-            updateScrollViewContentSize(by: settingsZoneHeight)
+            updateScrollViewContentSize(by: settingsZoneHeight + elements.calendar.frame.height)
             
             elements.verticalStackView.addArrangedSubview(elements.dividers[ind])
             elements.verticalStackView.addArrangedSubview(elements.calendar)
@@ -265,7 +265,6 @@ class TaskScreenViewController: UIViewController {
                 elements.calendar.setDate(date, animated: true)
                 selectDate(date: date)
                 size += elements.calendar.frame.height
-                size += 32 / Aligners.modelHight * Aligners.height
             }
             
             updateScrollViewContentSize(by: size)
