@@ -9,6 +9,15 @@ import UIKit
 
 class TaskScreenViewController: UIViewController {
     
+    
+    /*
+     private let item: ToDoItem
+         
+         init(item: ToDoItem) {
+             self.item = item
+             super.init(nibName: nil, bundle: nil)
+         }
+     */
     let fileCache = FileCache()
     let fileName = "MyFile"
     var correctId = ""
@@ -43,7 +52,7 @@ class TaskScreenViewController: UIViewController {
         loadItem()
     }
     
-    // MARK: objc methods
+    // MARK: - objc methods
     
     //keyboard
     @objc func doneButtonTapped() {
@@ -183,7 +192,7 @@ class TaskScreenViewController: UIViewController {
          cancelButtonTapped()
      }
     
-    // MARK: views settings
+    // MARK: - views settings
     
     func viewSettings() {
         contentView.showsVerticalScrollIndicator = false
