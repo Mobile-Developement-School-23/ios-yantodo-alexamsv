@@ -9,6 +9,8 @@ import Foundation
 
 final class FileCache {
     
+    var complitedCount = 0
+    
     private(set) var itemsCollection: [String: ToDoItem] = [:]
     
     @discardableResult

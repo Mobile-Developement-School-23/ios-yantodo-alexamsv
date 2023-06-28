@@ -7,15 +7,6 @@
 
 import UIKit
 
-
-// Сделано для адаптации под разные размеры экрана. Цифры взяты из размера экрана на макете в figma
-enum Aligners {
-    static let height = UIScreen.main.bounds.height
-    static let width = UIScreen.main.bounds.width
-    static let modelHight: CGFloat = 812
-    static let modelWidth: CGFloat = 375
-}
-
 class ViewElementsForTaskScreen {
     
     //MARK: text panel
@@ -126,9 +117,9 @@ class ViewElementsForTaskScreen {
     
     let segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl()
-        segmentedControl.insertSegment(with: UIImage(named: "segmentedImage0")?.withRenderingMode(.alwaysOriginal), at: 0, animated: true)
+        segmentedControl.insertSegment(with: UIImage(named: "ImportanceLow")?.withRenderingMode(.alwaysOriginal), at: 0, animated: true)
         segmentedControl.insertSegment(withTitle: "нет", at: 1, animated: true)
-        segmentedControl.insertSegment(with: UIImage(named: "segmentedImage2")?.withRenderingMode(.alwaysOriginal), at: 2, animated: true)
+        segmentedControl.insertSegment(with: UIImage(named: "ImportanceHight")?.withRenderingMode(.alwaysOriginal), at: 2, animated: true)
         
         segmentedControl.selectedSegmentIndex = 1
         
