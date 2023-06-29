@@ -7,9 +7,13 @@
 
 import UIKit
 
+//MARK: pending items
 class CustomTableViewCell: UITableViewCell {
-    //item
     
+    let elements = ViewElementsForMainScreen()
+    weak var delegate: CustomTableViewCellDelegate?
+    
+    //item
     var item: ToDoItem? {
         didSet {
             configureCell()
@@ -25,166 +29,154 @@ class CustomTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // cells components
-    
-    private let markerButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "PendingMarker"), for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 24 / Aligners.modelHight * Aligners.height).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 24 / Aligners.modelWidth * Aligners.width).isActive = true
-        return button
-    }()
-    
-    private let cellsLabel: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = 2
-        stack.alignment = .leading
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
-    
-    private let cellsInf: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.spacing = 2
-        stack.alignment = .top
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        return stack
-    }()
-    
-    private let importanceIcon: UIImageView = {
-        let icon = UIImageView()
-        icon.image = UIImage(named: "ImportanceHight")
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.widthAnchor.constraint(equalToConstant: 10 / Aligners.modelWidth * Aligners.width).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 16 / Aligners.modelHight * Aligners.height).isActive = true
-        return icon
-    }()
-    
-    private let title: UILabel = {
-        let text = UILabel()
-        text.font = UIFont(name: "SFProText-Regular", size: 17)
-        text.textColor = UIColor(named: "PrimaryLabel")
-        text.numberOfLines = 3
-        text.lineBreakMode = .byTruncatingTail
-        text.widthAnchor.constraint(equalToConstant: 250 / Aligners.modelWidth * Aligners.width).isActive = true
-        text.translatesAutoresizingMaskIntoConstraints = false
-        
-        return text
-    }()
-    
-    private let deadlineView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.alignment = .leading
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        
-        let icon = UIImageView(image: UIImage(named: "Deadline")!)
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.widthAnchor.constraint(equalToConstant: 16 / Aligners.modelWidth * Aligners.width).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 16 / Aligners.modelHight * Aligners.height).isActive = true
-        
-        stack.addArrangedSubview(icon)
-        return stack
-    }()
-    
-    private let deadlineTitle: UILabel = {
-        let text = UILabel()
-        text.font = UIFont(name: "SFProText-Regular", size: 15)
-        text.textColor = UIColor(named: "TertiaryLabel")
-        text.translatesAutoresizingMaskIntoConstraints = false
-        return text
-    }()
-    
-    private let chevronIcon: UIImageView = {
-        let icon = UIImageView()
-        icon.image = UIImage(named: "Chevron")
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.widthAnchor.constraint(equalToConstant: 7 / Aligners.modelWidth * Aligners.width).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 12 / Aligners.modelHight * Aligners.height).isActive = true
-        return icon
-    }()
-    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // Сбрасываем значения ячейки
+        item = nil
+        elements.markerButton.setImage(nil, for: .normal)
+        elements.cellsLabel.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        elements.cellsInf.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        elements.importanceIcon.image = nil
+        elements.title.text = nil
+        elements.deadlineTitle.text = nil
+    }
     
     
     //cells settings
     
     private func configureCell() {
         guard let item = item else { return }
-        
-        var space: CGFloat = 16
-        
         if !item.isCompleted {
-        if item.importance == .high {
-            markerButton.setImage(UIImage(named: "RedMarker"), for: .normal)
-            cellsInf.addArrangedSubview(importanceIcon)
-        }
-        
-        title.text = item.text
-        cellsLabel.addArrangedSubview(title)
-        
-        if let deadline = item.deadline {
-            space = 12
             
-            let formatter = DateFormatter()
-            formatter.locale = Locale(identifier: "ru_RU")
-            formatter.dateFormat = "d MMMM"
-            let formattedDeadline = formatter.string(from: deadline)
+            var space: CGFloat = 16
             
-            deadlineTitle.text = formattedDeadline
-            deadlineView.addArrangedSubview(deadlineTitle)
-            cellsLabel.addArrangedSubview(deadlineView)
-        }
-        
-        cellsInf.addArrangedSubview(cellsLabel)
-        
-        contentView.addSubview(markerButton)
-        contentView.addSubview(cellsInf)
-            NSLayoutConstraint.activate([
-                cellsInf.topAnchor.constraint(equalTo: contentView.topAnchor, constant: space / Aligners.modelHight * Aligners.height),
-                cellsInf.leadingAnchor.constraint(equalTo: markerButton.trailingAnchor, constant: 12 / Aligners.modelWidth * Aligners.width),
-                cellsInf.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -space / Aligners.modelHight * Aligners.height)
-                ])
+            if item.importance == .high {
+                elements.markerButton.setImage(UIImage(named: "RedMarker"), for: .normal)
+                elements.importanceIcon.image = UIImage(named: "ImportanceHight")
+                elements.cellsInf.addArrangedSubview(elements.importanceIcon)
+            } else {
+                elements.markerButton.setImage(UIImage(named: "PendingMarker"), for: .normal)
+            }
+            
+            elements.title.text = item.text
+            elements.cellsLabel.addArrangedSubview(elements.title)
+            
+            if let deadline = item.deadline {
+                space = 12
                 
-        } else {
-            markerButton.setImage(UIImage(named: "CompletedMarker"), for: .normal)
-            title.text = item.text
+                let formatter = DateFormatter()
+                formatter.locale = Locale(identifier: "ru_RU")
+                formatter.dateFormat = "d MMMM"
+                let formattedDeadline = formatter.string(from: deadline)
+                
+                elements.deadlineTitle.text = formattedDeadline
+                elements.deadlineView.addArrangedSubview(elements.deadlineTitle)
+                elements.cellsLabel.addArrangedSubview(elements.deadlineView)
+            }
+            
+            elements.cellsInf.addArrangedSubview(elements.cellsLabel)
+            
+            elements.markerButton.addTarget(self, action: #selector(markerButtonTapped), for: .touchUpInside)
+            contentView.addSubview(elements.markerButton)
+            contentView.addSubview(elements.cellsInf)
+            contentView.addSubview(elements.chevronIcon)
+            
+            NSLayoutConstraint.activate([
+                elements.markerButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16 / Aligners.modelHight * Aligners.height),
+                elements.markerButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width),
+                elements.markerButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16 / Aligners.modelHight * Aligners.height),
+                
+                elements.cellsInf.topAnchor.constraint(equalTo: contentView.topAnchor, constant: space / Aligners.modelHight * Aligners.height),
+                elements.cellsInf.leadingAnchor.constraint(equalTo: elements.markerButton.trailingAnchor, constant: 12 / Aligners.modelWidth * Aligners.width),
+                elements.cellsInf.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -space / Aligners.modelHight * Aligners.height),
+                
+                elements.chevronIcon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+                elements.chevronIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width)
+            ])
+            
+            
+        } else {return}
+    }
+    @objc private func markerButtonTapped() {
+        delegate?.toDoItemIsCompleted(in: self)
+    }
+    
+}
+
+//MARK: completed items
+class CustomCompletedTableViewCell: UITableViewCell {
+    //item
+    let elements = ViewElementsForMainScreen()
+    weak var delegate: CustomTableViewCellDelegate?
+    
+     var item: ToDoItem? {
+        didSet {
+            configureCell()
+        }
+    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        // Сбрасываем значения ячейки
+        item = nil
+        elements.markerButton.setImage(nil, for: .normal)
+        elements.title.text = nil
+    }
+
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        configureCell()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configureCell() {
+        guard let item = item else { return }
+        if item.isCompleted {
+            let space: CGFloat = 16
+            
+            elements.markerButton.setImage(UIImage(named: "CompletedMarker"), for: .normal)
+            elements.title.text = item.text
             
             let attributedString = NSAttributedString(string: item.text, attributes: [
                 NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue,
                 NSAttributedString.Key.foregroundColor: UIColor(named: "TertiaryLabel")!,
                 NSAttributedString.Key.font: UIFont(name: "SFProText-Regular", size: 17)!
             ])
-            title.attributedText = attributedString
+            elements.title.attributedText = attributedString
             
-            contentView.addSubview(markerButton)
-            contentView.addSubview(title)
+            elements.markerButton.addTarget(self, action: #selector(markerButtonTapped), for: .touchUpInside)
+            contentView.addSubview(elements.markerButton)
+            contentView.addSubview(elements.title)
+            contentView.addSubview(elements.chevronIcon)
             
             NSLayoutConstraint.activate([
-                title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: space / Aligners.modelHight * Aligners.height),
-                title.leadingAnchor.constraint(equalTo: markerButton.trailingAnchor, constant: 12 / Aligners.modelWidth * Aligners.width),
-                title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -space / Aligners.modelHight * Aligners.height)
-                ])
-        }
-        
-        contentView.addSubview(chevronIcon)
-        
-        NSLayoutConstraint.activate([
-            markerButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16 / Aligners.modelHight * Aligners.height),
-            markerButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width),
-            markerButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16 / Aligners.modelHight * Aligners.height),
-            
-            chevronIcon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            chevronIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width)
-        ])
-        
+                elements.markerButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16 / Aligners.modelHight * Aligners.height),
+                elements.markerButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width),
+                elements.markerButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16 / Aligners.modelHight * Aligners.height),
+                
+                elements.title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: space / Aligners.modelHight * Aligners.height),
+                elements.title.leadingAnchor.constraint(equalTo: elements.markerButton.trailingAnchor, constant: 12 / Aligners.modelWidth * Aligners.width),
+                elements.title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -space / Aligners.modelHight * Aligners.height),
+                
+                elements.chevronIcon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+                elements.chevronIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width)
+            ])
+        } else {return}
+    
     }
-  
+    @objc private func markerButtonTapped() {
+        delegate?.toDoItemIsPending(in: self)
+    }
 }
 
+//MARK: new item
 class SpecialTableViewCell: UITableViewCell {
+    
+    let elements = ViewElementsForMainScreen()
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
          configureCell()
@@ -194,23 +186,20 @@ class SpecialTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private let title: UILabel = {
-        let text = UILabel()
-        text.text = "Новое"
-        text.font = UIFont(name: "SFProText-Regular", size: 17)
-        text.textColor = UIColor(named: "TertiaryLabel")
-        text.translatesAutoresizingMaskIntoConstraints = false
-        
-        return text
-    }()
-    
     private func configureCell() {
+        contentView.addSubview(elements.newItemCell)
         
-        contentView.addSubview(title)
         NSLayoutConstraint.activate([
-            title.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
-            title.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 52 / Aligners.modelWidth * Aligners.width)
+            elements.newItemCell.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            elements.newItemCell.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 52 / Aligners.modelWidth * Aligners.width)
             ])
     }
     
+}
+
+
+//создаем протокол для изменения состояния isCompleted по нажатию кнопки
+protocol CustomTableViewCellDelegate: AnyObject {
+    func toDoItemIsCompleted(in cell: CustomTableViewCell)
+    func toDoItemIsPending(in cell: CustomCompletedTableViewCell)
 }

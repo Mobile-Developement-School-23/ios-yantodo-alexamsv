@@ -9,17 +9,22 @@ import UIKit
 
 class TaskScreenViewController: UIViewController {
     
+    private let toDoItem: ToDoItem?
+    weak var delegate: MainScreenViewController?
     
-    /*
-     private let item: ToDoItem
-         
-         init(item: ToDoItem) {
-             self.item = item
-             super.init(nibName: nil, bundle: nil)
+    init(toDoItem: ToDoItem?) {
+        self.toDoItem = toDoItem
+        super.init(nibName: nil, bundle: nil)
          }
-     */
-    let fileCache = FileCache()
-    let fileName = "MyFile"
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    let fileCache = DataManager.shared.fileCache
+    let fileName = DataManager.shared.fileName
+    var completedItems = DataManager.shared.completedItems
+    var pendingItems = DataManager.shared.pendingItems
     var correctId = ""
     
     let contentView = UIScrollView()
@@ -67,18 +72,21 @@ class TaskScreenViewController: UIViewController {
     @objc func saveButtonTapped() {
         // добавляю локально
         if !elements.textView.text.isEmpty {
+            if let item = toDoItem { fileCache.deleteToDoItem(itemsID: item.id) }
             let item = ToDoItem(text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
             
             fileCache.addNewToDoItem(item)
             //добавляю в файл
             do {
                 try fileCache.saveJsonToDoItemInFile(file: fileName)
+                delegate?.updateTable()
                 cancelButtonTapped()
                 
             } catch {
                 print(FileCacheErrors.failedToExtractData)
                 
             }
+            cancelButtonTapped()
         }
         
     }
@@ -182,6 +190,7 @@ class TaskScreenViewController: UIViewController {
          // пересохраняю файл уже без элемента
         do {
             try fileCache.saveJsonToDoItemInFile(file: fileName)
+            delegate?.updateTable()
             cancelButtonTapped()
             
         } catch {
@@ -245,30 +254,30 @@ class TaskScreenViewController: UIViewController {
             
         }
         
-        if let item = fileCache.itemsCollection.first {
+        if let item = toDoItem {
             // изменение вида
             elements.placeholder.isHidden = true
             componentsOn()
             
             // достаем нужные значения
-            correctId = item.value.id
-            elements.textView.text = item.value.text
+            correctId = item.id
+            elements.textView.text = item.text
             
-            let lines = item.value.text.components(separatedBy: "\n").count
+            let lines = item.text.components(separatedBy: "\n").count
             // еще изменение вида (высота предстваления)
             var size = settingsZoneHeight + Double(CGFloat(lines * 22) / Aligners.modelHight * Aligners.height)
             // продолжаем достовать значения
             
             let index: Int = {
                 var i = 1
-                if item.value.importance == .low { i = 0 }
-                if item.value.importance == .high { i = 2 }
+                if item.importance == .low { i = 0 }
+                if item.importance == .high { i = 2 }
                 return i
             }()
             
             elements.segmentedControl.selectedSegmentIndex = index
             
-            if let date = item.value.deadline {
+            if let date = item.deadline {
                 toggle.setOn(true, animated: true)
                 dateManager()
                 elements.calendar.setDate(date, animated: true)

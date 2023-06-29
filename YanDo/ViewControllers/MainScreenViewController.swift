@@ -9,10 +9,14 @@ import UIKit
 
 class MainScreenViewController: UIViewController {
     
-    let fileCache = FileCache()
+    let fileCache = DataManager.shared.fileCache
+    let fileName = DataManager.shared.fileName
     let elements = ViewElementsForMainScreen()
     
     var showCompletedToDoItems = false
+    var completedItems = DataManager.shared.completedItems
+    var pendingItems = DataManager.shared.pendingItems
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,22 +24,43 @@ class MainScreenViewController: UIViewController {
         
         viewSettings()
         
+        updateTable()
         infPanelSettings()
         tableSettings()
-        
-            }
+    }
+    
     
     // MARK: - objc methods
     
     @objc func showButtonTapped() {
         showCompletedToDoItems.toggle()
         
-        if showCompletedToDoItems { elements.showButton.setTitle("Скрыть", for: .normal) }
-        else { elements.showButton.setTitle("Показать", for: .normal) }
+        completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted }
+        pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted }
+        
+        if showCompletedToDoItems {
+            elements.showButton.setTitle("Скрыть", for: .normal)
+        } else {
+            elements.showButton.setTitle("Показать", for: .normal)
+        }
+        elements.tableView.reloadData()
+        
     }
     
     
     // MARK: - views settings
+    
+    func updateTable() {
+        do {
+           try fileCache.toDoItemsFromJsonFile(file: fileName)
+        } catch {
+            print(FileCacheErrors.failedToExtractData)
+        }
+        completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted }
+        pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted }
+        elements.tableView.reloadData()
+    }
+
     
     func viewSettings() {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -75,8 +100,11 @@ class MainScreenViewController: UIViewController {
         view.addSubview(elements.tableView)
         elements.tableView.delegate = self
         elements.tableView.dataSource = self
-        elements.tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "Cell")
+        
+        elements.tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
+        elements.tableView.register(CustomCompletedTableViewCell.self, forCellReuseIdentifier: "CustomCompletedCell")
         elements.tableView.register(SpecialTableViewCell.self, forCellReuseIdentifier: "SpecialCell")
+
         elements.tableView.isScrollEnabled = true
         elements.tableView.showsVerticalScrollIndicator = false
         
