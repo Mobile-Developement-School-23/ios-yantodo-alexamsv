@@ -1,5 +1,5 @@
 //
-//  ToDoItemManeger.swift
+//  ToDoItemStateControlExtension.swift
 //  YanDo
 //
 //  Created by Александра Маслова on 29.06.2023.
@@ -30,9 +30,7 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             }
         }
         // обнавляем таблицу
-        completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted }
-        pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted }
-        elements.tableView.reloadData()
+        updateTable()
        
     }
     
@@ -53,9 +51,7 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             }
         }
         // обнавляем таблицу
-        completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted }
-        pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted }
-        elements.tableView.reloadData()
+       updateTable()
         
     }
     

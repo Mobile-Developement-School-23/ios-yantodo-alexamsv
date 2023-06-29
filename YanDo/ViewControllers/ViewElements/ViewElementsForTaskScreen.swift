@@ -16,8 +16,6 @@ class ViewElementsForTaskScreen {
         view.backgroundColor = UIColor(named: "SecondaryBack")
         view.layer.cornerRadius = 16
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.heightAnchor.constraint(greaterThanOrEqualToConstant: 120 / Aligners.modelHight * Aligners.height).isActive = true
-        view.widthAnchor.constraint(equalToConstant: 343 / Aligners.modelWidth * Aligners.width).isActive = true
         return view
     }()
     
@@ -29,8 +27,6 @@ class ViewElementsForTaskScreen {
         text.textContainerInset = .zero
         text.textContainer.lineFragmentPadding = 0
         text.translatesAutoresizingMaskIntoConstraints = false
-        text.widthAnchor.constraint(equalToConstant: 311 / Aligners.modelWidth * Aligners.width).isActive = true
-        
         return text
     }()
     
@@ -54,7 +50,6 @@ class ViewElementsForTaskScreen {
         stack.layer.cornerRadius = 16
         stack.backgroundColor = UIColor(named: "SecondaryBack")
         stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.widthAnchor.constraint(equalToConstant: 343 / Aligners.modelWidth * Aligners.width).isActive = true
         return stack
     }()
     
@@ -201,7 +196,6 @@ class ViewElementsForTaskScreen {
         button.layer.cornerRadius = 16
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(greaterThanOrEqualToConstant: 56 / Aligners.modelHight * Aligners.height).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 343 / Aligners.modelWidth * Aligners.width).isActive = true
         return button
     }()
     

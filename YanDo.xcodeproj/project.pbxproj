@@ -22,7 +22,7 @@
 		3396009B2A4B6BF900725B0E /* AlignersForScreens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396009A2A4B6BF900725B0E /* AlignersForScreens.swift */; };
 		3396009E2A4C544A00725B0E /* MainScreenExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396009D2A4C544A00725B0E /* MainScreenExtension.swift */; };
 		339600A02A4C7F5A00725B0E /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396009F2A4C7F5A00725B0E /* CustomTableViewCell.swift */; };
-		339600A22A4D8BF100725B0E /* ToDoItemManeger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600A12A4D8BF100725B0E /* ToDoItemManeger.swift */; };
+		339600A22A4D8BF100725B0E /* ToDoItemStateControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600A12A4D8BF100725B0E /* ToDoItemStateControlExtension.swift */; };
 		339600A42A4D9A8E00725B0E /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600A32A4D9A8E00725B0E /* DataManager.swift */; };
 		33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F132A46EC2B00D4E63C /* AppDelegate.swift */; };
 		33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */; };
@@ -67,7 +67,7 @@
 		3396009A2A4B6BF900725B0E /* AlignersForScreens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignersForScreens.swift; sourceTree = "<group>"; };
 		3396009D2A4C544A00725B0E /* MainScreenExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenExtension.swift; sourceTree = "<group>"; };
 		3396009F2A4C7F5A00725B0E /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
-		339600A12A4D8BF100725B0E /* ToDoItemManeger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemManeger.swift; sourceTree = "<group>"; };
+		339600A12A4D8BF100725B0E /* ToDoItemStateControlExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemStateControlExtension.swift; sourceTree = "<group>"; };
 		339600A32A4D9A8E00725B0E /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		33E33F102A46EC2B00D4E63C /* YanDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YanDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33E33F132A46EC2B00D4E63C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -125,6 +125,7 @@
 				3396009A2A4B6BF900725B0E /* AlignersForScreens.swift */,
 				3396008D2A48655800725B0E /* TaskScreenExtension.swift */,
 				3396009D2A4C544A00725B0E /* MainScreenExtension.swift */,
+				339600A12A4D8BF100725B0E /* ToDoItemStateControlExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -145,7 +146,6 @@
 				339600812A48623D00725B0E /* ToDoItem.swift */,
 				339600872A4862E800725B0E /* FileCache.swift */,
 				339600A32A4D9A8E00725B0E /* DataManager.swift */,
-				339600A12A4D8BF100725B0E /* ToDoItemManeger.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -174,8 +174,8 @@
 			isa = PBXGroup;
 			children = (
 				339600982A4B6BAA00725B0E /* ViewElementsForMainScreen.swift */,
-				3396008B2A4864BB00725B0E /* ViewElementsForTaskScreen.swift */,
 				3396009F2A4C7F5A00725B0E /* CustomTableViewCell.swift */,
+				3396008B2A4864BB00725B0E /* ViewElementsForTaskScreen.swift */,
 			);
 			path = ViewElements;
 			sourceTree = "<group>";
@@ -372,7 +372,7 @@
 				3396009B2A4B6BF900725B0E /* AlignersForScreens.swift in Sources */,
 				339600882A4862E800725B0E /* FileCache.swift in Sources */,
 				339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */,
-				339600A22A4D8BF100725B0E /* ToDoItemManeger.swift in Sources */,
+				339600A22A4D8BF100725B0E /* ToDoItemStateControlExtension.swift in Sources */,
 				3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */,
 				339600822A48623D00725B0E /* ToDoItem.swift in Sources */,
 				339600992A4B6BAA00725B0E /* ViewElementsForMainScreen.swift in Sources */,
@@ -554,8 +554,8 @@
 				INFOPLIST_FILE = YanDo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -585,8 +585,8 @@
 				INFOPLIST_FILE = YanDo/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

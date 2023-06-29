@@ -64,4 +64,24 @@ extension TaskScreenViewController: UITextViewDelegate {
         
         rightNavButton.isEnabled = true
     }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        coordinator.animate(alongsideTransition: { _ in
+            self.updateContainerHeightForCurrentOrientation()
+        }, completion: nil)
+    }
+
+    private func updateContainerHeightForCurrentOrientation() {
+        let container = elements.textFieldContainer
+        
+        if UIDevice.current.orientation.isLandscape {
+            // Высота контейнера в горизонтальной ориентации
+            container.constraints.filter { $0.firstAttribute == .height }.first?.constant = 300 / Aligners.modelHight * Aligners.height
+        } else {
+            // Высота контейнера в вертикальной ориентации
+            container.constraints.filter { $0.firstAttribute == .height }.first?.constant = 120 / Aligners.modelHight * Aligners.height
+        }
+    }
 }

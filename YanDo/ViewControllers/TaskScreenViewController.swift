@@ -60,7 +60,7 @@ class TaskScreenViewController: UIViewController {
     // MARK: - objc methods
     
     //keyboard
-    @objc func doneButtonTapped() {
+    @objc func hideKeyBoard() {
         view.endEditing(true)
     }
     
@@ -146,6 +146,7 @@ class TaskScreenViewController: UIViewController {
         
         if showCalendarView && showCalendarLabel {
             updateScrollViewContentSize(by: settingsZoneHeight + elements.calendar.frame.height)
+            hideKeyBoard()
             
             elements.verticalStackView.addArrangedSubview(elements.dividers[ind])
             elements.verticalStackView.addArrangedSubview(elements.calendar)
@@ -295,14 +296,22 @@ class TaskScreenViewController: UIViewController {
         container.addSubview(elements.textView)
         container.addSubview(elements.placeholder)
         
+        elements.textView.delegate = self
+        elements.textView.isScrollEnabled = true
+        
+            
+        container.heightAnchor.constraint(greaterThanOrEqualToConstant: 120 / Aligners.modelHight * Aligners.height).isActive = true
+        
         NSLayoutConstraint.activate([
             container.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16 / Aligners.modelHight * Aligners.height),
-            container.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            container.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width),
+            container.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width),
             
             elements.placeholder.topAnchor.constraint(equalTo: container.topAnchor, constant: 17 / Aligners.modelHight * Aligners.height),
             elements.placeholder.leftAnchor.constraint(equalTo: container.leftAnchor, constant: 16 / Aligners.modelWidth * Aligners.width),
             
-            elements.textView.centerXAnchor.constraint(equalTo: container.centerXAnchor),
+            elements.textView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width),
+            elements.textView.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width),
             elements.textView.topAnchor.constraint(equalTo: container.topAnchor, constant: 17 / Aligners.modelHight * Aligners.height),
             elements.textView.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -17 / Aligners.modelHight * Aligners.height)
         ])
@@ -312,7 +321,7 @@ class TaskScreenViewController: UIViewController {
         toolbar.sizeToFit()
         
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(doneButtonTapped))
+        let doneButton = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(hideKeyBoard))
         
         toolbar.items = [flexibleSpace, doneButton]
         
@@ -335,7 +344,8 @@ class TaskScreenViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             HStack.topAnchor.constraint(equalTo: elements.textFieldContainer.bottomAnchor, constant: 16 / Aligners.modelHight * Aligners.height),
-            HStack.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
+            HStack.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width ),
+            HStack.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width)
         ])
         
         //коллекция view для правой части ячеек
@@ -389,7 +399,8 @@ class TaskScreenViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             elements.deleteButton.topAnchor.constraint(equalTo: elements.verticalStackView.bottomAnchor, constant: 16 / Aligners.modelHight * Aligners.height),
-            elements.deleteButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
+            elements.deleteButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width),
+            elements.deleteButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width)
         ])
     }
     

@@ -35,6 +35,7 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             
             cell.separatorInset = UIEdgeInsets(top: 0, left: tableView.bounds.size.width, bottom: 0, right: 0)
             cell.layoutMargins = UIEdgeInsets.zero
+            cell.backgroundColor = UIColor(named: "SecondaryBack")
             
             return cell
         } else {
@@ -160,15 +161,17 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         guard indexPath.row != tableView.numberOfRows(inSection: 0) - 1 else {
-            return nil // Не показывать свайп влево на последней ячейке
+            return nil
         }
-        // Действие свайпа вправо
+        
+        // красная иконка
         let deleteAction = UIContextualAction(style: .destructive, title: nil) { [weak self] (action, view, completion) in
             guard let self = self else {
                 completion(false)
                 return
             }
-            // получение корректного элемента
+            
+            // обрабатываем удаление через модель
             let toDoItem: ToDoItem
             if self.showCompletedToDoItems {
                 if indexPath.row < self.completedItems.count {
@@ -179,30 +182,42 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 toDoItem = self.pendingItems[indexPath.row]
             }
-            // удаление элемента
+            
             self.fileCache.deleteToDoItem(itemsID: toDoItem.id)
             
             do {
                 try self.fileCache.saveJsonToDoItemInFile(file: self.fileName)
-                self.updateTable()
             } catch {
                 print(FileCacheErrors.failedToExtractData)
             }
+            
+            // анимация
+            tableView.performBatchUpdates({
+                if self.showCompletedToDoItems {
+                    if indexPath.row < self.completedItems.count {
+                        self.completedItems.remove(at: indexPath.row)
+                    } else {
+                        self.pendingItems.remove(at: indexPath.row - self.completedItems.count)
+                    }
+                } else {
+                    self.pendingItems.remove(at: indexPath.row)
+                }
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }, completion: nil)
             
             completion(true)
         }
         
         deleteAction.image = UIImage(named: "Delete")
-        
         deleteAction.backgroundColor = UIColor(named: "RedColor")
         
-        
+        // серая иконка
         let showAction = UIContextualAction(style: .destructive, title: nil) { [weak self] (action, view, completion) in
             guard let self = self else {
                 completion(false)
                 return
             }
-            // получение корректного элемента
+            
             let toDoItem: ToDoItem
             if self.showCompletedToDoItems {
                 if indexPath.row < self.completedItems.count {
@@ -213,24 +228,23 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 toDoItem = self.pendingItems[indexPath.row]
             }
+            
             let vc = TaskScreenViewController(toDoItem: toDoItem)
             vc.delegate = self
             let navVC = UINavigationController(rootViewController: vc)
             self.present(navVC, animated: true, completion: nil)
             
             completion(true)
-            
         }
-        
         
         showAction.image = UIImage(named: "Show")
         showAction.backgroundColor = UIColor(named: "GrayLightColor")
-        
         
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction, showAction])
         swipeConfiguration.performsFirstActionWithFullSwipe = true
         
         return swipeConfiguration
     }
+
     
 }

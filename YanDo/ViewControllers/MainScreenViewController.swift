@@ -44,16 +44,12 @@ class MainScreenViewController: UIViewController {
     @objc func showButtonTapped() {
         showCompletedToDoItems.toggle()
         
-        completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted }
-        pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted }
-        sortItemsByCreationDate()
-        
         if showCompletedToDoItems {
             elements.showButton.setTitle("Скрыть", for: .normal)
         } else {
             elements.showButton.setTitle("Показать", for: .normal)
         }
-        elements.tableView.reloadData()
+       updateTable()
         
     }
     
@@ -76,7 +72,7 @@ class MainScreenViewController: UIViewController {
         completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted }
         pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted }
         sortItemsByCreationDate()
-        elements.tableView.reloadData()
+        elements.tableView.reloadSections(IndexSet(integer: 0), with: .fade)
         
     }
     

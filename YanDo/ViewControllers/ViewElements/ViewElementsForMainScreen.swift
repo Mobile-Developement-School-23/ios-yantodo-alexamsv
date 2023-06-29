@@ -101,7 +101,8 @@ class ViewElementsForMainScreen {
         stack.alignment = .leading
         stack.translatesAutoresizingMaskIntoConstraints = false
         
-        let icon = UIImageView(image: UIImage(named: "Deadline")!)
+        let icon = UIImageView(image: UIImage(systemName: "calendar"))
+        icon.tintColor = UIColor(named: "TertiaryLabel")
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.widthAnchor.constraint(equalToConstant: 16 / Aligners.modelWidth * Aligners.width).isActive = true
         icon.heightAnchor.constraint(equalToConstant: 16 / Aligners.modelHight * Aligners.height).isActive = true
