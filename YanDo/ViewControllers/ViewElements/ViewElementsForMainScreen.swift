@@ -129,14 +129,22 @@ class ViewElementsForMainScreen {
     
     // add item
     
-    let newItemButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "Plus"), for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 44 / Aligners.modelHight * Aligners.height).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 44 / Aligners.modelWidth * Aligners.width).isActive = true
-        return button
+    let newItemButton: UIImageView = {
+        let imageView = UIImageView(image: UIImage(named: "Plus"))
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        imageView.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        imageView.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        
+        imageView.layer.shadowColor = UIColor(named: "PrimaryLabel")?.cgColor
+        imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        imageView.layer.shadowOpacity = 0.5
+        imageView.layer.shadowRadius = 4
+        
+        return imageView
     }()
+
+
     
     let newItemCell: UILabel = {
         let text = UILabel()

@@ -13,10 +13,18 @@ class MainScreenViewController: UIViewController {
     let fileName = DataManager.shared.fileName
     let elements = ViewElementsForMainScreen()
     
-    var showCompletedToDoItems = false
-    var completedItems = DataManager.shared.completedItems
-    var pendingItems = DataManager.shared.pendingItems
+    let contentView = UIView()
     
+    var completedItemsCount = DataManager.shared.completedItems.count
+    var showCompletedToDoItems = false
+    var completedItems: [ToDoItem] = DataManager.shared.completedItems {
+        didSet {
+            completedItemsCount = completedItems.count
+            elements.completedLabel.text = "Выполнено — \(completedItemsCount)"
+        }
+    }
+
+    var pendingItems = DataManager.shared.pendingItems
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +35,7 @@ class MainScreenViewController: UIViewController {
         updateTable()
         infPanelSettings()
         tableSettings()
+        newItemButtonSettings()
     }
     
     
@@ -37,6 +46,7 @@ class MainScreenViewController: UIViewController {
         
         completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted }
         pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted }
+        sortItemsByCreationDate()
         
         if showCompletedToDoItems {
             elements.showButton.setTitle("Скрыть", for: .normal)
@@ -45,6 +55,13 @@ class MainScreenViewController: UIViewController {
         }
         elements.tableView.reloadData()
         
+    }
+    
+    @objc func createNewItem() {
+        let vc = TaskScreenViewController(toDoItem: nil)
+        vc.delegate = self
+        let navVC = UINavigationController(rootViewController: vc)
+        present(navVC, animated: true, completion: nil)
     }
     
     
@@ -58,7 +75,19 @@ class MainScreenViewController: UIViewController {
         }
         completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted }
         pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted }
+        sortItemsByCreationDate()
         elements.tableView.reloadData()
+        
+    }
+    
+    func sortItemsByCreationDate() {
+        var allItems = completedItems + pendingItems
+        allItems.sort{ $0.createdDate > $1.createdDate }
+        
+        // Разделите отсортированный массив на массивы completedItems и pendingItems
+        completedItems = allItems.filter { $0.isCompleted }
+        pendingItems = allItems.filter { !$0.isCompleted }
+        
     }
 
     
@@ -72,14 +101,23 @@ class MainScreenViewController: UIViewController {
             navigationBar.layoutMargins.top = 44 / Aligners.modelHight * Aligners.height
             navigationBar.layoutMargins.left = 32 / Aligners.modelWidth * Aligners.width
             navigationBar.preservesSuperviewLayoutMargins = true
+            navigationBar.backgroundColor = UIColor(named: "PrimaryBack")
         }
+        view.addSubview(contentView)
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
     }
     
     func infPanelSettings() {
-        view.addSubview(elements.informationView)
+        contentView.addSubview(elements.informationView)
         
         let label = elements.completedLabel
-        let completedItemsCount = fileCache.itemsCollection.values.filter { $0.isCompleted }.count
         label.text = "Выполнено — \(completedItemsCount)"
         
         let button = elements.showButton
@@ -91,13 +129,13 @@ class MainScreenViewController: UIViewController {
         stack.addArrangedSubview(elements.showButton)
         
         NSLayoutConstraint.activate([
-            stack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8 / Aligners.modelHight * Aligners.height),
-            stack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8 / Aligners.modelHight * Aligners.height),
+            stack.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             ])
     }
     
     func tableSettings() {
-        view.addSubview(elements.tableView)
+        contentView.addSubview(elements.tableView)
         elements.tableView.delegate = self
         elements.tableView.dataSource = self
         
@@ -113,10 +151,22 @@ class MainScreenViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             elements.tableView.topAnchor.constraint(equalTo: elements.informationView.bottomAnchor, constant: 12 / Aligners.modelHight * Aligners.height),
-            elements.tableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            elements.tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            elements.tableView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            elements.tableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
         ])
     }
     
+    func newItemButtonSettings() {
+        view.addSubview(elements.newItemButton)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(createNewItem))
+            elements.newItemButton.isUserInteractionEnabled = true
+            elements.newItemButton.addGestureRecognizer(tapGesture)
+            
+        NSLayoutConstraint.activate([
+            elements.newItemButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 166 / Aligners.modelWidth * Aligners.width),
+            elements.newItemButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -54 / Aligners.modelHight * Aligners.height)
+            ])
+    }
     
 }

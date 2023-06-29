@@ -110,8 +110,6 @@ class TaskScreenViewController: UIViewController {
         showCalendarLabel.toggle()
         
         showCalendarView = false
-        calendarManager()
-        
         
         let VStack = UIStackView()
         VStack.axis = .vertical
