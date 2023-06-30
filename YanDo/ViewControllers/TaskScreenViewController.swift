@@ -5,7 +5,6 @@
 //  Created by Александра Маслова on 20.06.2023.
 //
 // swiftlint:disable line_length
-// swiftlint:disable type_body_length
 
 import UIKit
 
@@ -63,13 +62,9 @@ class TaskScreenViewController: UIViewController {
             let item = ToDoItem(text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
             fileCache.addNewToDoItem(item)
             // добавляю в файл
-            do {
-                try fileCache.saveJsonToDoItemInFile(file: fileName)
-                delegate?.updateTable()
-                cancelButtonTapped()
-            } catch {
-                print(FileCacheErrors.failedToExtractData)
-            }
+            fileCache.saveJsonToDoItemInFile(file: fileName)
+            delegate?.updateTable()
+            cancelButtonTapped()
             cancelButtonTapped()
         }
     }
@@ -144,13 +139,9 @@ class TaskScreenViewController: UIViewController {
     @objc func deleteButtonTapped() {
         fileCache.deleteToDoItem(itemsID: correctId)
         // пересохраняю файл уже без элемента
-        do {
-            try fileCache.saveJsonToDoItemInFile(file: fileName)
-            delegate?.updateTable()
-            cancelButtonTapped()
-        } catch {
-            print(FileCacheErrors.failedToExtractData)
-        }
+        fileCache.saveJsonToDoItemInFile(file: fileName)
+        delegate?.updateTable()
+        cancelButtonTapped()
         // выхожу
         cancelButtonTapped()
     }
@@ -188,9 +179,7 @@ class TaskScreenViewController: UIViewController {
         navigationItem.rightBarButtonItem = rightNavButton
     }
     func loadItem() {
-        do { try fileCache.toDoItemsFromJsonFile(file: fileName) } catch {
-            print(FileCacheErrors.fileNotFound)
-        }
+    fileCache.toDoItemsFromJsonFile(file: fileName)
         if let item = toDoItem {
             // изменение вида
             elements.placeholder.isHidden = true
@@ -363,4 +352,3 @@ extension TaskScreenViewController: UITextViewDelegate {
     }
 }
 // swiftlint:enable line_length
-// swiftlint:enable type_body_length

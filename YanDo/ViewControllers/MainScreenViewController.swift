@@ -53,11 +53,7 @@ class MainScreenViewController: UIViewController {
     }
     // MARK: - views settings
     func updateTable() {
-        do {
-           try fileCache.toDoItemsFromJsonFile(file: fileName)
-        } catch {
-            print(FileCacheErrors.failedToExtractData)
-        }
+        fileCache.toDoItemsFromJsonFile(file: fileName)
         completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted }
         pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted }
         completedItems.sort { $0.createdDate > $1.createdDate }
@@ -295,11 +291,7 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
                 toDoItem = self.pendingItems[indexPath.row]
             }
             self.fileCache.deleteToDoItem(itemsID: toDoItem.id)
-            do {
-                try self.fileCache.saveJsonToDoItemInFile(file: self.fileName)
-            } catch {
-                print(FileCacheErrors.failedToExtractData)
-            }
+            self.fileCache.saveJsonToDoItemInFile(file: self.fileName)
             // анимация
             tableView.performBatchUpdates({
                 if self.showCompletedToDoItems {
@@ -364,11 +356,7 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             let newCompletedToDoItem = ToDoItem(text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: true, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
             fileCache.deleteToDoItem(itemsID: item.id)
             fileCache.addNewToDoItem(newCompletedToDoItem)
-            do {
-                try fileCache.saveJsonToDoItemInFile(file: fileName)
-            } catch {
-                print(FileCacheErrors.failedToExtractData)
-            }
+            fileCache.saveJsonToDoItemInFile(file: fileName)
         }
         // обнавляем таблицу
         updateTable()
@@ -382,11 +370,7 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             let newCompletedToDoItem = ToDoItem(text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: false, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
             fileCache.deleteToDoItem(itemsID: item.id)
             fileCache.addNewToDoItem(newCompletedToDoItem)
-            do {
-                try fileCache.saveJsonToDoItemInFile(file: fileName)
-            } catch {
-                print(FileCacheErrors.failedToExtractData)
-            }
+            fileCache.saveJsonToDoItemInFile(file: fileName)
         }
         // обнавляем таблицу
        updateTable()
