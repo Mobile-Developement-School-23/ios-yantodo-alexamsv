@@ -7,7 +7,14 @@
 
 import UIKit
 
-//MARK: pending items
+//MARK: - protocol
+// протокол для изменения состояния isCompleted по нажатию кнопки
+protocol CustomTableViewCellDelegate: AnyObject {
+    func toDoItemIsCompleted(in cell: CustomTableViewCell)
+    func toDoItemIsPending(in cell: CustomCompletedTableViewCell)
+}
+
+//MARK: - pending items
 class CustomTableViewCell: UITableViewCell {
     
     let elements = ViewElementsForMainScreen()
@@ -41,14 +48,11 @@ class CustomTableViewCell: UITableViewCell {
         elements.deadlineTitle.text = nil
     }
     
-    
     //cells settings
     
     private func configureCell() {
         guard let item = item else { return }
         if !item.isCompleted {
-            
-            var space: CGFloat = 16
             
             if item.importance == .high {
                 elements.markerButton.setImage(UIImage(named: "RedMarker"), for: .normal)
@@ -62,8 +66,6 @@ class CustomTableViewCell: UITableViewCell {
             elements.cellsLabel.addArrangedSubview(elements.title)
             
             if let deadline = item.deadline {
-                space = 12
-                
                 let formatter = DateFormatter()
                 formatter.locale = Locale(identifier: "ru_RU")
                 formatter.dateFormat = "d MMMM"
@@ -82,16 +84,15 @@ class CustomTableViewCell: UITableViewCell {
             contentView.addSubview(elements.chevronIcon)
             
             NSLayoutConstraint.activate([
-                elements.markerButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16 / Aligners.modelHight * Aligners.height),
+                elements.markerButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 elements.markerButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width),
                 
-                elements.cellsInf.topAnchor.constraint(equalTo: contentView.topAnchor, constant: space / Aligners.modelHight * Aligners.height),
+                elements.cellsInf.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 elements.cellsInf.leadingAnchor.constraint(equalTo: elements.markerButton.trailingAnchor, constant: 12 / Aligners.modelWidth * Aligners.width),
                 
                 elements.chevronIcon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 elements.chevronIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width)
             ])
-            
             
         } else {return}
     }
@@ -101,7 +102,7 @@ class CustomTableViewCell: UITableViewCell {
     
 }
 
-//MARK: completed items
+//MARK: - completed items
 class CustomCompletedTableViewCell: UITableViewCell {
     //item
     let elements = ViewElementsForMainScreen()
@@ -133,15 +134,14 @@ class CustomCompletedTableViewCell: UITableViewCell {
     func configureCell() {
         guard let item = item else { return }
         if item.isCompleted {
-            let space: CGFloat = 16
             
             elements.markerButton.setImage(UIImage(named: "CompletedMarker"), for: .normal)
             elements.title.text = item.text
             
             let attributedString = NSAttributedString(string: item.text, attributes: [
                 NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue,
-                NSAttributedString.Key.foregroundColor: UIColor(named: "TertiaryLabel")!,
-                NSAttributedString.Key.font: UIFont(name: "SFProText-Regular", size: 17)!
+                NSAttributedString.Key.foregroundColor: UIColor.tertiaryLabel!,
+                NSAttributedString.Key.font: UIFont.body!
             ])
             elements.title.attributedText = attributedString
             
@@ -151,10 +151,10 @@ class CustomCompletedTableViewCell: UITableViewCell {
             contentView.addSubview(elements.chevronIcon)
             
             NSLayoutConstraint.activate([
-                elements.markerButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16 / Aligners.modelHight * Aligners.height),
+                elements.markerButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 elements.markerButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width),
                 
-                elements.title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: space / Aligners.modelHight * Aligners.height),
+                elements.title.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 elements.title.leadingAnchor.constraint(equalTo: elements.markerButton.trailingAnchor, constant: 12 / Aligners.modelWidth * Aligners.width),
                 
                 elements.chevronIcon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
@@ -168,7 +168,7 @@ class CustomCompletedTableViewCell: UITableViewCell {
     }
 }
 
-//MARK: new item
+//MARK: - new item
 class SpecialTableViewCell: UITableViewCell {
     
     let elements = ViewElementsForMainScreen()
@@ -191,11 +191,4 @@ class SpecialTableViewCell: UITableViewCell {
             ])
     }
     
-}
-
-
-//создаем протокол для изменения состояния isCompleted по нажатию кнопки
-protocol CustomTableViewCellDelegate: AnyObject {
-    func toDoItemIsCompleted(in cell: CustomTableViewCell)
-    func toDoItemIsPending(in cell: CustomCompletedTableViewCell)
 }

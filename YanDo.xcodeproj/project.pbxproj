@@ -7,22 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		334055772A4F3C27003076F5 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334055762A4F3C27003076F5 /* UIColorExtension.swift */; };
+		334055792A4F4CC8003076F5 /* UIFontsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334055782A4F4CC8003076F5 /* UIFontsExtension.swift */; };
 		339600822A48623D00725B0E /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600812A48623D00725B0E /* ToDoItem.swift */; };
-		339600842A48627600725B0E /* ToDoItemExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600832A48627600725B0E /* ToDoItemExtension.swift */; };
 		339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600852A4862B300725B0E /* DateFormatterExtension.swift */; };
 		339600882A4862E800725B0E /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600872A4862E800725B0E /* FileCache.swift */; };
 		3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600892A48648B00725B0E /* TaskScreenViewController.swift */; };
 		3396008C2A4864BB00725B0E /* ViewElementsForTaskScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396008B2A4864BB00725B0E /* ViewElementsForTaskScreen.swift */; };
-		3396008E2A48655800725B0E /* TaskScreenExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396008D2A48655800725B0E /* TaskScreenExtension.swift */; };
 		339600912A48668600725B0E /* SFProDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 339600902A48668600725B0E /* SFProDisplay-Bold.ttf */; };
 		339600932A48668E00725B0E /* SFProDisplay-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 339600922A48668E00725B0E /* SFProDisplay-Semibold.ttf */; };
 		339600952A48669400725B0E /* SFProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 339600942A48669400725B0E /* SFProText-Regular.ttf */; };
 		339600972A48669900725B0E /* SFProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 339600962A48669900725B0E /* SFProText-Semibold.ttf */; };
 		339600992A4B6BAA00725B0E /* ViewElementsForMainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600982A4B6BAA00725B0E /* ViewElementsForMainScreen.swift */; };
 		3396009B2A4B6BF900725B0E /* AlignersForScreens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396009A2A4B6BF900725B0E /* AlignersForScreens.swift */; };
-		3396009E2A4C544A00725B0E /* MainScreenExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396009D2A4C544A00725B0E /* MainScreenExtension.swift */; };
 		339600A02A4C7F5A00725B0E /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396009F2A4C7F5A00725B0E /* CustomTableViewCell.swift */; };
-		339600A22A4D8BF100725B0E /* ToDoItemStateControlExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600A12A4D8BF100725B0E /* ToDoItemStateControlExtension.swift */; };
 		339600A42A4D9A8E00725B0E /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600A32A4D9A8E00725B0E /* DataManager.swift */; };
 		33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F132A46EC2B00D4E63C /* AppDelegate.swift */; };
 		33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */; };
@@ -52,22 +50,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		334055762A4F3C27003076F5 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		334055782A4F4CC8003076F5 /* UIFontsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFontsExtension.swift; sourceTree = "<group>"; };
 		339600812A48623D00725B0E /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
-		339600832A48627600725B0E /* ToDoItemExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemExtension.swift; sourceTree = "<group>"; };
 		339600852A4862B300725B0E /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
 		339600872A4862E800725B0E /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
 		339600892A48648B00725B0E /* TaskScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskScreenViewController.swift; sourceTree = "<group>"; };
 		3396008B2A4864BB00725B0E /* ViewElementsForTaskScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewElementsForTaskScreen.swift; sourceTree = "<group>"; };
-		3396008D2A48655800725B0E /* TaskScreenExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskScreenExtension.swift; sourceTree = "<group>"; };
 		339600902A48668600725B0E /* SFProDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Bold.ttf"; sourceTree = "<group>"; };
 		339600922A48668E00725B0E /* SFProDisplay-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Semibold.ttf"; sourceTree = "<group>"; };
 		339600942A48669400725B0E /* SFProText-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Regular.ttf"; sourceTree = "<group>"; };
 		339600962A48669900725B0E /* SFProText-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Semibold.ttf"; sourceTree = "<group>"; };
 		339600982A4B6BAA00725B0E /* ViewElementsForMainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewElementsForMainScreen.swift; sourceTree = "<group>"; };
 		3396009A2A4B6BF900725B0E /* AlignersForScreens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlignersForScreens.swift; sourceTree = "<group>"; };
-		3396009D2A4C544A00725B0E /* MainScreenExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenExtension.swift; sourceTree = "<group>"; };
 		3396009F2A4C7F5A00725B0E /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
-		339600A12A4D8BF100725B0E /* ToDoItemStateControlExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItemStateControlExtension.swift; sourceTree = "<group>"; };
 		339600A32A4D9A8E00725B0E /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		33E33F102A46EC2B00D4E63C /* YanDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YanDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33E33F132A46EC2B00D4E63C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -120,12 +116,10 @@
 		3396007D2A4861C000725B0E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				339600832A48627600725B0E /* ToDoItemExtension.swift */,
 				339600852A4862B300725B0E /* DateFormatterExtension.swift */,
 				3396009A2A4B6BF900725B0E /* AlignersForScreens.swift */,
-				3396008D2A48655800725B0E /* TaskScreenExtension.swift */,
-				3396009D2A4C544A00725B0E /* MainScreenExtension.swift */,
-				339600A12A4D8BF100725B0E /* ToDoItemStateControlExtension.swift */,
+				334055762A4F3C27003076F5 /* UIColorExtension.swift */,
+				334055782A4F4CC8003076F5 /* UIFontsExtension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -365,22 +359,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3396009E2A4C544A00725B0E /* MainScreenExtension.swift in Sources */,
 				339600A42A4D9A8E00725B0E /* DataManager.swift in Sources */,
 				33E33F182A46EC2B00D4E63C /* MainScreenViewController.swift in Sources */,
 				33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */,
 				3396009B2A4B6BF900725B0E /* AlignersForScreens.swift in Sources */,
+				334055792A4F4CC8003076F5 /* UIFontsExtension.swift in Sources */,
 				339600882A4862E800725B0E /* FileCache.swift in Sources */,
 				339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */,
-				339600A22A4D8BF100725B0E /* ToDoItemStateControlExtension.swift in Sources */,
 				3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */,
 				339600822A48623D00725B0E /* ToDoItem.swift in Sources */,
 				339600992A4B6BAA00725B0E /* ViewElementsForMainScreen.swift in Sources */,
-				3396008E2A48655800725B0E /* TaskScreenExtension.swift in Sources */,
 				339600A02A4C7F5A00725B0E /* CustomTableViewCell.swift in Sources */,
 				3396008C2A4864BB00725B0E /* ViewElementsForTaskScreen.swift in Sources */,
-				339600842A48627600725B0E /* ToDoItemExtension.swift in Sources */,
 				33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */,
+				334055772A4F3C27003076F5 /* UIColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

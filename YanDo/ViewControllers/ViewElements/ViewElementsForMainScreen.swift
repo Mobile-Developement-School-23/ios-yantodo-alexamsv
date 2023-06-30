@@ -23,8 +23,8 @@ class ViewElementsForMainScreen {
     
     let completedLabel: UILabel = {
         let text = UILabel()
-        text.font = UIFont(name: "SFProText-Regular", size: 15)
-        text.textColor = UIColor(named: "TertiaryLabel")
+        text.font = UIFont.subhead
+        text.textColor = UIColor.tertiaryLabel
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
     }()
@@ -32,8 +32,8 @@ class ViewElementsForMainScreen {
     let showButton: UIButton = {
         let button = UIButton()
         button.setTitle("Показать", for: .normal)
-        button.titleLabel?.font = UIFont(name: "SFProText-Semibold", size: 15)
-        button.setTitleColor(UIColor(named: "BlueColor"), for: .normal)
+        button.titleLabel?.font = UIFont.subhead
+        button.setTitleColor(UIColor.blueColor, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -58,7 +58,7 @@ class ViewElementsForMainScreen {
      let cellsLabel: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 2
+         stack.spacing = 4 / Aligners.modelHight * Aligners.height
         stack.alignment = .leading
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
@@ -67,7 +67,8 @@ class ViewElementsForMainScreen {
     let cellsInf: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
-        stack.spacing = 2
+        stack.spacing = 4 / Aligners.modelWidth * Aligners.width
+        stack.alignment = .leading
         stack.alignment = .top
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
@@ -77,14 +78,14 @@ class ViewElementsForMainScreen {
         let icon = UIImageView()
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.widthAnchor.constraint(equalToConstant: 10 / Aligners.modelWidth * Aligners.width).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 16 / Aligners.modelHight * Aligners.height).isActive = true
+        icon.heightAnchor.constraint(equalToConstant: 18 / Aligners.modelHight * Aligners.height).isActive = true
         return icon
     }()
     
      let title: UILabel = {
         let text = UILabel()
-        text.font = UIFont(name: "SFProText-Regular", size: 17)
-        text.textColor = UIColor(named: "PrimaryLabel")
+         text.font = UIFont.body
+         text.textColor = UIColor.primaryLabel
         text.numberOfLines = 3
         text.lineBreakMode = .byTruncatingTail
         text.widthAnchor.constraint(equalToConstant: 250 / Aligners.modelWidth * Aligners.width).isActive = true
@@ -96,11 +97,11 @@ class ViewElementsForMainScreen {
     let deadlineView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
-        stack.alignment = .leading
+        stack.alignment = .center
         stack.translatesAutoresizingMaskIntoConstraints = false
         
         let icon = UIImageView(image: UIImage(systemName: "calendar"))
-        icon.tintColor = UIColor(named: "TertiaryLabel")
+        icon.tintColor = UIColor.tertiaryLabel
         icon.translatesAutoresizingMaskIntoConstraints = false
         
         stack.addArrangedSubview(icon)
@@ -109,8 +110,8 @@ class ViewElementsForMainScreen {
     
     let deadlineTitle: UILabel = {
         let text = UILabel()
-        text.font = UIFont(name: "SFProText-Regular", size: 15)
-        text.textColor = UIColor(named: "TertiaryLabel")
+        text.font = UIFont.subhead
+        text.textColor = UIColor.tertiaryLabel
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
     }()
@@ -133,7 +134,7 @@ class ViewElementsForMainScreen {
         imageView.heightAnchor.constraint(equalToConstant: 44).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 44).isActive = true
         
-        imageView.layer.shadowColor = UIColor(named: "PrimaryLabel")?.cgColor
+        imageView.layer.shadowColor = UIColor.primaryLabel?.cgColor
         imageView.layer.shadowOffset = CGSize(width: 0, height: 2)
         imageView.layer.shadowOpacity = 0.5
         imageView.layer.shadowRadius = 4
@@ -144,8 +145,8 @@ class ViewElementsForMainScreen {
     let newItemCell: UILabel = {
         let text = UILabel()
         text.text = "Новое"
-        text.font = UIFont(name: "SFProText-Regular", size: 17)
-        text.textColor = UIColor(named: "TertiaryLabel")
+        text.font = UIFont.body
+        text.textColor = UIColor.tertiaryLabel
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
     }()

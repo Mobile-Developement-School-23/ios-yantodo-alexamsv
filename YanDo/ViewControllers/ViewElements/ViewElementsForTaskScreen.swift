@@ -13,7 +13,7 @@ class ViewElementsForTaskScreen {
     
     let textFieldContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = UIColor(named: "SecondaryBack")
+        view.backgroundColor = UIColor.secondaryBack
         view.layer.cornerRadius = 16
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -22,8 +22,8 @@ class ViewElementsForTaskScreen {
     let textView: UITextView = {
         let text = UITextView()
         text.backgroundColor = .clear
-        text.textColor = UIColor(named: "PrimaryLabel")
-        text.font = UIFont(name: "SFProText-Regular", size: 17)
+        text.textColor = UIColor.primaryLabel
+        text.font = UIFont.body
         text.textContainerInset = .zero
         text.textContainer.lineFragmentPadding = 0
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -33,8 +33,8 @@ class ViewElementsForTaskScreen {
     let placeholder: UILabel = {
         let text = UILabel()
         text.text = "Что надо сделать?"
-        text.font = UIFont(name: "SFProText-Regular", size: 17)
-        text.textColor = UIColor(named: "TertiaryLabel")
+        text.font = UIFont.body
+        text.textColor = UIColor.tertiaryLabel
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
     }()
@@ -48,7 +48,7 @@ class ViewElementsForTaskScreen {
         stack.axis = .horizontal
         stack.alignment = .center
         stack.layer.cornerRadius = 16
-        stack.backgroundColor = UIColor(named: "SecondaryBack")
+        stack.backgroundColor = UIColor.secondaryBack
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -97,8 +97,8 @@ class ViewElementsForTaskScreen {
         for title in titles {
             let label = UILabel()
             label.text = title
-            label.textColor = UIColor(named: "PrimaryLabel")
-            label.font = UIFont(name: "SFProText-Regular", size: 17)
+            label.textColor = UIColor.primaryLabel
+            label.font = UIFont.body
             label.numberOfLines = 1
             label.translatesAutoresizingMaskIntoConstraints = false
             label.heightAnchor.constraint(equalToConstant: 22 / Aligners.modelHight * Aligners.height).isActive = true
@@ -126,8 +126,8 @@ class ViewElementsForTaskScreen {
     
     let calendarButton: UIButton = {
         let button = UIButton()
-        button.setTitleColor(UIColor(named: "BlueColor"), for: .normal)
-        button.titleLabel?.font = UIFont(name: "SFProText-Semibold", size: 13)
+        button.setTitleColor(UIColor.blueColor, for: .normal)
+        button.titleLabel?.font = UIFont.footnote
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 18 / Aligners.modelHight * Aligners.height).isActive = true
         
@@ -176,7 +176,7 @@ class ViewElementsForTaskScreen {
         
         for _ in 0..<cellsCount {
             let divider = UIView()
-            divider.backgroundColor = UIColor(named: "SeparatorSupport")
+            divider.backgroundColor = UIColor.separatorSupport
             divider.translatesAutoresizingMaskIntoConstraints = false
             divider.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.scale).isActive = true
             
@@ -189,10 +189,10 @@ class ViewElementsForTaskScreen {
     
     let deleteButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = UIColor(named: "SecondaryBack")
+        button.backgroundColor = UIColor.secondaryBack
         button.setTitle("Удалить", for: .normal)
-        button.titleLabel?.font = UIFont(name: "SFProText-Regular", size: 17)
-        button.setTitleColor(UIColor(named: "TertiaryLabel"), for: .normal)
+        button.titleLabel?.font = UIFont.body
+        button.setTitleColor(UIColor.tertiaryLabel, for: .normal)
         button.layer.cornerRadius = 16
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(greaterThanOrEqualToConstant: 56 / Aligners.modelHight * Aligners.height).isActive = true

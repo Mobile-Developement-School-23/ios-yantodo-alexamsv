@@ -46,7 +46,7 @@ class TaskScreenViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(named: "PrimaryBack")
+        view.backgroundColor = UIColor.primaryBack
                 
         viewSettings()
         navBarSettings()
@@ -219,23 +219,23 @@ class TaskScreenViewController: UIViewController {
     func navBarSettings() {
         // Заголовок
         navigationItem.title = "Дело"
-        let font = UIFont(name: "SFProText-Semibold", size: 17)!
+        let font = UIFont.headline
         let titleAttributes: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor(named: "PrimaryLabel")!,
-            .font: font
+            .foregroundColor: UIColor.primaryBack!,
+            .font: font!
         ]
         
         navigationController?.navigationBar.titleTextAttributes = titleAttributes
         
         // Отменить
-        leftNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "BlueColor")!, NSAttributedString.Key.font: UIFont(name: "SFProText-Regular", size: 17)!], for: .normal)
+        leftNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.blueColor!, NSAttributedString.Key.font: UIFont.body!], for: .normal)
         leftNavButton.target = self
         leftNavButton.action = #selector(cancelButtonTapped)
         
         navigationItem.leftBarButtonItem = leftNavButton
         
         // Сохранить
-        rightNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor(named: "TertiaryLabel")!, NSAttributedString.Key.font: UIFont(name: "SFProText-Regular", size: 17)!], for: .normal)
+        rightNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.tertiaryLabel!, NSAttributedString.Key.font: UIFont.body!], for: .normal)
         rightNavButton.target = self
         
         rightNavButton.action = #selector(saveButtonTapped)
@@ -406,4 +406,81 @@ class TaskScreenViewController: UIViewController {
     
 }
 
+extension TaskScreenViewController: UITextViewDelegate {
+    
+    func updateScrollViewContentSize(by height: Double) {
+        let contentHeight = contentView.subviews.reduce(0) { maxHeight, view in
+            let viewMaxY = view.frame.maxY
+            return max(maxHeight, viewMaxY)
+        }
+        let finalContentSize = CGSize(width: contentView.frame.width, height: contentHeight + height)
+        contentView.contentSize = finalContentSize
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        updateScrollViewContentSize(by: settingsZoneHeight)
+        // обновление вида
+        if textView.text.isEmpty {
+            componentsOff()
+        }
+        else {
+            componentsOn()
+            scrollToVisible()
+        }
+    }
+    
+    private func scrollToVisible() {
+        let contentHeight = contentView.contentSize.height
+        let visibleHeight = contentView.bounds.height
+        
+        // Прокрутка до видимой области
+        if contentHeight > visibleHeight {
+            let rect = CGRect(x: 0, y: contentHeight - visibleHeight, width: 1, height: visibleHeight)
+            contentView.scrollRectToVisible(rect, animated: true)
+        }
+    }
+    
+    
+    func componentsOff() {
+        elements.placeholder.isHidden = false
+        
+        rightNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.tertiaryLabel!, NSAttributedString.Key.font: UIFont.body!], for: .normal)
+        
+        elements.deleteButton.setTitleColor(UIColor.tertiaryLabel, for: .normal)
+        elements.deleteButton.removeTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+        
+        rightNavButton.isEnabled = false
+    }
+    
+    func componentsOn() {
+        elements.placeholder.isHidden = true
+        
+        rightNavButton.setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.blueColor!, NSAttributedString.Key.font: UIFont.body!], for: .normal)
+        
+        elements.deleteButton.setTitleColor(UIColor.redColor, for: .normal)
+        elements.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
+        
+        rightNavButton.isEnabled = true
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        
+        coordinator.animate(alongsideTransition: { _ in
+            self.updateContainerHeightForCurrentOrientation()
+        }, completion: nil)
+    }
+
+    private func updateContainerHeightForCurrentOrientation() {
+        let container = elements.textFieldContainer
+        
+        if UIDevice.current.orientation.isLandscape {
+            // Высота контейнера в горизонтальной ориентации
+            container.constraints.filter { $0.firstAttribute == .height }.first?.constant = 300 / Aligners.modelHight * Aligners.height
+        } else {
+            // Высота контейнера в вертикальной ориентации
+            container.constraints.filter { $0.firstAttribute == .height }.first?.constant = 120 / Aligners.modelHight * Aligners.height
+        }
+    }
+}
 
