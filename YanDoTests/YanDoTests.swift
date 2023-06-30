@@ -4,12 +4,13 @@
 //
 //  Created by Александра Маслова on 12.06.2023.
 //
+// swiftlint:disable line_length
+// swiftlint:disable force_try
 
 import XCTest
 @testable import YanDo
 
 final class ToDoListAppTests: XCTestCase {
-        
     // MARK: tests for ToDoItem
     // Проверка init объекта с заданными значениями и сравнивнение свойсв созданного объекта с ожидаемыми значениями.
         func testToDoItemInit() {
@@ -20,9 +21,7 @@ final class ToDoListAppTests: XCTestCase {
             let isCompleted = false
             let createdDate = Date()
             let dateOfChange: Date? = nil
-            
             let todoItem = ToDoItem(id: id, text: text, importance: importance, deadline: deadline, isCompleted: isCompleted, createdDate: createdDate, dateОfСhange: dateOfChange)
-            
             XCTAssertEqual(todoItem.id, id)
             XCTAssertEqual(todoItem.text, text)
             XCTAssertEqual(todoItem.importance, importance)
@@ -36,13 +35,11 @@ final class ToDoListAppTests: XCTestCase {
         func testParseJSON_InvalidJSON_ReturnsNil() {
             let json: [String: Any] = [
                 "id": "testID",
-                "text": "Test todo item",
+                "text": "Test todo item"
             ]
-            
             let parsedItem = ToDoItem.parseJSON(json: json)
             XCTAssertNil(parsedItem)
         }
-        
     // Проверка заданного объекта  в формате JSON и его соответствие ожидаемому JSON.
     func testJSON_ReturnsCorrectJSONRepresentation() {
         let id = "testID"
@@ -52,9 +49,7 @@ final class ToDoListAppTests: XCTestCase {
         let isCompleted = false
         let createdDate = Date()
         let dateOfChange = Date().addingTimeInterval(60)
-        
         let todoItem = ToDoItem(id: id, text: text, importance: importance, deadline: deadline, isCompleted: isCompleted, createdDate: createdDate, dateОfСhange: dateOfChange)
-        
         let expectedJSON: [String: Any] = [
             "id": id,
             "text": text,
@@ -64,12 +59,10 @@ final class ToDoListAppTests: XCTestCase {
             "created_date": Int(createdDate.timeIntervalSince1970),
             "date_of_change": Int(dateOfChange.timeIntervalSince1970)
         ]
-        
         let json = todoItem.json as? [String: Any]
         XCTAssertNotNil(json)
         XCTAssertEqual(json as NSDictionary?, expectedJSON as NSDictionary?)
     }
-     
     // Проверка  метода `parseJSON` (проверка извлечения JSON и соответсвиея ожидаемому объекту)
     func testJSONParsing() {
         let json: [String: Any] = [
@@ -80,10 +73,8 @@ final class ToDoListAppTests: XCTestCase {
             "created_date": 1678872000,
             "date_of_change": 1678893600
         ]
-        
         let todoItem = ToDoItem.parseJSON(json: json)
         XCTAssertNotNil(todoItem)
-        
         XCTAssertEqual(todoItem?.id, "id")
         XCTAssertEqual(todoItem?.text, "Test todo item")
         XCTAssertEqual(todoItem?.importance, .normal)
@@ -92,7 +83,6 @@ final class ToDoListAppTests: XCTestCase {
         XCTAssertEqual(todoItem?.createdDate, Date(timeIntervalSince1970: 1678872000))
         XCTAssertEqual(todoItem?.dateОfСhange, Date(timeIntervalSince1970: 1678893600))
     }
-    
     // Проверка сериализации объекта в формат JSON
     func testJSONSerialization() {
         let todoItem = ToDoItem(
@@ -104,15 +94,11 @@ final class ToDoListAppTests: XCTestCase {
             createdDate: Date(timeIntervalSince1970: 1678872000),
             dateОfСhange: Date(timeIntervalSince1970: 1678893600)
         )
-        
         let jsonData = try? JSONSerialization.data(withJSONObject: todoItem.json, options: [])
-        
         XCTAssertNotNil(jsonData)
         let jsonObject = try? JSONSerialization.jsonObject(with: jsonData!, options: [])
-        
         XCTAssertNotNil(jsonObject)
         XCTAssertTrue(jsonObject is [String: Any])
-        
         if let jsonDictionary = jsonObject as? [String: Any] {
             XCTAssertEqual(jsonDictionary["id"] as? String, "123456")
             XCTAssertEqual(jsonDictionary["text"] as? String, "Test todo item")
@@ -125,22 +111,15 @@ final class ToDoListAppTests: XCTestCase {
             XCTFail("Invalid JSON object")
         }
     }
-    
  // MARK: tests for FileCache
-    
    private var fileCache: FileCache!
    private let newItem = ToDoItem(text: "Test Item", importance: .normal, deadline: nil, isCompleted: false, createdDate: Date(), dateОfСhange: Date().addingTimeInterval(60))
-    
     override func setUp() {super.setUp(); fileCache = FileCache()}
-    
-    
     override func tearDown() {fileCache = nil; super.tearDown()}
-    
-    //Тест проверяет, что объект был успешно добавлен в коллекцию
+    // Тест проверяет, что объект был успешно добавлен в коллекцию
     func testAddNewToDoItem() {
         let addedItem = fileCache.addNewToDoItem(newItem)
         XCTAssertNil(addedItem) // Проверяем, что предыдущий элемент не возвращается
-        
         XCTAssertEqual(fileCache.itemsCollection[newItem.id]?.id, newItem.id)
         XCTAssertEqual(fileCache.itemsCollection[newItem.id]?.text, newItem.text)
     }
@@ -148,39 +127,29 @@ final class ToDoListAppTests: XCTestCase {
     // Тест проверяет, что объект был успешно удален из коллекции
     func testDeleteToDoItem() {
         fileCache.addNewToDoItem(newItem)
-        
         let deletedItem = fileCache.deleteToDoItem(itemsID: newItem.id)
-        
         XCTAssertNotNil(deletedItem)
         XCTAssertEqual(deletedItem?.id, newItem.id)
         XCTAssertEqual(deletedItem?.text, newItem.text)
-        
         XCTAssertNil(fileCache.itemsCollection[newItem.id])
     }
-    
     // Тест проверяет, что коллекция объектов была успешно добавлен в в файл в формате JSON
     func testSaveJsonToDoItemInFile() {
         let item1 = ToDoItem(text: "Item 1", importance: .normal, deadline: nil, isCompleted: false, createdDate: Date(), dateОfСhange: Date().addingTimeInterval(30))
         let item2 = ToDoItem(text: "Item 2", importance: .high, deadline: Date().addingTimeInterval(180), isCompleted: false, createdDate: Date(), dateОfСhange: nil)
         fileCache.addNewToDoItem(item1)
         fileCache.addNewToDoItem(item2)
-        
         let fileName = "TestFile"
-        
         XCTAssertNoThrow(try fileCache.saveJsonToDoItemInFile(file: fileName))
-        
         let fileManager = FileManager.default
         let directory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
         let filePath = directory.appendingPathComponent("\(fileName).todo")
         XCTAssertTrue(fileManager.fileExists(atPath: filePath.path))
-        
         try? fileManager.removeItem(at: filePath)
     }
-    
     // Тест проверяет, что коллекция объектов была успешно загружена из файла в формате JSON
     func testToDoItemsFromJsonFile() {
         let fileName = "TestFile"
-        
         let jsonItems: [[String: Any]] = [
             [
                 "id": "1",
@@ -198,25 +167,20 @@ final class ToDoListAppTests: XCTestCase {
                 "created_date": 1678872000
             ]
         ]
-        
         let fileManager = FileManager.default
         let directory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
         let filePath = directory.appendingPathComponent("\(fileName).todo")
-        
         let jsonData = try! JSONSerialization.data(withJSONObject: jsonItems, options: [])
         try! jsonData.write(to: filePath)
-        
         XCTAssertNoThrow(try fileCache.toDoItemsFromJsonFile(file: fileName))
-        
         XCTAssertEqual(fileCache.itemsCollection.count, jsonItems.count)
-        
         try? fileManager.removeItem(at: filePath)
     }
-    
     // MARK: system functions
     // override func setUpWithError() throws {}
     // override func tearDownWithError() throws {}
     // func testExample() throws {}
     // func testPerformanceExample() throws {self.measure {}}
-    
 }
+// swiftlint:enable line_length
+// swiftlint:enable force_try

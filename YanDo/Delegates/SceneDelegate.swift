@@ -4,6 +4,7 @@
 //
 //  Created by Александра Маслова on 24.06.2023.
 //
+// swiftlint:disable line_length
 
 import UIKit
 
@@ -11,19 +12,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
-        
         let mainScreenViewController = MainScreenViewController()
         let navigationController = UINavigationController(rootViewController: mainScreenViewController)
         navigationController.navigationBar.prefersLargeTitles = true
-        
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
     }
-
 
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
@@ -53,6 +50,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
-
 }
 
+// swiftlint:enable line_length

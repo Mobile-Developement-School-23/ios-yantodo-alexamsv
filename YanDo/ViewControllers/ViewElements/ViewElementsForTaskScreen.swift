@@ -4,13 +4,12 @@
 //
 //  Created by Александра Маслова on 21.06.2023.
 //
+// swiftlint:disable line_length
 
 import UIKit
 
 class ViewElementsForTaskScreen {
-    
-    //MARK: text panel
-    
+    // MARK: text panel
     let textFieldContainer: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor.secondaryBack
@@ -18,7 +17,6 @@ class ViewElementsForTaskScreen {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-    
     let textView: UITextView = {
         let text = UITextView()
         text.backgroundColor = .clear
@@ -29,7 +27,6 @@ class ViewElementsForTaskScreen {
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
     }()
-    
     let placeholder: UILabel = {
         let text = UILabel()
         text.text = "Что надо сделать?"
@@ -38,11 +35,8 @@ class ViewElementsForTaskScreen {
         text.translatesAutoresizingMaskIntoConstraints = false
         return text
     }()
-    
-    //MARK: control panel
-    
+    // MARK: control panel
     static let cellsCount = 2
-    
     let horizontalStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -52,21 +46,18 @@ class ViewElementsForTaskScreen {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
-    
     let leadingSpacer: UIView = {
         let spacer = UIView()
         spacer.translatesAutoresizingMaskIntoConstraints = false
         spacer.widthAnchor.constraint(equalToConstant: 16 / Aligners.modelWidth * Aligners.width).isActive = true
         return spacer
     }()
-    
     let trailingSpacer: UIView = {
         let spacer = UIView()
         spacer.translatesAutoresizingMaskIntoConstraints = false
         spacer.widthAnchor.constraint(equalToConstant: 12 / Aligners.modelWidth * Aligners.width).isActive = true
         return spacer
     }()
-    
     let verticalStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
@@ -74,8 +65,6 @@ class ViewElementsForTaskScreen {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
-    
-    
     let horizontalStacksForCells: [UIStackView] = {
         var arr = [UIStackView]()
         for _ in 0..<cellsCount {
@@ -84,16 +73,13 @@ class ViewElementsForTaskScreen {
             stack.alignment = .center
             stack.translatesAutoresizingMaskIntoConstraints = false
             stack.heightAnchor.constraint(greaterThanOrEqualToConstant: 56 / Aligners.modelHight * Aligners.height).isActive = true
-            
             arr.append(stack)
         }
         return arr
     }()
-    
     let labels: [UILabel] = {
         var arr = [UILabel]()
         let titles = ["Важность", "Сделать до"]
-        
         for title in titles {
             let label = UILabel()
             label.text = title
@@ -102,53 +88,39 @@ class ViewElementsForTaskScreen {
             label.numberOfLines = 1
             label.translatesAutoresizingMaskIntoConstraints = false
             label.heightAnchor.constraint(equalToConstant: 22 / Aligners.modelHight * Aligners.height).isActive = true
-            
             arr.append(label)
         }
-        
         return arr
     }()
-    
-    
     let segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl()
         segmentedControl.insertSegment(with: UIImage(named: "ImportanceLow")?.withRenderingMode(.alwaysOriginal), at: 0, animated: true)
         segmentedControl.insertSegment(withTitle: "нет", at: 1, animated: true)
         segmentedControl.insertSegment(with: UIImage(named: "ImportanceHight")?.withRenderingMode(.alwaysOriginal), at: 2, animated: true)
-        
         segmentedControl.selectedSegmentIndex = 1
-        
         segmentedControl.heightAnchor.constraint(equalToConstant: 36 / Aligners.modelHight * Aligners.height).isActive = true
         segmentedControl.widthAnchor.constraint(equalToConstant: 150 / Aligners.modelWidth * Aligners.width).isActive = true
-        
         return segmentedControl
     }()
-    
     let calendarButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(UIColor.blueColor, for: .normal)
         button.titleLabel?.font = UIFont.footnote
         button.translatesAutoresizingMaskIntoConstraints = false
         button.heightAnchor.constraint(equalToConstant: 18 / Aligners.modelHight * Aligners.height).isActive = true
-        
         // Устанавливаем следующий день в качестве заголовка кнопки
         let currentDate = Date()
         let dateFormatter = DateFormatter()
-        
         dateFormatter.locale = Locale(identifier: "ru_RU")
         dateFormatter.dateFormat = "dd MMMM yyyy"
-        
         var dateComponents = DateComponents()
         dateComponents.day = 1
         let nextDate = Calendar.current.date(byAdding: dateComponents, to: currentDate)
-        
         var nextDateFormatted = dateFormatter.string(from: nextDate ?? currentDate)
         if nextDateFormatted.hasPrefix("0") {nextDateFormatted.removeFirst()} // если число с 1 по 9 включительно
         button.setTitle(nextDateFormatted, for: .normal)
-        
         return button
     }()
-    
     let calendar: UIDatePicker = {
         let picker = UIDatePicker()
         picker.datePickerMode = .date
@@ -156,37 +128,29 @@ class ViewElementsForTaskScreen {
         picker.preferredDatePickerStyle = .inline
         picker.translatesAutoresizingMaskIntoConstraints = false
         picker.heightAnchor.constraint(equalToConstant: 333 / Aligners.modelHight * Aligners.height).isActive = true
-        
         // Устанавливаем следующий день как выбранную дату по умолчанию
         let currentDate = Date()
         var dateComponents = DateComponents()
         dateComponents.day = 1
-        
         let nextDate = Calendar.current.date(byAdding: dateComponents, to: currentDate)
         picker.setDate(nextDate ?? currentDate, animated: false)
-        
         // Выключаем возможность выбора даты в прошлом
         picker.minimumDate = currentDate
-        
         return picker
     }()
 
     let dividers: [UIView] = {
         var arr = [UIView]()
-        
         for _ in 0..<cellsCount {
             let divider = UIView()
             divider.backgroundColor = UIColor.separatorSupport
             divider.translatesAutoresizingMaskIntoConstraints = false
             divider.heightAnchor.constraint(equalToConstant: 1.0 / UIScreen.main.scale).isActive = true
-            
             arr.append(divider)
         }
         return arr
     }()
-    
-    //MARK: delete panel
-    
+    // MARK: delete panel
     let deleteButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.secondaryBack
@@ -198,5 +162,5 @@ class ViewElementsForTaskScreen {
         button.heightAnchor.constraint(greaterThanOrEqualToConstant: 56 / Aligners.modelHight * Aligners.height).isActive = true
         return button
     }()
-    
 }
+// swiftlint:enable line_length

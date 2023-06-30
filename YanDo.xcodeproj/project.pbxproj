@@ -30,6 +30,9 @@
 		33E33F2B2A46EC2D00D4E63C /* YanDoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F2A2A46EC2D00D4E63C /* YanDoTests.swift */; };
 		33E33F352A46EC2D00D4E63C /* YanDoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F342A46EC2D00D4E63C /* YanDoUITests.swift */; };
 		33E33F372A46EC2D00D4E63C /* YanDoUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F362A46EC2D00D4E63C /* YanDoUITestsLaunchTests.swift */; };
+		39B1D2E439B1C2E4DA6E060A /* Pods_YanDo_YanDoUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81A1D5A03BA11476944AD78F /* Pods_YanDo_YanDoUITests.framework */; };
+		5D93E92A6E44C7E67EA944ED /* Pods_YanDoTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58BD9EF7DF96B6671A544495 /* Pods_YanDoTests.framework */; };
+		C7CB81F8526862656B5C2F46 /* Pods_YanDo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E91ACD02F243DABC65F0202 /* Pods_YanDo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +53,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		105F97A6AB51FF1352992CDF /* Pods-YanDo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YanDo.debug.xcconfig"; path = "Target Support Files/Pods-YanDo/Pods-YanDo.debug.xcconfig"; sourceTree = "<group>"; };
 		334055762A4F3C27003076F5 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		334055782A4F4CC8003076F5 /* UIFontsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFontsExtension.swift; sourceTree = "<group>"; };
 		339600812A48623D00725B0E /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
@@ -77,6 +81,14 @@
 		33E33F302A46EC2D00D4E63C /* YanDoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = YanDoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		33E33F342A46EC2D00D4E63C /* YanDoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YanDoUITests.swift; sourceTree = "<group>"; };
 		33E33F362A46EC2D00D4E63C /* YanDoUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YanDoUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		58BD9EF7DF96B6671A544495 /* Pods_YanDoTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YanDoTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5E91ACD02F243DABC65F0202 /* Pods_YanDo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YanDo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		81A1D5A03BA11476944AD78F /* Pods_YanDo_YanDoUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YanDo_YanDoUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8509F8B99EDAA557057253DB /* Pods-YanDo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YanDo.release.xcconfig"; path = "Target Support Files/Pods-YanDo/Pods-YanDo.release.xcconfig"; sourceTree = "<group>"; };
+		858FB13B8B6948AFE803A232 /* Pods-YanDoTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YanDoTests.debug.xcconfig"; path = "Target Support Files/Pods-YanDoTests/Pods-YanDoTests.debug.xcconfig"; sourceTree = "<group>"; };
+		9DD3E9FE4A70DE596F3FB5F6 /* Pods-YanDo-YanDoUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YanDo-YanDoUITests.release.xcconfig"; path = "Target Support Files/Pods-YanDo-YanDoUITests/Pods-YanDo-YanDoUITests.release.xcconfig"; sourceTree = "<group>"; };
+		BC0A4B6743A8AE72FBC912E6 /* Pods-YanDoTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YanDoTests.release.xcconfig"; path = "Target Support Files/Pods-YanDoTests/Pods-YanDoTests.release.xcconfig"; sourceTree = "<group>"; };
+		F87C44F6F6795AEB5F870526 /* Pods-YanDo-YanDoUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YanDo-YanDoUITests.debug.xcconfig"; path = "Target Support Files/Pods-YanDo-YanDoUITests/Pods-YanDo-YanDoUITests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,6 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7CB81F8526862656B5C2F46 /* Pods_YanDo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D93E92A6E44C7E67EA944ED /* Pods_YanDoTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -98,6 +112,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39B1D2E439B1C2E4DA6E060A /* Pods_YanDo_YanDoUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -181,6 +196,8 @@
 				33E33F292A46EC2D00D4E63C /* YanDoTests */,
 				33E33F332A46EC2D00D4E63C /* YanDoUITests */,
 				33E33F112A46EC2B00D4E63C /* Products */,
+				BEE0860DA3707104027439B0 /* Pods */,
+				B06214079D2FCBA061323069 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -225,6 +242,29 @@
 			path = YanDoUITests;
 			sourceTree = "<group>";
 		};
+		B06214079D2FCBA061323069 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5E91ACD02F243DABC65F0202 /* Pods_YanDo.framework */,
+				81A1D5A03BA11476944AD78F /* Pods_YanDo_YanDoUITests.framework */,
+				58BD9EF7DF96B6671A544495 /* Pods_YanDoTests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BEE0860DA3707104027439B0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				105F97A6AB51FF1352992CDF /* Pods-YanDo.debug.xcconfig */,
+				8509F8B99EDAA557057253DB /* Pods-YanDo.release.xcconfig */,
+				F87C44F6F6795AEB5F870526 /* Pods-YanDo-YanDoUITests.debug.xcconfig */,
+				9DD3E9FE4A70DE596F3FB5F6 /* Pods-YanDo-YanDoUITests.release.xcconfig */,
+				858FB13B8B6948AFE803A232 /* Pods-YanDoTests.debug.xcconfig */,
+				BC0A4B6743A8AE72FBC912E6 /* Pods-YanDoTests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -232,6 +272,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 33E33F3A2A46EC2D00D4E63C /* Build configuration list for PBXNativeTarget "YanDo" */;
 			buildPhases = (
+				013BD3B425FBD74971E2B8FD /* [CP] Check Pods Manifest.lock */,
+				3340557B2A4F77C2003076F5 /* ShellScript */,
 				33E33F0C2A46EC2B00D4E63C /* Sources */,
 				33E33F0D2A46EC2B00D4E63C /* Frameworks */,
 				33E33F0E2A46EC2B00D4E63C /* Resources */,
@@ -249,6 +291,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 33E33F3D2A46EC2D00D4E63C /* Build configuration list for PBXNativeTarget "YanDoTests" */;
 			buildPhases = (
+				306E061685AEAD87D164238B /* [CP] Check Pods Manifest.lock */,
 				33E33F222A46EC2D00D4E63C /* Sources */,
 				33E33F232A46EC2D00D4E63C /* Frameworks */,
 				33E33F242A46EC2D00D4E63C /* Resources */,
@@ -267,6 +310,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 33E33F402A46EC2D00D4E63C /* Build configuration list for PBXNativeTarget "YanDoUITests" */;
 			buildPhases = (
+				D0640560899A7C9EE8E61846 /* [CP] Check Pods Manifest.lock */,
 				33E33F2C2A46EC2D00D4E63C /* Sources */,
 				33E33F2D2A46EC2D00D4E63C /* Frameworks */,
 				33E33F2E2A46EC2D00D4E63C /* Resources */,
@@ -353,6 +397,92 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		013BD3B425FBD74971E2B8FD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-YanDo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		306E061685AEAD87D164238B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-YanDoTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3340557B2A4F77C2003076F5 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+		};
+		D0640560899A7C9EE8E61846 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-YanDo-YanDoUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		33E33F0C2A46EC2B00D4E63C /* Sources */ = {
@@ -536,6 +666,7 @@
 		};
 		33E33F3B2A46EC2D00D4E63C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 105F97A6AB51FF1352992CDF /* Pods-YanDo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -567,6 +698,7 @@
 		};
 		33E33F3C2A46EC2D00D4E63C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8509F8B99EDAA557057253DB /* Pods-YanDo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -598,6 +730,7 @@
 		};
 		33E33F3E2A46EC2D00D4E63C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 858FB13B8B6948AFE803A232 /* Pods-YanDoTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -618,6 +751,7 @@
 		};
 		33E33F3F2A46EC2D00D4E63C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BC0A4B6743A8AE72FBC912E6 /* Pods-YanDoTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -638,6 +772,7 @@
 		};
 		33E33F412A46EC2D00D4E63C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F87C44F6F6795AEB5F870526 /* Pods-YanDo-YanDoUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -656,6 +791,7 @@
 		};
 		33E33F422A46EC2D00D4E63C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9DD3E9FE4A70DE596F3FB5F6 /* Pods-YanDo-YanDoUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
