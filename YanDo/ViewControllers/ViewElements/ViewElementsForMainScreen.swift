@@ -52,8 +52,6 @@ class ViewElementsForMainScreen {
      let markerButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.heightAnchor.constraint(equalToConstant: 24 / Aligners.modelHight * Aligners.height).isActive = true
-        button.widthAnchor.constraint(equalToConstant: 24 / Aligners.modelWidth * Aligners.width).isActive = true
         return button
     }()
     
@@ -104,8 +102,6 @@ class ViewElementsForMainScreen {
         let icon = UIImageView(image: UIImage(systemName: "calendar"))
         icon.tintColor = UIColor(named: "TertiaryLabel")
         icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.widthAnchor.constraint(equalToConstant: 16 / Aligners.modelWidth * Aligners.width).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 16 / Aligners.modelHight * Aligners.height).isActive = true
         
         stack.addArrangedSubview(icon)
         return stack
@@ -144,8 +140,6 @@ class ViewElementsForMainScreen {
         
         return imageView
     }()
-
-
     
     let newItemCell: UILabel = {
         let text = UILabel()

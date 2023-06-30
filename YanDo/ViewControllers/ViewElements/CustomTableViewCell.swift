@@ -84,11 +84,9 @@ class CustomTableViewCell: UITableViewCell {
             NSLayoutConstraint.activate([
                 elements.markerButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16 / Aligners.modelHight * Aligners.height),
                 elements.markerButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width),
-                elements.markerButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16 / Aligners.modelHight * Aligners.height),
                 
                 elements.cellsInf.topAnchor.constraint(equalTo: contentView.topAnchor, constant: space / Aligners.modelHight * Aligners.height),
                 elements.cellsInf.leadingAnchor.constraint(equalTo: elements.markerButton.trailingAnchor, constant: 12 / Aligners.modelWidth * Aligners.width),
-                elements.cellsInf.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -space / Aligners.modelHight * Aligners.height),
                 
                 elements.chevronIcon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 elements.chevronIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width)
@@ -155,11 +153,9 @@ class CustomCompletedTableViewCell: UITableViewCell {
             NSLayoutConstraint.activate([
                 elements.markerButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16 / Aligners.modelHight * Aligners.height),
                 elements.markerButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width),
-                elements.markerButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -16 / Aligners.modelHight * Aligners.height),
                 
                 elements.title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: space / Aligners.modelHight * Aligners.height),
                 elements.title.leadingAnchor.constraint(equalTo: elements.markerButton.trailingAnchor, constant: 12 / Aligners.modelWidth * Aligners.width),
-                elements.title.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -space / Aligners.modelHight * Aligners.height),
                 
                 elements.chevronIcon.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
                 elements.chevronIcon.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width)
