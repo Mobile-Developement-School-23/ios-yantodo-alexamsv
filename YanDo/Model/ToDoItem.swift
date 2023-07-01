@@ -4,8 +4,10 @@
 //
 //  Created by Александра Маслова on 12.06.2023.
 //
-// swiftlint:disable line_length
 
+// MARK: Так как создана библиотека на основе ToDoItem его код не нужен
+// swiftlint:disable line_length
+/*
 import Foundation
 
 struct ToDoItem {
@@ -68,7 +70,7 @@ extension ToDoItem {
         let dateОfСhange = (jsonData[Keys.dateOfChange] as? Int).flatMap({Date(timeIntervalSince1970: TimeInterval($0))})
         return ToDoItem(id: id, text: text, importance: importance, deadline: deadline, isCompleted: isCompleted, createdDate: createdDate, dateОfСhange: dateОfСhange)
     }
-    var json: Any {
+   private var json: Any {
         var jsn: [String: Any] = [:]
         jsn[Keys.id] = id
         jsn[Keys.text] = text
@@ -95,7 +97,7 @@ extension ToDoItem {
         let dateОfСhange = DateFormatter.csvDateFormatter.date(from: components[6])
         return ToDoItem(id: id, text: text, importance: importance, deadline: deadline, isCompleted: isCompleted, createdDate: createdDate, dateОfСhange: dateОfСhange)
     }
-    var csv: String {
+     var csv: String {
         var csvString = "\(id);\(text);"
         if importance != .normal {
             csvString += "\(importance.rawValue);"
@@ -112,4 +114,5 @@ extension ToDoItem {
         return csvString
     }
 }
+ */
 // swiftlint:enable line_length

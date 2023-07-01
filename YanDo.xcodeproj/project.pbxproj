@@ -13,6 +13,7 @@
 		334055852A4F94B5003076F5 /* CocoaLumberjackSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 334055842A4F94B5003076F5 /* CocoaLumberjackSwift */; };
 		334055872A4F94B5003076F5 /* CocoaLumberjackSwiftLogBackend in Frameworks */ = {isa = PBXBuildFile; productRef = 334055862A4F94B5003076F5 /* CocoaLumberjackSwiftLogBackend */; };
 		3340558C2A4F9582003076F5 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3340558B2A4F9582003076F5 /* Logger.swift */; };
+		334055952A4FAB59003076F5 /* YanDoItem in Frameworks */ = {isa = PBXBuildFile; productRef = 334055942A4FAB59003076F5 /* YanDoItem */; };
 		339600822A48623D00725B0E /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600812A48623D00725B0E /* ToDoItem.swift */; };
 		339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600852A4862B300725B0E /* DateFormatterExtension.swift */; };
 		339600882A4862E800725B0E /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600872A4862E800725B0E /* FileCache.swift */; };
@@ -101,6 +102,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				334055952A4FAB59003076F5 /* YanDoItem in Frameworks */,
 				334055832A4F94B5003076F5 /* CocoaLumberjack in Frameworks */,
 				C7CB81F8526862656B5C2F46 /* Pods_YanDo.framework in Frameworks */,
 				334055872A4F94B5003076F5 /* CocoaLumberjackSwiftLogBackend in Frameworks */,
@@ -304,6 +306,7 @@
 				334055822A4F94B5003076F5 /* CocoaLumberjack */,
 				334055842A4F94B5003076F5 /* CocoaLumberjackSwift */,
 				334055862A4F94B5003076F5 /* CocoaLumberjackSwiftLogBackend */,
+				334055942A4FAB59003076F5 /* YanDoItem */,
 			);
 			productName = YanDo;
 			productReference = 33E33F102A46EC2B00D4E63C /* YanDo.app */;
@@ -381,6 +384,7 @@
 			mainGroup = 33E33F072A46EC2B00D4E63C;
 			packageReferences = (
 				334055812A4F94B5003076F5 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */,
+				334055932A4FAB59003076F5 /* XCRemoteSwiftPackageReference "YanDoItemLibrary" */,
 			);
 			productRefGroup = 33E33F112A46EC2B00D4E63C /* Products */;
 			projectDirPath = "";
@@ -884,6 +888,14 @@
 				kind = branch;
 			};
 		};
+		334055932A4FAB59003076F5 /* XCRemoteSwiftPackageReference "YanDoItemLibrary" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/masllova/YanDoItemLibrary.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -901,6 +913,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 334055812A4F94B5003076F5 /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
 			productName = CocoaLumberjackSwiftLogBackend;
+		};
+		334055942A4FAB59003076F5 /* YanDoItem */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 334055932A4FAB59003076F5 /* XCRemoteSwiftPackageReference "YanDoItemLibrary" */;
+			productName = YanDoItem;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

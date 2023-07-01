@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import YanDoItem
 
 class DataManager {
     static let shared = DataManager()

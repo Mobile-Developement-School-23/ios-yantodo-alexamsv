@@ -7,6 +7,7 @@
 // swiftlint:disable line_length
 
 import UIKit
+import YanDoItem
 
 // MARK: - protocol
 // протокол для изменения состояния isCompleted по нажатию кнопки
