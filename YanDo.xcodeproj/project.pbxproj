@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3339113D2A56E8600031E8C8 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3339113C2A56E8600031E8C8 /* Networking.swift */; };
+		333911412A5721AD0031E8C8 /* NetToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333911402A5721AD0031E8C8 /* NetToDoItem.swift */; };
+		333911432A57242D0031E8C8 /* NetCollections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333911422A57242D0031E8C8 /* NetCollections.swift */; };
+		333911452A5727D70031E8C8 /* NetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333911442A5727D70031E8C8 /* NetworkingManager.swift */; };
 		334055772A4F3C27003076F5 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334055762A4F3C27003076F5 /* UIColorExtension.swift */; };
 		334055792A4F4CC8003076F5 /* UIFontsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 334055782A4F4CC8003076F5 /* UIFontsExtension.swift */; };
 		334055832A4F94B5003076F5 /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 334055822A4F94B5003076F5 /* CocoaLumberjack */; };
@@ -60,6 +64,10 @@
 
 /* Begin PBXFileReference section */
 		105F97A6AB51FF1352992CDF /* Pods-YanDo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YanDo.debug.xcconfig"; path = "Target Support Files/Pods-YanDo/Pods-YanDo.debug.xcconfig"; sourceTree = "<group>"; };
+		3339113C2A56E8600031E8C8 /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
+		333911402A5721AD0031E8C8 /* NetToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetToDoItem.swift; sourceTree = "<group>"; };
+		333911422A57242D0031E8C8 /* NetCollections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetCollections.swift; sourceTree = "<group>"; };
+		333911442A5727D70031E8C8 /* NetworkingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingManager.swift; sourceTree = "<group>"; };
 		334055762A4F3C27003076F5 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		334055782A4F4CC8003076F5 /* UIFontsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFontsExtension.swift; sourceTree = "<group>"; };
 		3340558B2A4F9582003076F5 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -131,12 +139,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		334055882A4F94E3003076F5 /* LoggerSettings */ = {
+		3339113B2A56E8420031E8C8 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				339600872A4862E800725B0E /* FileCache.swift */,
+				3339113C2A56E8600031E8C8 /* Networking.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		3339113F2A5721920031E8C8 /* NetworkingModels */ = {
+			isa = PBXGroup;
+			children = (
+				333911402A5721AD0031E8C8 /* NetToDoItem.swift */,
+				333911422A57242D0031E8C8 /* NetCollections.swift */,
+				333911442A5727D70031E8C8 /* NetworkingManager.swift */,
+			);
+			path = NetworkingModels;
+			sourceTree = "<group>";
+		};
+		334055882A4F94E3003076F5 /* Logger */ = {
 			isa = PBXGroup;
 			children = (
 				3340558B2A4F9582003076F5 /* Logger.swift */,
 			);
-			path = LoggerSettings;
+			path = Logger;
 			sourceTree = "<group>";
 		};
 		3396007C2A4861B100725B0E /* Assets */ = {
@@ -173,8 +200,8 @@
 		3396007F2A4861E900725B0E /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3339113F2A5721920031E8C8 /* NetworkingModels */,
 				339600812A48623D00725B0E /* ToDoItem.swift */,
-				339600872A4862E800725B0E /* FileCache.swift */,
 				339600A32A4D9A8E00725B0E /* DataManager.swift */,
 			);
 			path = Model;
@@ -237,9 +264,10 @@
 			children = (
 				339600802A4861F100725B0E /* Delegates */,
 				3396007F2A4861E900725B0E /* Model */,
+				3339113B2A56E8420031E8C8 /* Services */,
 				3396007E2A4861CF00725B0E /* ViewControllers */,
 				3396007D2A4861C000725B0E /* Extensions */,
-				334055882A4F94E3003076F5 /* LoggerSettings */,
+				334055882A4F94E3003076F5 /* Logger */,
 				3396007C2A4861B100725B0E /* Assets */,
 				33E33F1E2A46EC2D00D4E63C /* LaunchScreen.storyboard */,
 				33E33F212A46EC2D00D4E63C /* Info.plist */,
@@ -525,17 +553,21 @@
 			files = (
 				339600A42A4D9A8E00725B0E /* DataManager.swift in Sources */,
 				3340558C2A4F9582003076F5 /* Logger.swift in Sources */,
+				333911412A5721AD0031E8C8 /* NetToDoItem.swift in Sources */,
 				33E33F182A46EC2B00D4E63C /* MainScreenViewController.swift in Sources */,
 				33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */,
 				3396009B2A4B6BF900725B0E /* AlignersForScreens.swift in Sources */,
 				334055792A4F4CC8003076F5 /* UIFontsExtension.swift in Sources */,
 				339600882A4862E800725B0E /* FileCache.swift in Sources */,
 				339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */,
+				3339113D2A56E8600031E8C8 /* Networking.swift in Sources */,
 				3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */,
 				334B59522A549F4C008CE597 /* URLSessionExtension .swift in Sources */,
 				339600822A48623D00725B0E /* ToDoItem.swift in Sources */,
+				333911452A5727D70031E8C8 /* NetworkingManager.swift in Sources */,
 				339600992A4B6BAA00725B0E /* ViewElementsForMainScreen.swift in Sources */,
 				339600A02A4C7F5A00725B0E /* CustomTableViewCell.swift in Sources */,
+				333911432A57242D0031E8C8 /* NetCollections.swift in Sources */,
 				3396008C2A4864BB00725B0E /* ViewElementsForTaskScreen.swift in Sources */,
 				33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */,
 				334055772A4F3C27003076F5 /* UIColorExtension.swift in Sources */,

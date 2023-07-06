@@ -19,22 +19,60 @@ class MainScreenViewController: UIViewController {
     let contentView = UIView()
     var completedItemsCount = DataManager.shared.completedItems.count
     var showCompletedToDoItems = false
+    // collections
+    var pendingItems = DataManager.shared.pendingItems
     var completedItems: [ToDoItem] = DataManager.shared.completedItems {
         didSet {
             completedItemsCount = completedItems.count
             elements.completedLabel.text = "Выполнено — \(completedItemsCount)"
         }
     }
+    // networking
+    let networkingService = DefaultNetworkingService()
+    var itemsFromNet: [ToDoItem] = []
 
-    var pendingItems = DataManager.shared.pendingItems
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.primaryBack
         viewSettings()
+        fileCache.toDoItemsFromJsonFile(file: fileName)
         updateTable()
         infPanelSettings()
         tableSettings()
         newItemButtonSettings()
+ 
+        
+        networkingService.getToDoItems { result in
+            switch result {
+            case .success:
+                print("Запрос выполнен успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
+                print(self.networkingService.netToDoItems)
+               
+            case .failure(let error):
+                print("Произошла ошибка при выполнении запроса: \(error)")
+            }
+        }
+        networkingService.patchToDoItems { result in
+            switch result {
+            case .success:
+                print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
+                print(self.networkingService.netToDoItems)
+                print("Скаченные элементы: \(self.networkingService.netToDoItems)")
+                for item in self.networkingService.netToDoItems {
+                    self.itemsFromNet.append(item)
+                }
+                print(self.itemsFromNet)
+                DispatchQueue.main.async {
+                    self.updateTable()
+                }
+
+            case .failure(let error):
+                print("Произошла ошибка при обновлении: \(error)")
+            }
+        }
+        
+
     }
     // MARK: - objc methods
     @objc func showButtonTapped() {
@@ -54,9 +92,9 @@ class MainScreenViewController: UIViewController {
     }
     // MARK: - views settings
     func updateTable() {
-        fileCache.toDoItemsFromJsonFile(file: fileName)
+        
         completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted }
-        pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted }
+        pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted } + itemsFromNet //здесь обязательно надо сделать фильтрацию по isCompleted
         completedItems.sort { $0.createdDate > $1.createdDate }
         pendingItems.sort { $0.createdDate > $1.createdDate }
         elements.tableView.reloadSections(IndexSet(integer: 0), with: .fade)
