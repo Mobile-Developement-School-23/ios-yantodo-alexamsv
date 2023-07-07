@@ -1,5 +1,5 @@
 //
-//  Networking.swift
+//  NetworkingService.swift
 //  YanDo
 //
 //  Created by Александра Маслова on 06.07.2023.
@@ -11,11 +11,115 @@
 import Foundation
 import UIKit
 
-class DefaultNetworkingService {
-    let networkingManager = NetworkingManager.shared
-    var netToDoItems: [ToDoItem] = []
+protocol NetworkingService: AnyObject {
+    var networkingService: DefaultNetworkingService { get }
+    var itemsFromNet: [ToDoItem] { get set }
+}
 
-    func getCorrectRevision(completion: @escaping (Result<Void, Error>) -> Void) {
+class DefaultNetworkingService {
+   private let networkingManager = NetworkingManager.shared
+   var netToDoItems: [ToDoItem] = []
+    
+    @discardableResult
+    func getCorrectInfFromNet() -> Bool {
+        var isSuccess = false
+        
+        let group = DispatchGroup()
+
+        group.enter()
+        DispatchQueue.global().async {
+            self.getFromApi { result in
+                defer {
+                    group.leave()
+                }
+                switch result {
+                case .success:
+                    print("POST: Запрос выполнен успешно")
+                    isSuccess = true
+                case .failure(let error):
+                    print("POST: Произошла ошибка при выполнении запроса: \(error)")
+                }
+            }
+        }
+        group.wait()
+
+        return isSuccess
+    }
+    
+    func updateToDoItemsFromNet(completion: @escaping (Bool) -> Void) {
+        patch { result in
+            switch result {
+            case .success:
+                print("PATCH: Обновление выполнено успешно")
+                DispatchQueue.main.async {
+                    completion(true)
+                }
+            case .failure(let error):
+                print("PATCH: Произошла ошибка при обновлении: \(error)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+            }
+        }
+    }
+    
+    func addNewToDoItemToNet(item: ToDoItem, completion: @escaping (Bool) -> Void) {
+        post(item: item) { result in
+            switch result {
+            case .success:
+                print("POST: Обновление выполнено успешно")
+                DispatchQueue.main.async {
+                    completion(true)
+                }
+            case .failure(let error):
+                print("POST: Произошла ошибка при обновлении: \(error)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+            }
+        }
+        
+    }
+    
+    func deleteToDoItemFromNet(id: String, completion: @escaping (Bool) -> Void) {
+        delete(withId: id) { result in
+            switch result {
+            case .success:
+                print("DELETE: Обновление выполнено успешно")
+                DispatchQueue.main.async {
+                    completion(true)
+                }
+            case .failure(let error):
+                print("DELETE: Произошла ошибка при обновлении: \(error)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+            }
+        }
+        
+    }
+    
+    @discardableResult
+    func updateToDoItemFromNet(id: String, item: ToDoItem, completion: @escaping (Bool) -> Void) {
+        put(withId: id, newItem: item) { result in
+            switch result {
+            case .success:
+                print("PUT: Обновление выполнено успешно")
+                DispatchQueue.main.async {
+                    completion(true)
+                }
+            case .failure(let error):
+                print("PUT: Произошла ошибка при обновлении: \(error)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+            }
+        }
+    }
+
+    // MARK: - privat
+
+   private func getFromApi(completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: "\(networkingManager.baseURL)/list") else {
             completion(.failure(NetworkingError.invalidURL))
             return
@@ -60,7 +164,7 @@ class DefaultNetworkingService {
         task.resume()
     }
 
-    func patchToDoItems(completion: @escaping (Result<Void, Error>) -> Void) {
+  private  func patch(completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: "\(networkingManager.baseURL)/list") else {
             completion(.failure(NetworkingError.invalidURL))
             return
@@ -112,7 +216,7 @@ class DefaultNetworkingService {
         task.resume()
     }
 
-    func postToDoItem(item: ToDoItem, completion: @escaping (Result<Void, Error>) -> Void) {
+   private func post(item: ToDoItem, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: "\(networkingManager.baseURL)/list") else {
             completion(.failure(NetworkingError.invalidURL))
             return
@@ -150,7 +254,7 @@ class DefaultNetworkingService {
         task.resume()
     }
 
-    func deleteItem(withId: String, completion: @escaping (Result<Void, Error>) -> Void) {
+  private func delete(withId: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: "\(networkingManager.baseURL)/list/" + withId) else {
             completion(.failure(NetworkingError.invalidURL))
             return
@@ -185,7 +289,7 @@ class DefaultNetworkingService {
             task.resume()
         }
     
-    func updateToDoItem(withId id: String, newItem: ToDoItem, completion: @escaping (Result<Void, Error>) -> Void) {
+  private func put(withId id: String, newItem: ToDoItem, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: "\(networkingManager.baseURL)/list/\(id)") else {
             completion(.failure(NetworkingError.invalidURL))
             return
@@ -229,7 +333,7 @@ class DefaultNetworkingService {
     }
 
 
-    func createJSONElement(from netToDoItem: NetToDoItem, revision: Int) -> Data? {
+  private func createJSONElement(from netToDoItem: NetToDoItem, revision: Int) -> Data? {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
 
@@ -247,14 +351,16 @@ class DefaultNetworkingService {
             return nil
         }
     }
+    
+   private enum NetworkingError: Error {
+        case invalidURL
+        case noData
+        case invalidResponse
+        case jsonSerializationFailed
+    }
 
 }
-enum NetworkingError: Error {
-    case invalidURL
-    case noData
-    case invalidResponse
-    case jsonSerializationFailed
-}
+
 // swiftlint:enable trailing_whitespace
 // swiftlint:enable unused_closure_parameter
 // swiftlint:enable line_length

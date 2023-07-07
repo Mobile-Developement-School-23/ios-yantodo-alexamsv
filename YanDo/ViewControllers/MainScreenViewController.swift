@@ -11,24 +11,26 @@
 // swiftlint:disable unused_closure_parameter
 import UIKit
 
-class MainScreenViewController: UIViewController {
+class MainScreenViewController: UIViewController, NetworkingService {
     let fileCache = DataManager.shared.fileCache
     let fileName = DataManager.shared.fileName
-    let elements = ViewElementsForMainScreen()
-    let contentView = UIView()
-    var completedItemsCount = DataManager.shared.completedItems.count
-    var showCompletedToDoItems = false
-    // collections
     var pendingItems = DataManager.shared.pendingItems
     var completedItems: [ToDoItem] = DataManager.shared.completedItems {
         didSet {
             completedItemsCount = completedItems.count
-            elements.completedLabel.text = "Выполнено — \(completedItemsCount)"
+            DispatchQueue.main.async {
+                self.elements.completedLabel.text = "Выполнено — \(self.completedItemsCount)"
+            }
         }
     }
     // networking
     let networkingService = DefaultNetworkingService()
     var itemsFromNet = NetworkingManager.shared.toDoItemsFromNet
+    //view
+    let elements = ViewElementsForMainScreen()
+    let contentView = UIView()
+    var completedItemsCount = DataManager.shared.completedItems.count
+    var showCompletedToDoItems = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,48 +42,7 @@ class MainScreenViewController: UIViewController {
         tableSettings()
         newItemButtonSettings()
 
-        let group = DispatchGroup()
-
-        group.enter()
-        DispatchQueue.global().async {
-            self.networkingService.getCorrectRevision { result in
-                defer {
-                    group.leave()
-                }
-            
-                switch result {
-                case .success:
-                    print("Запрос выполнен успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
-                    print(self.networkingService.netToDoItems)
-                case .failure(let error):
-                    print("Произошла ошибка при выполнении запроса: \(error)")
-                }
-            }
-        }
-
-        group.wait() // Ожидаем завершения метода getCorrectRevision
-
-        networkingService.patchToDoItems { result in
-            switch result {
-            case .success:
-                print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
-                print(self.networkingService.netToDoItems)
-                print("Скаченные элементы: \(self.networkingService.netToDoItems)")
-                self.itemsFromNet.removeAll()
-                for item in self.networkingService.netToDoItems {
-                    self.itemsFromNet.append(item)
-                }
-                print(self.itemsFromNet)
-                DispatchQueue.main.async {
-                    self.updateTable()
-                }
-            case .failure(let error):
-                print("Произошла ошибка при обновлении: \(error)")
-            }
-        }
-/*
         
-*/
 
     }
     // MARK: - objc methods
@@ -101,6 +62,22 @@ class MainScreenViewController: UIViewController {
         present(navVC, animated: true, completion: nil)
     }
     // MARK: - views settings
+    func networkStart () {
+        
+        networkingService.getCorrectInfFromNet()
+        
+        networkingService.updateToDoItemsFromNet { success in
+            if success {
+                DispatchQueue.main.async {
+                    self.updateTable()
+                }
+            } else {
+                
+            }
+        }
+
+    }
+    
     func updateTable() {
         // Объединение массивов
         var combinedItems = Array(fileCache.itemsCollection.values) + itemsFromNet
@@ -363,34 +340,28 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             self.fileCache.deleteToDoItem(itemsID: toDoItem.id)
             self.fileCache.saveJsonToDoItemInFile(file: self.fileName)
             // удаляем из сети
-            networkingService.deleteItem(withId: toDoItem.id) { result in
-                switch result {
-                case .success:
-                    print("Успешно удалено")
-                    self.pendingItems = self.pendingItems.filter { $0.id != toDoItem.id }
-                    self.completedItems = self.completedItems.filter { $0.id != toDoItem.id }
-                case .failure(let error):
-                    print("Ошибка при удалении: \(error)")
+            networkingService.deleteToDoItemFromNet(id: toDoItem.id) { success in
+                if success {
+                    DispatchQueue.main.async {
+                        self.pendingItems = self.pendingItems.filter { $0.id != toDoItem.id }
+                        self.completedItems = self.completedItems.filter { $0.id != toDoItem.id }
+                    }
+                } else {
+                    
                 }
             }
-            networkingService.patchToDoItems { result in
-                switch result {
-                case .success:
-                    print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
-                    print(self.networkingService.netToDoItems)
-                    print("Скаченные элементы: \(self.networkingService.netToDoItems)")
-                    self.itemsFromNet.removeAll()
-                    for item in self.networkingService.netToDoItems {
-                        self.itemsFromNet.append(item)
-                    }
-                    print(self.itemsFromNet)
+            networkingService.updateToDoItemsFromNet { success in
+                if success {
                     DispatchQueue.main.async {
+                        for item in self.networkingService.netToDoItems {
+                            self.itemsFromNet.append(item)
+                        }
                         self.updateTable()
                     }
-                case .failure(let error):
-                    print("Произошла ошибка при обновлении: \(error)")
-                }
+                } else { }
             }
+    
+        
             // анимация
             tableView.performBatchUpdates({
                 if self.showCompletedToDoItems {
@@ -457,30 +428,22 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             fileCache.addNewToDoItem(newCompletedToDoItem)
             fileCache.saveJsonToDoItemInFile(file: fileName)
             // изменяем в сети
-            networkingService.updateToDoItem(withId: newCompletedToDoItem.id, newItem: newCompletedToDoItem) { result in
-                switch result {
-                case .success:
-                    print("Успешно измненено")
-                case .failure(let error):
-                    print("Ошибка при измненено: \(error)")
+            networkingService.updateToDoItemFromNet(id: newCompletedToDoItem.id, item: newCompletedToDoItem) { success in
+                if success {
+                
+                } else {
+            
                 }
             }
-
-            networkingService.patchToDoItems { result in
-                switch result {
-                case .success:
-                    print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
-                    print(self.networkingService.netToDoItems)
-                    print("Скаченные элементы: \(self.networkingService.netToDoItems)")
-                    
-                    print(self.itemsFromNet)
+            
+            networkingService.updateToDoItemsFromNet { success in
+                if success {
                     DispatchQueue.main.async {
                         self.updateTable()
                     }
-                case .failure(let error):
-                    print("Произошла ошибка при обновлении: \(error)")
-                }
+                } else { }
             }
+
         }
     }
     // пометить item как ожидающий
@@ -494,28 +457,21 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             fileCache.addNewToDoItem(newPendingToDoItem)
             fileCache.saveJsonToDoItemInFile(file: fileName)
             // изменяем в сети
-            networkingService.updateToDoItem(withId: newPendingToDoItem.id, newItem: newPendingToDoItem) { result in
-                switch result {
-                case .success:
-                    print("Успешно измненено")
-                case .failure(let error):
-                    print("Ошибка при измненено: \(error)")
+            networkingService.updateToDoItemFromNet(id: newPendingToDoItem.id, item: newPendingToDoItem) { success in
+                if success {
+                
+                } else {
+            
                 }
             }
 
-            networkingService.patchToDoItems { result in
-                switch result {
-                case .success:
-                    print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
-                    print(self.networkingService.netToDoItems)
-                    print("Скаченные элементы: \(self.networkingService.netToDoItems)")
-                    
-                    print(self.itemsFromNet)
+            networkingService.updateToDoItemsFromNet() { success in
+                if success {
                     DispatchQueue.main.async {
                         self.updateTable()
                     }
-                case .failure(let error):
-                    print("Произошла ошибка при обновлении: \(error)")
+                } else {
+                
                 }
             }
         }

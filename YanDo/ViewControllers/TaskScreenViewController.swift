@@ -5,10 +5,11 @@
 //  Created by Александра Маслова on 20.06.2023.
 //
 // swiftlint:disable line_length
+// swiftlint:disable type_body_length
 
 import UIKit
 
-class TaskScreenViewController: UIViewController {
+class TaskScreenViewController: UIViewController, NetworkingService {
     private let toDoItem: ToDoItem?
     weak var delegate: MainScreenViewController?
     init(toDoItem: ToDoItem?) {
@@ -61,40 +62,46 @@ class TaskScreenViewController: UIViewController {
     @objc func saveButtonTapped() {
         // добавляю локально
         if !elements.textView.text.isEmpty {
-            if let item = toDoItem { fileCache.deleteToDoItem(itemsID: item.id) }
-            let item = ToDoItem(text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
-            fileCache.addNewToDoItem(item)
-            // добавляю в файл
-            fileCache.saveJsonToDoItemInFile(file: fileName)
-            delegate?.updateTable()
-            cancelButtonTapped()
-            cancelButtonTapped()
-            // добавляю в сеть
-            networkingService.postToDoItem(item: item) { result in
-                switch result {
-                case .success:
-                    print("Элемент добавлен")
-                case .failure(let error):
-                    print("Произошла ошибка при добавлении элемента: \(error)")
+            if let item = toDoItem {
+                let newItem = ToDoItem(id: item.id, text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
+                // добавляю в файл
+                fileCache.deleteToDoItem(itemsID: item.id)
+                fileCache.addNewToDoItem(newItem)
+                // добавляю в сеть
+                networkingService.updateToDoItemFromNet(id: newItem.id, item: newItem) { success in
+                    if success {
+                    
+                    } else {
+            
+                    }
+                }
+            } else {
+                let newItem = ToDoItem( text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
+                // добавляю в файл
+                fileCache.addNewToDoItem(newItem)
+                // добавляю в сеть
+                networkingService.addNewToDoItemToNet(item: newItem) { success in
+                    if success {
+        
+                    } else { }
                 }
             }
+            }
+        fileCache.saveJsonToDoItemInFile(file: fileName)
+        delegate?.updateTable()
+        cancelButtonTapped()
+        cancelButtonTapped()
             // обновляю данные
-            networkingService.patchToDoItems { result in
-                switch result {
-                case .success:
-                    print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
-                    print(self.networkingService.netToDoItems)
-                    print("Скаченные элементы: \(self.networkingService.netToDoItems)")
-                    self.itemsFromNet.removeAll()
+        networkingService.updateToDoItemsFromNet { success in
+            if success {
+                DispatchQueue.main.async {
                     for item in self.networkingService.netToDoItems {
                         self.itemsFromNet.append(item)
                     }
-                    print(self.itemsFromNet)
-                case .failure(let error):
-                    print("Произошла ошибка при обновлении: \(error)")
                 }
-            }
-        }    
+            } else { }
+        }
+    
     }
     // importance
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
@@ -171,15 +178,14 @@ class TaskScreenViewController: UIViewController {
         delegate?.updateTable()
         cancelButtonTapped()
         // удаляю из сети
-        networkingService.deleteItem(withId: correctId) { result in
-            switch result {
-            case .success:
-                print("Успешно удалено")
-                // Фильтрация массива pendingItems
-                self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
-                self.completedItems = self.completedItems.filter { $0.id != self.correctId }
-            case .failure(let error):
-                print("Ошибка при удалении: \(error)")
+        networkingService.deleteToDoItemFromNet(id: correctId) { success in
+            if success {
+                DispatchQueue.main.async {
+                    self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
+                    self.completedItems = self.completedItems.filter { $0.id != self.correctId }
+                }
+            } else {
+        
             }
         }
         // выхожу
@@ -219,7 +225,7 @@ class TaskScreenViewController: UIViewController {
         navigationItem.rightBarButtonItem = rightNavButton
     }
     func loadItem() {
-    fileCache.toDoItemsFromJsonFile(file: fileName)
+        fileCache.toDoItemsFromJsonFile(file: fileName)
         if let item = toDoItem {
             // изменение вида
             elements.placeholder.isHidden = true
@@ -392,3 +398,4 @@ extension TaskScreenViewController: UITextViewDelegate {
     }
 }
 // swiftlint:enable line_length
+//swiftlint:enable type_body_length
