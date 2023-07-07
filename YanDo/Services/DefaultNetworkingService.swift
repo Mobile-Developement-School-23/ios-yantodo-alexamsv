@@ -35,9 +35,11 @@ class DefaultNetworkingService {
                 switch result {
                 case .success:
                     print("POST: Запрос выполнен успешно")
+                    self.networkingManager.isDirty = false
                     isSuccess = true
                 case .failure(let error):
                     print("POST: Произошла ошибка при выполнении запроса: \(error)")
+                    self.networkingManager.isDirty = true
                 }
             }
         }
@@ -46,18 +48,20 @@ class DefaultNetworkingService {
         return isSuccess
     }
     
-    func updateToDoItemsFromNet(completion: @escaping (Bool) -> Void) {
+    func updateListFromNet(completion: @escaping (Bool) -> Void) {
         patch { result in
             switch result {
             case .success:
                 print("PATCH: Обновление выполнено успешно")
                 DispatchQueue.main.async {
                     completion(true)
+                    self.networkingManager.isDirty = false
                 }
             case .failure(let error):
                 print("PATCH: Произошла ошибка при обновлении: \(error)")
                 DispatchQueue.main.async {
                     completion(false)
+                    self.networkingManager.isDirty = true
                 }
             }
         }
@@ -70,11 +74,13 @@ class DefaultNetworkingService {
                 print("POST: Обновление выполнено успешно")
                 DispatchQueue.main.async {
                     completion(true)
+                    self.networkingManager.isDirty = false
                 }
             case .failure(let error):
                 print("POST: Произошла ошибка при обновлении: \(error)")
                 DispatchQueue.main.async {
                     completion(false)
+                    self.networkingManager.isDirty = true
                 }
             }
         }
@@ -88,18 +94,20 @@ class DefaultNetworkingService {
                 print("DELETE: Обновление выполнено успешно")
                 DispatchQueue.main.async {
                     completion(true)
+                    self.networkingManager.isDirty = false
                 }
             case .failure(let error):
                 print("DELETE: Произошла ошибка при обновлении: \(error)")
                 DispatchQueue.main.async {
                     completion(false)
+                    self.networkingManager.isDirty = true
                 }
             }
         }
         
     }
     
-    @discardableResult
+    
     func updateToDoItemFromNet(id: String, item: ToDoItem, completion: @escaping (Bool) -> Void) {
         put(withId: id, newItem: item) { result in
             switch result {
@@ -107,11 +115,13 @@ class DefaultNetworkingService {
                 print("PUT: Обновление выполнено успешно")
                 DispatchQueue.main.async {
                     completion(true)
+                    self.networkingManager.isDirty = false
                 }
             case .failure(let error):
                 print("PUT: Произошла ошибка при обновлении: \(error)")
                 DispatchQueue.main.async {
                     completion(false)
+                    self.networkingManager.isDirty = true
                 }
             }
         }

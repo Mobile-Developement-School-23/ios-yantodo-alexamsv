@@ -92,7 +92,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         cancelButtonTapped()
         cancelButtonTapped()
             // обновляю данные
-        networkingService.updateToDoItemsFromNet { success in
+        networkingService.updateListFromNet { success in
             if success {
                 DispatchQueue.main.async {
                     for item in self.networkingService.netToDoItems {
@@ -178,6 +178,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         delegate?.updateTable()
         cancelButtonTapped()
         // удаляю из сети
+        
         networkingService.deleteToDoItemFromNet(id: correctId) { success in
             if success {
                 DispatchQueue.main.async {
@@ -185,7 +186,10 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                     self.completedItems = self.completedItems.filter { $0.id != self.correctId }
                 }
             } else {
-        
+                DispatchQueue.main.async {
+                    self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
+                    self.completedItems = self.completedItems.filter { $0.id != self.correctId }
+                }
             }
         }
         // выхожу

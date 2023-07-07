@@ -37,12 +37,13 @@ class MainScreenViewController: UIViewController, NetworkingService {
         view.backgroundColor = UIColor.primaryBack
         viewSettings()
         fileCache.toDoItemsFromJsonFile(file: fileName)
-        updateTable()
+    
         infPanelSettings()
         tableSettings()
         newItemButtonSettings()
 
-        
+        networkStart()
+        updateTable()
 
     }
     // MARK: - objc methods
@@ -63,24 +64,27 @@ class MainScreenViewController: UIViewController, NetworkingService {
     }
     // MARK: - views settings
     func networkStart () {
-        
         networkingService.getCorrectInfFromNet()
-        
-        networkingService.updateToDoItemsFromNet { success in
+        networkingService.updateListFromNet { success in
             if success {
                 DispatchQueue.main.async {
+                    for item in self.networkingService.netToDoItems {
+                        self.itemsFromNet.append(item)
+                    }
                     self.updateTable()
                 }
             } else {
-                
+
             }
         }
 
     }
-    
     func updateTable() {
         // Объединение массивов
         var combinedItems = Array(fileCache.itemsCollection.values) + itemsFromNet
+        if NetworkingManager.shared.isDirty {
+             combinedItems = itemsFromNet + Array(fileCache.itemsCollection.values)
+        }
 
         // Удаление дублирующихся элементов на основе id
         var uniqueItems = [ToDoItem]()
@@ -100,9 +104,6 @@ class MainScreenViewController: UIViewController, NetworkingService {
         // Сортировка массивов
         completedItems.sort { $0.createdDate > $1.createdDate }
         pendingItems.sort { $0.createdDate > $1.createdDate }
-
-        print("выполненные \(completedItems)")
-        print("ожидающие \(pendingItems)")
 
         elements.tableView.reloadSections(IndexSet(integer: 0), with: .fade)
 
@@ -347,21 +348,13 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
                         self.completedItems = self.completedItems.filter { $0.id != toDoItem.id }
                     }
                 } else {
-                    
+                    DispatchQueue.main.async {
+                        self.pendingItems = self.pendingItems.filter { $0.id != toDoItem.id }
+                        self.completedItems = self.completedItems.filter { $0.id != toDoItem.id }
+                    }
+                
                 }
             }
-            networkingService.updateToDoItemsFromNet { success in
-                if success {
-                    DispatchQueue.main.async {
-                        for item in self.networkingService.netToDoItems {
-                            self.itemsFromNet.append(item)
-                        }
-                        self.updateTable()
-                    }
-                } else { }
-            }
-    
-        
             // анимация
             tableView.performBatchUpdates({
                 if self.showCompletedToDoItems {
@@ -430,15 +423,18 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             // изменяем в сети
             networkingService.updateToDoItemFromNet(id: newCompletedToDoItem.id, item: newCompletedToDoItem) { success in
                 if success {
-                
+        
                 } else {
-            
+    
                 }
             }
-            
-            networkingService.updateToDoItemsFromNet { success in
+    
+            networkingService.updateListFromNet { success in
                 if success {
                     DispatchQueue.main.async {
+                        for item in self.networkingService.netToDoItems {
+                            self.itemsFromNet.append(item)
+                        }
                         self.updateTable()
                     }
                 } else { }
@@ -465,9 +461,12 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
                 }
             }
 
-            networkingService.updateToDoItemsFromNet() { success in
+            networkingService.updateListFromNet() { success in
                 if success {
                     DispatchQueue.main.async {
+                        for item in self.networkingService.netToDoItems {
+                            self.itemsFromNet.append(item)
+                        }
                         self.updateTable()
                     }
                 } else {

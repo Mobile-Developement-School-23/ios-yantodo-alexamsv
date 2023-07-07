@@ -14,5 +14,6 @@ class NetworkingManager {
     let token = "chatty"
     var revision = 0
     var toDoItemsFromNet: [ToDoItem] = []
+    var isDirty = false
     private init() {}
 }
