@@ -48,7 +48,7 @@ class MainScreenViewController: UIViewController {
                 defer {
                     group.leave()
                 }
-                
+            
                 switch result {
                 case .success:
                     print("Запрос выполнен успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
@@ -67,6 +67,7 @@ class MainScreenViewController: UIViewController {
                 print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
                 print(self.networkingService.netToDoItems)
                 print("Скаченные элементы: \(self.networkingService.netToDoItems)")
+                self.itemsFromNet.removeAll()
                 for item in self.networkingService.netToDoItems {
                     self.itemsFromNet.append(item)
                 }
@@ -81,8 +82,6 @@ class MainScreenViewController: UIViewController {
 /*
         
 */
-
-       
 
     }
     // MARK: - objc methods
@@ -103,12 +102,33 @@ class MainScreenViewController: UIViewController {
     }
     // MARK: - views settings
     func updateTable() {
-        completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted } + itemsFromNet.filter { $0.isCompleted }
-        pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted } + itemsFromNet.filter { !$0.isCompleted }
-        
+        // Объединение массивов
+        var combinedItems = Array(fileCache.itemsCollection.values) + itemsFromNet
+
+        // Удаление дублирующихся элементов на основе id
+        var uniqueItems = [ToDoItem]()
+        var encounteredIDs = Set<String>()
+
+        for item in combinedItems {
+            if !encounteredIDs.contains(item.id) {
+                uniqueItems.append(item)
+                encounteredIDs.insert(item.id)
+            }
+        }
+
+        // Фильтрация уникальных элементов по isCompleted
+         completedItems = uniqueItems.filter { $0.isCompleted }
+         pendingItems = uniqueItems.filter { !$0.isCompleted }
+
+        // Сортировка массивов
         completedItems.sort { $0.createdDate > $1.createdDate }
         pendingItems.sort { $0.createdDate > $1.createdDate }
+
+        print("выполненные \(completedItems)")
+        print("ожидающие \(pendingItems)")
+
         elements.tableView.reloadSections(IndexSet(integer: 0), with: .fade)
+
     }
     func viewSettings() {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -347,8 +367,28 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
                 switch result {
                 case .success:
                     print("Успешно удалено")
+                    self.pendingItems = self.pendingItems.filter { $0.id != toDoItem.id }
+                    self.completedItems = self.completedItems.filter { $0.id != toDoItem.id }
                 case .failure(let error):
                     print("Ошибка при удалении: \(error)")
+                }
+            }
+            networkingService.patchToDoItems { result in
+                switch result {
+                case .success:
+                    print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
+                    print(self.networkingService.netToDoItems)
+                    print("Скаченные элементы: \(self.networkingService.netToDoItems)")
+                    self.itemsFromNet.removeAll()
+                    for item in self.networkingService.netToDoItems {
+                        self.itemsFromNet.append(item)
+                    }
+                    print(self.itemsFromNet)
+                    DispatchQueue.main.async {
+                        self.updateTable()
+                    }
+                case .failure(let error):
+                    print("Произошла ошибка при обновлении: \(error)")
                 }
             }
             // анимация
@@ -412,13 +452,36 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
                  item = pendingItems[indexPath.row - completedItems.count]
             }
             // перезаписываем item
-            let newCompletedToDoItem = ToDoItem(text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: true, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
+            let newCompletedToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: true, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
             fileCache.deleteToDoItem(itemsID: item.id)
             fileCache.addNewToDoItem(newCompletedToDoItem)
             fileCache.saveJsonToDoItemInFile(file: fileName)
+            // изменяем в сети
+            networkingService.updateToDoItem(withId: newCompletedToDoItem.id, newItem: newCompletedToDoItem) { result in
+                switch result {
+                case .success:
+                    print("Успешно измненено")
+                case .failure(let error):
+                    print("Ошибка при измненено: \(error)")
+                }
+            }
+
+            networkingService.patchToDoItems { result in
+                switch result {
+                case .success:
+                    print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
+                    print(self.networkingService.netToDoItems)
+                    print("Скаченные элементы: \(self.networkingService.netToDoItems)")
+                    
+                    print(self.itemsFromNet)
+                    DispatchQueue.main.async {
+                        self.updateTable()
+                    }
+                case .failure(let error):
+                    print("Произошла ошибка при обновлении: \(error)")
+                }
+            }
         }
-        // обнавляем таблицу
-        updateTable()
     }
     // пометить item как ожидающий
     func toDoItemIsPending(in cell: CustomCompletedTableViewCell) {
@@ -426,13 +489,36 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
         if let indexPath = elements.tableView.indexPath(for: cell) {
             let item = completedItems[indexPath.row]
             // перезаписываем item
-            let newCompletedToDoItem = ToDoItem(text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: false, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
+            let newPendingToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: false, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
             fileCache.deleteToDoItem(itemsID: item.id)
-            fileCache.addNewToDoItem(newCompletedToDoItem)
+            fileCache.addNewToDoItem(newPendingToDoItem)
             fileCache.saveJsonToDoItemInFile(file: fileName)
+            // изменяем в сети
+            networkingService.updateToDoItem(withId: newPendingToDoItem.id, newItem: newPendingToDoItem) { result in
+                switch result {
+                case .success:
+                    print("Успешно измненено")
+                case .failure(let error):
+                    print("Ошибка при измненено: \(error)")
+                }
+            }
+
+            networkingService.patchToDoItems { result in
+                switch result {
+                case .success:
+                    print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
+                    print(self.networkingService.netToDoItems)
+                    print("Скаченные элементы: \(self.networkingService.netToDoItems)")
+                    
+                    print(self.itemsFromNet)
+                    DispatchQueue.main.async {
+                        self.updateTable()
+                    }
+                case .failure(let error):
+                    print("Произошла ошибка при обновлении: \(error)")
+                }
+            }
         }
-        // обнавляем таблицу
-       updateTable()
     }
 }
 // swiftlint:enable force_cast

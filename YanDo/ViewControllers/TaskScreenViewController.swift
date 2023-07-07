@@ -85,6 +85,7 @@ class TaskScreenViewController: UIViewController {
                     print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
                     print(self.networkingService.netToDoItems)
                     print("Скаченные элементы: \(self.networkingService.netToDoItems)")
+                    self.itemsFromNet.removeAll()
                     for item in self.networkingService.netToDoItems {
                         self.itemsFromNet.append(item)
                     }
@@ -174,6 +175,9 @@ class TaskScreenViewController: UIViewController {
             switch result {
             case .success:
                 print("Успешно удалено")
+                // Фильтрация массива pendingItems
+                self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
+                self.completedItems = self.completedItems.filter { $0.id != self.correctId }
             case .failure(let error):
                 print("Ошибка при удалении: \(error)")
             }

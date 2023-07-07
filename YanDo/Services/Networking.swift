@@ -6,6 +6,7 @@
 //
 // swiftlint:disable unused_closure_parameter
 // swiftlint:disable line_length
+// swiftlint:disable trailing_whitespace
 
 import Foundation
 import UIKit
@@ -30,19 +31,19 @@ class DefaultNetworkingService {
                 completion(.failure(error))
                 return
             }
-    
+
             guard let data = data else {
                 completion(.failure(NetworkingError.noData))
                 return
             }
-    
+
             do {
                 let json = try JSONSerialization.jsonObject(with: data, options: [])
                 guard let result = json as? [String: Any] else {
                     completion(.failure(NetworkingError.invalidResponse))
                     return
                 }
-        
+
                 if let status = result[NetKeys.status] as? String, status == "ok" {
                     if let revision = result[NetKeys.revision] as? Int {
                         self.networkingManager.revision = revision
@@ -55,7 +56,7 @@ class DefaultNetworkingService {
                 completion(.failure(error))
             }
         }
-    
+
         task.resume()
     }
 
@@ -76,12 +77,12 @@ class DefaultNetworkingService {
                 completion(.failure(error))
                 return
             }
-    
+
             guard let data = data else {
                 completion(.failure(NetworkingError.noData))
                 return
             }
-    
+
             do {
                 let decoder = JSONDecoder()
                 decoder.dateDecodingStrategy = .secondsSince1970
@@ -111,7 +112,6 @@ class DefaultNetworkingService {
         task.resume()
     }
 
-    
     func postToDoItem(item: ToDoItem, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: "\(networkingManager.baseURL)/list") else {
             completion(.failure(NetworkingError.invalidURL))
@@ -120,36 +120,35 @@ class DefaultNetworkingService {
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
+
         if let jsonData = createJSONElement(from: NetToDoItem.init(from: item), revision: NetworkingManager.shared.revision) {
                 request.httpBody = jsonData
             } else {
                 completion(.failure(NetworkingError.jsonSerializationFailed))
                 return
             }
-        
+
         request.allHTTPHeaderFields = [
             "Authorization": "Bearer \(networkingManager.token)",
             "X-Last-Known-Revision": "\(NetworkingManager.shared.revision)"
         ]
-        
+
         let task = networkingManager.urlSession.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 completion(.failure(error))
                 return
             }
-            
+
             guard let data = data else {
                 completion(.failure(NetworkingError.noData))
                 return
             }
-            
+
             completion(.success(()))
         }
-        
+
         task.resume()
     }
-    
 
     func deleteItem(withId: String, completion: @escaping (Result<Void, Error>) -> Void) {
         guard let url = URL(string: "\(networkingManager.baseURL)/list/" + withId) else {
@@ -163,13 +162,13 @@ class DefaultNetworkingService {
             "Authorization": "Bearer \(networkingManager.token)",
             "X-Last-Known-Revision": "\(networkingManager.revision)"
         ]
-            
+
             let task = networkingManager.urlSession.dataTask(with: request) { (data, response, error) in
                 if let error = error {
                     completion(.failure(error))
                     return
                 }
-                
+
                 if let httpResponse = response as? HTTPURLResponse {
                     if httpResponse.statusCode == 200 {
                         self.networkingManager.revision += 1
@@ -182,10 +181,54 @@ class DefaultNetworkingService {
                     completion(.failure(NetworkingError.invalidResponse))
                 }
             }
-            
+
             task.resume()
         }
     
+    func updateToDoItem(withId id: String, newItem: ToDoItem, completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let url = URL(string: "\(networkingManager.baseURL)/list/\(id)") else {
+            completion(.failure(NetworkingError.invalidURL))
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        
+        if let jsonData = createJSONElement(from: NetToDoItem(from: newItem), revision: NetworkingManager.shared.revision) {
+            request.httpBody = jsonData
+        } else {
+            completion(.failure(NetworkingError.jsonSerializationFailed))
+            return
+        }
+        
+        request.allHTTPHeaderFields = [
+            "Authorization": "Bearer \(networkingManager.token)",
+            "X-Last-Known-Revision": "\(NetworkingManager.shared.revision)"
+        ]
+        
+        let task = networkingManager.urlSession.dataTask(with: request) { (data, response, error) in
+            if let error = error {
+                completion(.failure(error))
+                return
+            }
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                if httpResponse.statusCode == 200 {
+                    self.networkingManager.revision += 1
+                    completion(.success(()))
+                } else {
+                    let error = NSError(domain: "NetworkingError", code: httpResponse.statusCode, userInfo: nil)
+                    completion(.failure(error))
+                }
+            } else {
+                completion(.failure(NetworkingError.invalidResponse))
+            }
+        }
+        
+        task.resume()
+    }
+
+
     func createJSONElement(from netToDoItem: NetToDoItem, revision: Int) -> Data? {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
@@ -212,5 +255,6 @@ enum NetworkingError: Error {
     case invalidResponse
     case jsonSerializationFailed
 }
+// swiftlint:enable trailing_whitespace
 // swiftlint:enable unused_closure_parameter
 // swiftlint:enable line_length
