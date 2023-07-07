@@ -7,24 +7,6 @@
 
 import Foundation
 
-struct NetElement: Codable {
-    let status: String
-    let element: NetToDoItem
-    let revision: Int
-
-    init(status: String = "ok", element: NetToDoItem, revision: Int = 0) {
-        self.status = status
-        self.element = element
-        self.revision = revision
-    }
-
-  private enum Keys {
-        static let status = "status"
-        static let element = "element"
-        static let revision = "revision"
-    }
-}
-
 struct NetList: Codable {
     let status: String
     let list: [NetToDoItem]
@@ -35,10 +17,11 @@ struct NetList: Codable {
         self.list = list
         self.revision = revision
     }
-
-   private enum Keys {
-        static let status = "status"
-        static let list = "list"
-        static let revision = "revision"
-    }
 }
+
+ enum NetKeys {
+      static let status = "status"
+      static let element = "element"
+      static let list = "list"
+      static let revision = "revision"
+  }

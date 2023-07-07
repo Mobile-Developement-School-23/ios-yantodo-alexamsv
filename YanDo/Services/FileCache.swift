@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import YanDoItem
 import CocoaLumberjackSwift
 
 final class FileCache {

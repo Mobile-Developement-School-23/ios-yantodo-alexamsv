@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import YanDoItem
 import UIKit
 
 struct NetToDoItem: Codable {

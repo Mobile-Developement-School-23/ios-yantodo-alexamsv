@@ -7,7 +7,6 @@
 // swiftlint:disable line_length
 
 import UIKit
-import YanDoItem
 
 class TaskScreenViewController: UIViewController {
     private let toDoItem: ToDoItem?
@@ -19,13 +18,16 @@ class TaskScreenViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    // networking
+    let networkingService = DefaultNetworkingService()
+    var itemsFromNet = NetworkingManager.shared.toDoItemsFromNet
     // model
     let fileCache = DataManager.shared.fileCache
     let fileName = DataManager.shared.fileName
     var completedItems = DataManager.shared.completedItems
     var pendingItems = DataManager.shared.pendingItems
     var correctId = ""
-    private var importanceLevel = Importance.normal
+    private var importanceLevel = Importance.basic
     private var deadlineDate: Date?
     private let ind = ViewElementsForTaskScreen.cellsCount - 1
     // view
@@ -67,14 +69,38 @@ class TaskScreenViewController: UIViewController {
             delegate?.updateTable()
             cancelButtonTapped()
             cancelButtonTapped()
-        }
+            // добавляю в сеть
+            networkingService.postToDoItem(item: item) { result in
+                switch result {
+                case .success:
+                    print("Элемент добавлен")
+                case .failure(let error):
+                    print("Произошла ошибка при добавлении элемента: \(error)")
+                }
+            }
+            // обновляю данные
+            networkingService.patchToDoItems { result in
+                switch result {
+                case .success:
+                    print("Oбновление выполнено успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
+                    print(self.networkingService.netToDoItems)
+                    print("Скаченные элементы: \(self.networkingService.netToDoItems)")
+                    for item in self.networkingService.netToDoItems {
+                        self.itemsFromNet.append(item)
+                    }
+                    print(self.itemsFromNet)
+                case .failure(let error):
+                    print("Произошла ошибка при обновлении: \(error)")
+                }
+            }
+        }    
     }
     // importance
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0: importanceLevel = Importance.low
-        case 1: importanceLevel = Importance.normal
-        case 2: importanceLevel = Importance.high
+        case 1: importanceLevel = Importance.basic
+        case 2: importanceLevel = Importance.important
         default: break
         }
     }
@@ -143,6 +169,15 @@ class TaskScreenViewController: UIViewController {
         fileCache.saveJsonToDoItemInFile(file: fileName)
         delegate?.updateTable()
         cancelButtonTapped()
+        // удаляю из сети
+        networkingService.deleteItem(withId: correctId) { result in
+            switch result {
+            case .success:
+                print("Успешно удалено")
+            case .failure(let error):
+                print("Ошибка при удалении: \(error)")
+            }
+        }
         // выхожу
         cancelButtonTapped()
     }
@@ -195,7 +230,7 @@ class TaskScreenViewController: UIViewController {
             let index: Int = {
                 var ind = 1
                 if item.importance == .low { ind = 0 }
-                if item.importance == .high { ind = 2 }
+                if item.importance == .important { ind = 2 }
                 return ind
             }()
             elements.segmentedControl.selectedSegmentIndex = index

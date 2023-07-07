@@ -10,7 +10,6 @@
 // swiftlint:disable function_body_length
 // swiftlint:disable unused_closure_parameter
 import UIKit
-import YanDoItem
 
 class MainScreenViewController: UIViewController {
     let fileCache = DataManager.shared.fileCache
@@ -29,9 +28,8 @@ class MainScreenViewController: UIViewController {
     }
     // networking
     let networkingService = DefaultNetworkingService()
-    var itemsFromNet: [ToDoItem] = []
+    var itemsFromNet = NetworkingManager.shared.toDoItemsFromNet
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.primaryBack
@@ -41,18 +39,28 @@ class MainScreenViewController: UIViewController {
         infPanelSettings()
         tableSettings()
         newItemButtonSettings()
- 
-        
-        networkingService.getToDoItems { result in
-            switch result {
-            case .success:
-                print("Запрос выполнен успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
-                print(self.networkingService.netToDoItems)
-               
-            case .failure(let error):
-                print("Произошла ошибка при выполнении запроса: \(error)")
+
+        let group = DispatchGroup()
+
+        group.enter()
+        DispatchQueue.global().async {
+            self.networkingService.getCorrectRevision { result in
+                defer {
+                    group.leave()
+                }
+                
+                switch result {
+                case .success:
+                    print("Запрос выполнен успешно. Ревизия повышена до \(NetworkingManager.shared.revision)")
+                    print(self.networkingService.netToDoItems)
+                case .failure(let error):
+                    print("Произошла ошибка при выполнении запроса: \(error)")
+                }
             }
         }
+
+        group.wait() // Ожидаем завершения метода getCorrectRevision
+
         networkingService.patchToDoItems { result in
             switch result {
             case .success:
@@ -66,12 +74,15 @@ class MainScreenViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.updateTable()
                 }
-
             case .failure(let error):
                 print("Произошла ошибка при обновлении: \(error)")
             }
         }
+/*
         
+*/
+
+       
 
     }
     // MARK: - objc methods
@@ -92,9 +103,9 @@ class MainScreenViewController: UIViewController {
     }
     // MARK: - views settings
     func updateTable() {
+        completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted } + itemsFromNet.filter { $0.isCompleted }
+        pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted } + itemsFromNet.filter { !$0.isCompleted }
         
-        completedItems = Array(fileCache.itemsCollection.values).filter { $0.isCompleted }
-        pendingItems = Array(fileCache.itemsCollection.values).filter { !$0.isCompleted } + itemsFromNet //здесь обязательно надо сделать фильтрацию по isCompleted
         completedItems.sort { $0.createdDate > $1.createdDate }
         pendingItems.sort { $0.createdDate > $1.createdDate }
         elements.tableView.reloadSections(IndexSet(integer: 0), with: .fade)
@@ -331,6 +342,15 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             }
             self.fileCache.deleteToDoItem(itemsID: toDoItem.id)
             self.fileCache.saveJsonToDoItemInFile(file: self.fileName)
+            // удаляем из сети
+            networkingService.deleteItem(withId: toDoItem.id) { result in
+                switch result {
+                case .success:
+                    print("Успешно удалено")
+                case .failure(let error):
+                    print("Ошибка при удалении: \(error)")
+                }
+            }
             // анимация
             tableView.performBatchUpdates({
                 if self.showCompletedToDoItems {

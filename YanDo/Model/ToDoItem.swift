@@ -7,7 +7,7 @@
 
 // MARK: Так как создана библиотека на основе ToDoItem его код не нужен
 // swiftlint:disable line_length
-/*
+
 import Foundation
 
 struct ToDoItem {
@@ -49,8 +49,8 @@ struct ToDoItem {
 
 enum Importance: String {
     case low
-    case normal
-    case high
+    case basic
+    case important
 }
 
 extension ToDoItem {
@@ -64,17 +64,17 @@ extension ToDoItem {
               let text = jsonData[Keys.text] as? String,
               let createdDate = (jsonData[Keys.createdDate] as? Int).flatMap({Date(timeIntervalSince1970: TimeInterval($0))})
         else {return nil}
-        let importance = (jsonData[Keys.importance] as? String).flatMap(Importance.init(rawValue:)) ?? .normal
+        let importance = (jsonData[Keys.importance] as? String).flatMap(Importance.init(rawValue:)) ?? .basic
         let deadline = (jsonData[Keys.deadline] as? Int).flatMap({Date(timeIntervalSince1970: TimeInterval($0))})
         let isCompleted = (jsonData[Keys.isCompleted] as? Bool) ?? false
         let dateОfСhange = (jsonData[Keys.dateOfChange] as? Int).flatMap({Date(timeIntervalSince1970: TimeInterval($0))})
         return ToDoItem(id: id, text: text, importance: importance, deadline: deadline, isCompleted: isCompleted, createdDate: createdDate, dateОfСhange: dateОfСhange)
     }
-   private var json: Any {
+    var json: Any {
         var jsn: [String: Any] = [:]
         jsn[Keys.id] = id
         jsn[Keys.text] = text
-        if importance != .normal {jsn[Keys.importance] = importance.rawValue}
+       if importance != .basic {jsn[Keys.importance] = importance.rawValue}
         if let deadline = deadline {jsn[Keys.deadline] = Int(deadline.timeIntervalSince1970)}
         jsn[Keys.isCompleted] = isCompleted
         jsn[Keys.createdDate] = Int(createdDate.timeIntervalSince1970)
@@ -90,7 +90,7 @@ extension ToDoItem {
         }
         let id = components[0]
         let text = components[1]
-        let importance = Importance(rawValue: components[2]) ?? .normal
+        let importance = Importance(rawValue: components[2]) ?? .basic
         let deadline = DateFormatter.csvDateFormatter.date(from: components[3])
         let isCompleted = Bool(components[4]) ?? false
         let createdDate = DateFormatter.csvDateFormatter.date(from: components[5]) ?? Date()
@@ -99,7 +99,7 @@ extension ToDoItem {
     }
      var csv: String {
         var csvString = "\(id);\(text);"
-        if importance != .normal {
+         if importance != .basic {
             csvString += "\(importance.rawValue);"
         } else {
             csvString += ";"
@@ -114,5 +114,5 @@ extension ToDoItem {
         return csvString
     }
 }
- */
+
 // swiftlint:enable line_length

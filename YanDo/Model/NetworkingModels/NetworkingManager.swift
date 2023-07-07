@@ -13,5 +13,6 @@ class NetworkingManager {
     let baseURL = "https://beta.mrdekk.ru/todobackend"
     let token = "chatty"
     var revision = 0
+    var toDoItemsFromNet: [ToDoItem] = []
     private init() {}
 }
