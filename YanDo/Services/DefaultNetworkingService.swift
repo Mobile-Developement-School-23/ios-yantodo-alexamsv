@@ -7,6 +7,7 @@
 // swiftlint:disable unused_closure_parameter
 // swiftlint:disable line_length
 // swiftlint:disable trailing_whitespace
+// swiftlint:disable type_body_length
 
 import Foundation
 import UIKit
@@ -14,6 +15,7 @@ import UIKit
 protocol NetworkingService: AnyObject {
     var networkingService: DefaultNetworkingService { get }
     var itemsFromNet: [ToDoItem] { get set }
+    var indicator: Bool { get set }
 }
 
 class DefaultNetworkingService {
@@ -106,7 +108,6 @@ class DefaultNetworkingService {
         }
         
     }
-    
     
     func updateToDoItemFromNet(id: String, item: ToDoItem, completion: @escaping (Bool) -> Void) {
         put(withId: id, newItem: item) { result in
@@ -253,7 +254,7 @@ class DefaultNetworkingService {
                 return
             }
 
-            guard let data = data else {
+            guard data != nil else {
                 completion(.failure(NetworkingError.noData))
                 return
             }
@@ -342,7 +343,6 @@ class DefaultNetworkingService {
         task.resume()
     }
 
-
   private func createJSONElement(from netToDoItem: NetToDoItem, revision: Int) -> Data? {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
@@ -374,3 +374,4 @@ class DefaultNetworkingService {
 // swiftlint:enable trailing_whitespace
 // swiftlint:enable unused_closure_parameter
 // swiftlint:enable line_length
+// swiftlint:enable type_body_length

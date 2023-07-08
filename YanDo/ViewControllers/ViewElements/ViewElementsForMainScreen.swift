@@ -9,6 +9,14 @@ import UIKit
 
 class ViewElementsForMainScreen {
     // inf panel
+    let netIndicator: UIImageView = {
+        let icon = UIImageView()
+        icon.contentMode = .scaleAspectFit
+        icon.translatesAutoresizingMaskIntoConstraints = false
+        icon.widthAnchor.constraint(equalToConstant: 24 / Aligners.modelWidth * Aligners.width).isActive = true
+        icon.heightAnchor.constraint(equalToConstant: 24 / Aligners.modelHight * Aligners.height).isActive = true
+        return icon
+    }()
     let informationView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal

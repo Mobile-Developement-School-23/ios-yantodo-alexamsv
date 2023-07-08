@@ -6,9 +6,11 @@
 //
 // swiftlint:disable force_cast
 // swiftlint:disable line_length
-// swiftlint:disable cyclomatic_complexity
 // swiftlint:disable function_body_length
 // swiftlint:disable unused_closure_parameter
+// swiftlint:disable empty_parentheses_with_trailing_closure
+// swiftlint:disable for_where
+// swiftlint:disable file_length
 import UIKit
 
 class MainScreenViewController: UIViewController, NetworkingService {
@@ -26,18 +28,29 @@ class MainScreenViewController: UIViewController, NetworkingService {
     // networking
     let networkingService = DefaultNetworkingService()
     var itemsFromNet = NetworkingManager.shared.toDoItemsFromNet
-    //view
+    var indicator: Bool = NetworkingManager.shared.isDirty {
+        didSet {
+            if indicator {
+                elements.netIndicator.image = IndicatorImages.disconnect.uiImage
+            } else {
+                elements.netIndicator.image = IndicatorImages.connect.uiImage
+            }
+        }
+    }
+
+    // view
     let elements = ViewElementsForMainScreen()
-    let contentView = UIView()
     var completedItemsCount = DataManager.shared.completedItems.count
     var showCompletedToDoItems = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.primaryBack
+        self.view.tintColor = UIColor.blueColor
+
         viewSettings()
         fileCache.toDoItemsFromJsonFile(file: fileName)
-    
+
         infPanelSettings()
         tableSettings()
         newItemButtonSettings()
@@ -65,17 +78,16 @@ class MainScreenViewController: UIViewController, NetworkingService {
     // MARK: - views settings
     func networkStart () {
         networkingService.getCorrectInfFromNet()
-        networkingService.updateListFromNet { success in
+        networkingService.updateListFromNet { [self] success in
             if success {
-                DispatchQueue.main.async {
-                    for item in self.networkingService.netToDoItems {
-                        self.itemsFromNet.append(item)
+                indicator = false
+                DispatchQueue.main.async { [self] in
+                    for item in networkingService.netToDoItems {
+                        itemsFromNet.append(item)
                     }
-                    self.updateTable()
+                    updateTable()
                 }
-            } else {
-
-            }
+            } else { indicator = true }
         }
 
     }
@@ -85,28 +97,22 @@ class MainScreenViewController: UIViewController, NetworkingService {
         if NetworkingManager.shared.isDirty {
              combinedItems = itemsFromNet + Array(fileCache.itemsCollection.values)
         }
-
         // Удаление дублирующихся элементов на основе id
         var uniqueItems = [ToDoItem]()
         var encounteredIDs = Set<String>()
-
         for item in combinedItems {
             if !encounteredIDs.contains(item.id) {
                 uniqueItems.append(item)
                 encounteredIDs.insert(item.id)
             }
         }
-
         // Фильтрация уникальных элементов по isCompleted
          completedItems = uniqueItems.filter { $0.isCompleted }
          pendingItems = uniqueItems.filter { !$0.isCompleted }
-
         // Сортировка массивов
         completedItems.sort { $0.createdDate > $1.createdDate }
         pendingItems.sort { $0.createdDate > $1.createdDate }
-
         elements.tableView.reloadSections(IndexSet(integer: 0), with: .fade)
-
     }
     func viewSettings() {
         navigationController?.navigationBar.prefersLargeTitles = true
@@ -118,19 +124,15 @@ class MainScreenViewController: UIViewController, NetworkingService {
             navigationBar.layoutMargins.top = 44 / Aligners.modelHight * Aligners.height
             navigationBar.layoutMargins.left = 32 / Aligners.modelWidth * Aligners.width
             navigationBar.preservesSuperviewLayoutMargins = true
-            navigationBar.backgroundColor = UIColor.primaryBack
         }
-        view.addSubview(contentView)
-        contentView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(elements.netIndicator)
+        elements.netIndicator.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            contentView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            contentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            elements.netIndicator.topAnchor.constraint(equalTo: view.topAnchor, constant: 100 / Aligners.modelHight * Aligners.height),
+            elements.netIndicator.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32 / Aligners.modelWidth * Aligners.width)
         ])
     }
     func infPanelSettings() {
-// contentView.addSubview(elements.informationView)
         let label = elements.completedLabel
         label.text = "Выполнено — \(completedItemsCount)"
         let button = elements.showButton
@@ -139,12 +141,12 @@ class MainScreenViewController: UIViewController, NetworkingService {
         elements.informationView.addArrangedSubview(label)
         elements.informationView.addArrangedSubview(elements.showButton)
         NSLayoutConstraint.activate([
-            elements.informationView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8 / Aligners.modelHight * Aligners.height),
-            elements.informationView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
+            elements.informationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8 / Aligners.modelHight * Aligners.height),
+            elements.informationView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
             ])
     }
     func tableSettings() {
-        contentView.addSubview(elements.tableView)
+        view.addSubview(elements.tableView)
         elements.tableView.delegate = self
         elements.tableView.dataSource = self
         elements.tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
@@ -156,9 +158,9 @@ class MainScreenViewController: UIViewController, NetworkingService {
         elements.tableView.backgroundColor = .clear
         elements.tableView.layer.cornerRadius = 16
         NSLayoutConstraint.activate([
-            elements.tableView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 52 / Aligners.modelHight * Aligners.height),
-            elements.tableView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            elements.tableView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
+            elements.tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 52 / Aligners.modelHight * Aligners.height),
+            elements.tableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            elements.tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     func newItemButtonSettings() {
@@ -233,23 +235,21 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             if showCompletedToDoItems {
                 if indexPath.row < completedItems.count {
                     let toDoItem = completedItems[indexPath.row]
-                    if toDoItem.text.count > 25 && toDoItem.text.count < 50 { height += 20 }
-                    if toDoItem.text.count > 50 { height += 42 }
+                    height += calculateHeight(forText: toDoItem.text)
                 } else {
                     let toDoItem = pendingItems[indexPath.row - completedItems.count]
                     if toDoItem.deadline != nil { height += 10 }
-                    if toDoItem.text.count > 25 && toDoItem.text.count < 50 { height += 20 }
-                    if toDoItem.text.count > 50 { height += 42 }
+                    height += calculateHeight(forText: toDoItem.text)
                 }
             } else {
                 let toDoItem = pendingItems[indexPath.row]
                 if toDoItem.deadline != nil { height += 10 }
-                if toDoItem.text.count > 25 && toDoItem.text.count < 50 { height += 20 }
-                if toDoItem.text.count > 50 { height += 42 }
+                height += calculateHeight(forText: toDoItem.text)
             }
         }
         return height / Aligners.modelHight * Aligners.height
     }
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let lastRowIndex = tableView.numberOfRows(inSection: 0) - 1
         if indexPath.row == lastRowIndex {
@@ -343,17 +343,21 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             // удаляем из сети
             networkingService.deleteToDoItemFromNet(id: toDoItem.id) { success in
                 if success {
+                    self.indicator = false
                     DispatchQueue.main.async {
                         self.pendingItems = self.pendingItems.filter { $0.id != toDoItem.id }
                         self.completedItems = self.completedItems.filter { $0.id != toDoItem.id }
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.pendingItems = self.pendingItems.filter { $0.id != toDoItem.id }
-                        self.completedItems = self.completedItems.filter { $0.id != toDoItem.id }
-                    }
-                
+                        self.itemsFromNet = self.itemsFromNet.filter { $0.id != toDoItem.id }
                 }
+                } else {
+                    self.indicator = true
+                    DispatchQueue.main.async {
+                        self.pendingItems = self.pendingItems.filter { $0.id != toDoItem.id }
+                        self.completedItems = self.completedItems.filter { $0.id != toDoItem.id }
+                        self.itemsFromNet = self.itemsFromNet.filter { $0.id != toDoItem.id }
+                    }
+                }
+                
             }
             // анимация
             tableView.performBatchUpdates({
@@ -423,23 +427,21 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             // изменяем в сети
             networkingService.updateToDoItemFromNet(id: newCompletedToDoItem.id, item: newCompletedToDoItem) { success in
                 if success {
-        
-                } else {
-    
-                }
+                    self.indicator = false
+                } else { self.indicator = true }
             }
-    
             networkingService.updateListFromNet { success in
                 if success {
+                    self.indicator = false
                     DispatchQueue.main.async {
                         for item in self.networkingService.netToDoItems {
                             self.itemsFromNet.append(item)
                         }
                         self.updateTable()
                     }
-                } else { }
+                } else { self.indicator = true }
             }
-
+            
         }
     }
     // пометить item как ожидающий
@@ -455,29 +457,28 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             // изменяем в сети
             networkingService.updateToDoItemFromNet(id: newPendingToDoItem.id, item: newPendingToDoItem) { success in
                 if success {
-                
-                } else {
-            
-                }
+                    self.indicator = false
+                } else { self.indicator = true }
             }
-
+            
             networkingService.updateListFromNet() { success in
                 if success {
+                    self.indicator = false
                     DispatchQueue.main.async {
                         for item in self.networkingService.netToDoItems {
                             self.itemsFromNet.append(item)
                         }
                         self.updateTable()
                     }
-                } else {
-                
-                }
+                } else { self.indicator = true }
             }
         }
     }
 }
 // swiftlint:enable force_cast
 // swiftlint:enable line_length
-// swiftlint:enable cyclomatic_complexity
 // swiftlint:enable function_body_length
 // swiftlint:enable unused_closure_parameter
+// swiftlint:enable empty_parentheses_with_trailing_closure
+// swiftlint:enable for_where
+// swiftlint:enable file_length

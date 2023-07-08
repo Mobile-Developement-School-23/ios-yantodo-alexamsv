@@ -22,6 +22,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     // networking
     let networkingService = DefaultNetworkingService()
     var itemsFromNet = NetworkingManager.shared.toDoItemsFromNet
+    var indicator = NetworkingManager.shared.isDirty
     // model
     let fileCache = DataManager.shared.fileCache
     let fileName = DataManager.shared.fileName
@@ -70,10 +71,8 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                 // добавляю в сеть
                 networkingService.updateToDoItemFromNet(id: newItem.id, item: newItem) { success in
                     if success {
-                    
-                    } else {
-            
-                    }
+                        self.indicator = false
+                    } else { self.indicator = true }
                 }
             } else {
                 let newItem = ToDoItem( text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
@@ -82,8 +81,8 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                 // добавляю в сеть
                 networkingService.addNewToDoItemToNet(item: newItem) { success in
                     if success {
-        
-                    } else { }
+                        self.indicator = false
+                    } else { self.indicator = true }
                 }
             }
             }
@@ -94,14 +93,14 @@ class TaskScreenViewController: UIViewController, NetworkingService {
             // обновляю данные
         networkingService.updateListFromNet { success in
             if success {
+                self.indicator = false
                 DispatchQueue.main.async {
                     for item in self.networkingService.netToDoItems {
                         self.itemsFromNet.append(item)
                     }
                 }
-            } else { }
+            } else { self.indicator = true }
         }
-    
     }
     // importance
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
@@ -178,17 +177,20 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         delegate?.updateTable()
         cancelButtonTapped()
         // удаляю из сети
-        
         networkingService.deleteToDoItemFromNet(id: correctId) { success in
             if success {
+                self.indicator = false
                 DispatchQueue.main.async {
                     self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
                     self.completedItems = self.completedItems.filter { $0.id != self.correctId }
+                    self.itemsFromNet = self.itemsFromNet.filter { $0.id != self.correctId }
                 }
             } else {
+                self.indicator = true
                 DispatchQueue.main.async {
                     self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
                     self.completedItems = self.completedItems.filter { $0.id != self.correctId }
+                    self.itemsFromNet = self.itemsFromNet.filter { $0.id != self.correctId }
                 }
             }
         }
@@ -384,22 +386,6 @@ extension TaskScreenViewController: UITextViewDelegate {
         elements.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
         rightNavButton.isEnabled = true
     }
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: { _ in
-            self.updateContainerHeightForCurrentOrientation()
-        }, completion: nil)
-    }
-    private func updateContainerHeightForCurrentOrientation() {
-        let container = elements.textFieldContainer
-        if UIDevice.current.orientation.isLandscape {
-            // Высота контейнера в горизонтальной ориентации
-            container.constraints.filter { $0.firstAttribute == .height }.first?.constant = 300 / Aligners.modelHight * Aligners.height
-        } else {
-            // Высота контейнера в вертикальной ориентации
-            container.constraints.filter { $0.firstAttribute == .height }.first?.constant = 120 / Aligners.modelHight * Aligners.height
-        }
-    }
 }
 // swiftlint:enable line_length
-//swiftlint:enable type_body_length
+// swiftlint:enable type_body_length
