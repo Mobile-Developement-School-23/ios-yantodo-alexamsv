@@ -12,12 +12,6 @@
 import Foundation
 import UIKit
 
-protocol NetworkingService: AnyObject {
-    var networkingService: DefaultNetworkingService { get }
-    var itemsFromNet: [ToDoItem] { get set }
-    var indicator: Bool { get set }
-}
-
 class DefaultNetworkingService {
    private let networkingManager = NetworkingManager.shared
    var netToDoItems: [ToDoItem] = []

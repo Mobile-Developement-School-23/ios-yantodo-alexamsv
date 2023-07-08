@@ -11,7 +11,6 @@ import UIKit
 enum IndicatorImages {
     case connect
     case disconnect
-    
     var uiImage: UIImage {
         switch self {
         case .connect:
@@ -21,4 +20,3 @@ enum IndicatorImages {
         }
     }
 }
-

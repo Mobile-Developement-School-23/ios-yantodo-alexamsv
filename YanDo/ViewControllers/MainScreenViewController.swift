@@ -357,7 +357,6 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
                         self.itemsFromNet = self.itemsFromNet.filter { $0.id != toDoItem.id }
                     }
                 }
-                
             }
             // анимация
             tableView.performBatchUpdates({
@@ -441,7 +440,6 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
                     }
                 } else { self.indicator = true }
             }
-            
         }
     }
     // пометить item как ожидающий
@@ -460,7 +458,6 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
                     self.indicator = false
                 } else { self.indicator = true }
             }
-            
             networkingService.updateListFromNet() { success in
                 if success {
                     self.indicator = false
