@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3339113D2A56E8600031E8C8 /* DefaultNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3339113C2A56E8600031E8C8 /* DefaultNetworkingService.swift */; };
 		333911412A5721AD0031E8C8 /* NetToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333911402A5721AD0031E8C8 /* NetToDoItem.swift */; };
 		333911432A57242D0031E8C8 /* NetCollections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333911422A57242D0031E8C8 /* NetCollections.swift */; };
 		333911452A5727D70031E8C8 /* NetworkingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333911442A5727D70031E8C8 /* NetworkingManager.swift */; };
@@ -20,6 +19,7 @@
 		334B59522A549F4C008CE597 /* URLSessionExtension .swift in Sources */ = {isa = PBXBuildFile; fileRef = 334B59512A549F4C008CE597 /* URLSessionExtension .swift */; };
 		338BFD2F2A58DCAC003AFAF3 /* TextHightHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338BFD2E2A58DCAC003AFAF3 /* TextHightHelper.swift */; };
 		338BFD332A58EE5E003AFAF3 /* SystemImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338BFD322A58EE5E003AFAF3 /* SystemImages.swift */; };
+		338BFD3A2A58F69D003AFAF3 /* DefaultNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338BFD392A58F69D003AFAF3 /* DefaultNetworkingService.swift */; };
 		339600822A48623D00725B0E /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600812A48623D00725B0E /* ToDoItem.swift */; };
 		339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600852A4862B300725B0E /* DateFormatterExtension.swift */; };
 		339600882A4862E800725B0E /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600872A4862E800725B0E /* FileCache.swift */; };
@@ -65,7 +65,6 @@
 
 /* Begin PBXFileReference section */
 		105F97A6AB51FF1352992CDF /* Pods-YanDo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YanDo.debug.xcconfig"; path = "Target Support Files/Pods-YanDo/Pods-YanDo.debug.xcconfig"; sourceTree = "<group>"; };
-		3339113C2A56E8600031E8C8 /* DefaultNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNetworkingService.swift; sourceTree = "<group>"; };
 		333911402A5721AD0031E8C8 /* NetToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetToDoItem.swift; sourceTree = "<group>"; };
 		333911422A57242D0031E8C8 /* NetCollections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetCollections.swift; sourceTree = "<group>"; };
 		333911442A5727D70031E8C8 /* NetworkingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingManager.swift; sourceTree = "<group>"; };
@@ -75,6 +74,7 @@
 		334B59512A549F4C008CE597 /* URLSessionExtension .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionExtension .swift"; sourceTree = "<group>"; };
 		338BFD2E2A58DCAC003AFAF3 /* TextHightHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextHightHelper.swift; sourceTree = "<group>"; };
 		338BFD322A58EE5E003AFAF3 /* SystemImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemImages.swift; sourceTree = "<group>"; };
+		338BFD392A58F69D003AFAF3 /* DefaultNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNetworkingService.swift; sourceTree = "<group>"; };
 		339600812A48623D00725B0E /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
 		339600852A4862B300725B0E /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
 		339600872A4862E800725B0E /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
@@ -145,7 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				339600872A4862E800725B0E /* FileCache.swift */,
-				3339113C2A56E8600031E8C8 /* DefaultNetworkingService.swift */,
+				338BFD392A58F69D003AFAF3 /* DefaultNetworkingService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -563,7 +563,6 @@
 				334055792A4F4CC8003076F5 /* UIFontsExtension.swift in Sources */,
 				339600882A4862E800725B0E /* FileCache.swift in Sources */,
 				339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */,
-				3339113D2A56E8600031E8C8 /* DefaultNetworkingService.swift in Sources */,
 				3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */,
 				334B59522A549F4C008CE597 /* URLSessionExtension .swift in Sources */,
 				339600822A48623D00725B0E /* ToDoItem.swift in Sources */,
@@ -575,6 +574,7 @@
 				3396008C2A4864BB00725B0E /* ViewElementsForTaskScreen.swift in Sources */,
 				33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */,
 				334055772A4F3C27003076F5 /* UIColorExtension.swift in Sources */,
+				338BFD3A2A58F69D003AFAF3 /* DefaultNetworkingService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
