@@ -16,7 +16,7 @@ final class ToDoListAppTests: XCTestCase {
         func testToDoItemInit() {
             let id = "19"
             let text = "Write a Unit-test"
-            let importance = Importance.high
+            let importance = Importance.important
             let deadline = Date().addingTimeInterval(360)
             let isCompleted = false
             let createdDate = Date()
@@ -44,7 +44,7 @@ final class ToDoListAppTests: XCTestCase {
     func testJSON_ReturnsCorrectJSONRepresentation() {
         let id = "testID"
         let text = "Test todo item"
-        let importance = Importance.high
+        let importance = importance
         let deadline = Date()
         let isCompleted = false
         let createdDate = Date()
@@ -88,7 +88,7 @@ final class ToDoListAppTests: XCTestCase {
         let todoItem = ToDoItem(
             id: "123456",
             text: "Test todo item",
-            importance: .high,
+            importance: .important,
             deadline: Date(timeIntervalSince1970: 1678924800),
             isCompleted: true,
             createdDate: Date(timeIntervalSince1970: 1678872000),
@@ -136,7 +136,7 @@ final class ToDoListAppTests: XCTestCase {
     // Тест проверяет, что коллекция объектов была успешно добавлен в в файл в формате JSON
     func testSaveJsonToDoItemInFile() {
         let item1 = ToDoItem(text: "Item 1", importance: .normal, deadline: nil, isCompleted: false, createdDate: Date(), dateОfСhange: Date().addingTimeInterval(30))
-        let item2 = ToDoItem(text: "Item 2", importance: .high, deadline: Date().addingTimeInterval(180), isCompleted: false, createdDate: Date(), dateОfСhange: nil)
+        let item2 = ToDoItem(text: "Item 2", importance: .imortant, deadline: Date().addingTimeInterval(180), isCompleted: false, createdDate: Date(), dateОfСhange: nil)
         fileCache.addNewToDoItem(item1)
         fileCache.addNewToDoItem(item2)
         let fileName = "TestFile"

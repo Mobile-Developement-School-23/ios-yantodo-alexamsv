@@ -7,7 +7,6 @@
 // swiftlint:disable line_length
 
 import UIKit
-import YanDoItem
 
 // MARK: - protocol
 // протокол для изменения состояния isCompleted по нажатию кнопки
@@ -48,7 +47,7 @@ class CustomTableViewCell: UITableViewCell {
     private func configureCell() {
         guard let item = item else { return }
         if !item.isCompleted {
-            if item.importance == .high {
+            if item.importance ==  .important {
                 elements.markerButton.setImage(UIImage(named: "RedMarker"), for: .normal)
                 elements.importanceIcon.image = UIImage(named: "ImportanceHight")
                 elements.cellsInf.addArrangedSubview(elements.importanceIcon)

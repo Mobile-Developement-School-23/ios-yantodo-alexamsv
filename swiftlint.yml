@@ -1,0 +1,4 @@
+line_lenght:
+- 300 # warning
+- 500 # error
+- force_unwrapping: all

@@ -5,11 +5,11 @@
 //  Created by Александра Маслова on 20.06.2023.
 //
 // swiftlint:disable line_length
+// swiftlint:disable type_body_length
 
 import UIKit
-import YanDoItem
 
-class TaskScreenViewController: UIViewController {
+class TaskScreenViewController: UIViewController, NetworkingService {
     private let toDoItem: ToDoItem?
     weak var delegate: MainScreenViewController?
     init(toDoItem: ToDoItem?) {
@@ -19,13 +19,17 @@ class TaskScreenViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    // networking
+    let networkingService = DefaultNetworkingService()
+    var itemsFromNet = NetworkingManager.shared.toDoItemsFromNet
+    var indicator = NetworkingManager.shared.isDirty
     // model
     let fileCache = DataManager.shared.fileCache
     let fileName = DataManager.shared.fileName
     var completedItems = DataManager.shared.completedItems
     var pendingItems = DataManager.shared.pendingItems
     var correctId = ""
-    private var importanceLevel = Importance.normal
+    private var importanceLevel = Importance.basic
     private var deadlineDate: Date?
     private let ind = ViewElementsForTaskScreen.cellsCount - 1
     // view
@@ -59,22 +63,51 @@ class TaskScreenViewController: UIViewController {
     @objc func saveButtonTapped() {
         // добавляю локально
         if !elements.textView.text.isEmpty {
-            if let item = toDoItem { fileCache.deleteToDoItem(itemsID: item.id) }
-            let item = ToDoItem(text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
-            fileCache.addNewToDoItem(item)
-            // добавляю в файл
-            fileCache.saveJsonToDoItemInFile(file: fileName)
-            delegate?.updateTable()
-            cancelButtonTapped()
-            cancelButtonTapped()
+            if let item = toDoItem {
+                let newItem = ToDoItem(id: item.id, text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
+                // добавляю в файл
+                fileCache.deleteToDoItem(itemsID: item.id)
+                fileCache.addNewToDoItem(newItem)
+                // добавляю в сеть
+                networkingService.updateToDoItemFromNet(id: newItem.id, item: newItem) { success in
+                    if success {
+                        self.indicator = false
+                    } else { self.indicator = true }
+                }
+            } else {
+                let newItem = ToDoItem( text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
+                // добавляю в файл
+                fileCache.addNewToDoItem(newItem)
+                // добавляю в сеть
+                networkingService.addNewToDoItemToNet(item: newItem) { success in
+                    if success {
+                        self.indicator = false
+                    } else { self.indicator = true }
+                }
+            }
+            }
+        fileCache.saveJsonToDoItemInFile(file: fileName)
+        delegate?.updateTable()
+        cancelButtonTapped()
+        cancelButtonTapped()
+            // обновляю данные
+        networkingService.updateListFromNet { success in
+            if success {
+                self.indicator = false
+                DispatchQueue.main.async {
+                    for item in self.networkingService.netToDoItems {
+                        self.itemsFromNet.append(item)
+                    }
+                }
+            } else { self.indicator = true }
         }
     }
     // importance
     @objc func segmentedControlValueChanged(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
         case 0: importanceLevel = Importance.low
-        case 1: importanceLevel = Importance.normal
-        case 2: importanceLevel = Importance.high
+        case 1: importanceLevel = Importance.basic
+        case 2: importanceLevel = Importance.important
         default: break
         }
     }
@@ -143,6 +176,24 @@ class TaskScreenViewController: UIViewController {
         fileCache.saveJsonToDoItemInFile(file: fileName)
         delegate?.updateTable()
         cancelButtonTapped()
+        // удаляю из сети
+        networkingService.deleteToDoItemFromNet(id: correctId) { success in
+            if success {
+                self.indicator = false
+                DispatchQueue.main.async {
+                    self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
+                    self.completedItems = self.completedItems.filter { $0.id != self.correctId }
+                    self.itemsFromNet = self.itemsFromNet.filter { $0.id != self.correctId }
+                }
+            } else {
+                self.indicator = true
+                DispatchQueue.main.async {
+                    self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
+                    self.completedItems = self.completedItems.filter { $0.id != self.correctId }
+                    self.itemsFromNet = self.itemsFromNet.filter { $0.id != self.correctId }
+                }
+            }
+        }
         // выхожу
         cancelButtonTapped()
     }
@@ -180,7 +231,7 @@ class TaskScreenViewController: UIViewController {
         navigationItem.rightBarButtonItem = rightNavButton
     }
     func loadItem() {
-    fileCache.toDoItemsFromJsonFile(file: fileName)
+        fileCache.toDoItemsFromJsonFile(file: fileName)
         if let item = toDoItem {
             // изменение вида
             elements.placeholder.isHidden = true
@@ -195,7 +246,7 @@ class TaskScreenViewController: UIViewController {
             let index: Int = {
                 var ind = 1
                 if item.importance == .low { ind = 0 }
-                if item.importance == .high { ind = 2 }
+                if item.importance == .important { ind = 2 }
                 return ind
             }()
             elements.segmentedControl.selectedSegmentIndex = index
@@ -335,21 +386,6 @@ extension TaskScreenViewController: UITextViewDelegate {
         elements.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
         rightNavButton.isEnabled = true
     }
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        coordinator.animate(alongsideTransition: { _ in
-            self.updateContainerHeightForCurrentOrientation()
-        }, completion: nil)
-    }
-    private func updateContainerHeightForCurrentOrientation() {
-        let container = elements.textFieldContainer
-        if UIDevice.current.orientation.isLandscape {
-            // Высота контейнера в горизонтальной ориентации
-            container.constraints.filter { $0.firstAttribute == .height }.first?.constant = 300 / Aligners.modelHight * Aligners.height
-        } else {
-            // Высота контейнера в вертикальной ориентации
-            container.constraints.filter { $0.firstAttribute == .height }.first?.constant = 120 / Aligners.modelHight * Aligners.height
-        }
-    }
 }
 // swiftlint:enable line_length
+// swiftlint:enable type_body_length

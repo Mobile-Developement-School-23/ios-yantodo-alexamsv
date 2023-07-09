@@ -4,14 +4,13 @@
 //
 //  Created by Александра Маслова on 04.07.2023.
 //
+// swiftlint:disable line_length
 
 import Foundation
 import CocoaLumberjackSwift
 
-import CocoaLumberjack
-
 extension URLSession {
-    func data(for request: URLRequest) async throws -> (Data, URLResponse) {
+    func dataTask(for request: URLRequest) async throws -> (Data, URLResponse) {
         return try await withCheckedThrowingContinuation({ continuation in
             // Создание задачи для сетевого запроса с использованием переданного URLRequest
             let task = self.dataTask(with: request) { data, response, error in
@@ -40,3 +39,4 @@ extension URLSession {
         })
     }
 }
+// swiftlint:enable line_length
