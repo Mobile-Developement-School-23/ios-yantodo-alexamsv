@@ -14,6 +14,7 @@
 		334055872A4F94B5003076F5 /* CocoaLumberjackSwiftLogBackend in Frameworks */ = {isa = PBXBuildFile; productRef = 334055862A4F94B5003076F5 /* CocoaLumberjackSwiftLogBackend */; };
 		3340558C2A4F9582003076F5 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3340558B2A4F9582003076F5 /* Logger.swift */; };
 		334055952A4FAB59003076F5 /* YanDoItem in Frameworks */ = {isa = PBXBuildFile; productRef = 334055942A4FAB59003076F5 /* YanDoItem */; };
+		334B59522A549F4C008CE597 /* URLSessionExtension .swift in Sources */ = {isa = PBXBuildFile; fileRef = 334B59512A549F4C008CE597 /* URLSessionExtension .swift */; };
 		339600822A48623D00725B0E /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600812A48623D00725B0E /* ToDoItem.swift */; };
 		339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600852A4862B300725B0E /* DateFormatterExtension.swift */; };
 		339600882A4862E800725B0E /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600872A4862E800725B0E /* FileCache.swift */; };
@@ -62,6 +63,7 @@
 		334055762A4F3C27003076F5 /* UIColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		334055782A4F4CC8003076F5 /* UIFontsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIFontsExtension.swift; sourceTree = "<group>"; };
 		3340558B2A4F9582003076F5 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		334B59512A549F4C008CE597 /* URLSessionExtension .swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionExtension .swift"; sourceTree = "<group>"; };
 		339600812A48623D00725B0E /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
 		339600852A4862B300725B0E /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
 		339600872A4862E800725B0E /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
@@ -149,6 +151,7 @@
 		3396007D2A4861C000725B0E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				334B59512A549F4C008CE597 /* URLSessionExtension .swift */,
 				339600852A4862B300725B0E /* DateFormatterExtension.swift */,
 				3396009A2A4B6BF900725B0E /* AlignersForScreens.swift */,
 				334055762A4F3C27003076F5 /* UIColorExtension.swift */,
@@ -292,7 +295,7 @@
 			buildConfigurationList = 33E33F3A2A46EC2D00D4E63C /* Build configuration list for PBXNativeTarget "YanDo" */;
 			buildPhases = (
 				013BD3B425FBD74971E2B8FD /* [CP] Check Pods Manifest.lock */,
-				3340557B2A4F77C2003076F5 /* ShellScript */,
+				3340557B2A4F77C2003076F5 /* Run Script */,
 				33E33F0C2A46EC2B00D4E63C /* Sources */,
 				33E33F0D2A46EC2B00D4E63C /* Frameworks */,
 				33E33F0E2A46EC2B00D4E63C /* Resources */,
@@ -472,8 +475,9 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3340557B2A4F77C2003076F5 /* ShellScript */ = {
+		3340557B2A4F77C2003076F5 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -481,6 +485,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -527,6 +532,7 @@
 				339600882A4862E800725B0E /* FileCache.swift in Sources */,
 				339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */,
 				3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */,
+				334B59522A549F4C008CE597 /* URLSessionExtension .swift in Sources */,
 				339600822A48623D00725B0E /* ToDoItem.swift in Sources */,
 				339600992A4B6BAA00725B0E /* ViewElementsForMainScreen.swift in Sources */,
 				339600A02A4C7F5A00725B0E /* CustomTableViewCell.swift in Sources */,
