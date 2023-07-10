@@ -8,43 +8,10 @@
 import UIKit
 
 class ViewElementsForMainScreen {
-    // inf panel
-    let netIndicator: UIImageView = {
-        let icon = UIImageView()
-        icon.contentMode = .scaleAspectFit
-        icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.widthAnchor.constraint(equalToConstant: 24 / Aligners.modelWidth * Aligners.width).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 24 / Aligners.modelHight * Aligners.height).isActive = true
-        return icon
-    }()
-    let informationView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.alignment = .fill
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        stack.widthAnchor.constraint(equalToConstant: 311 / Aligners.modelWidth * Aligners.width).isActive = true
-        return stack
-    }()
-    let completedLabel: UILabel = {
-        let text = UILabel()
-        text.font = UIFont.subhead
-        text.textColor = UIColor.tertiaryLabel
-        text.translatesAutoresizingMaskIntoConstraints = false
-        return text
-    }()
-    let showButton: UIButton = {
-        let button = UIButton()
-        button.setTitle("Показать", for: .normal)
-        button.titleLabel?.font = UIFont.subhead
-        button.setTitleColor(UIColor.blueColor, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
     // table
     let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.widthAnchor.constraint(equalToConstant: 343 / Aligners.modelWidth * Aligners.width).isActive = true
         return tableView
     }()
     // cells components

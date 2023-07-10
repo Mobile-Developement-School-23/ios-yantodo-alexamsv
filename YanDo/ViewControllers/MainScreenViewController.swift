@@ -21,7 +21,7 @@ class MainScreenViewController: UIViewController, NetworkingService {
         didSet {
             completedItemsCount = completedItems.count
             DispatchQueue.main.async {
-                self.elements.completedLabel.text = "Выполнено — \(self.completedItemsCount)"
+                self.headerView.completedLabel.text = "Выполнено — \(self.completedItemsCount)"
             }
         }
     }
@@ -31,15 +31,16 @@ class MainScreenViewController: UIViewController, NetworkingService {
     var indicator: Bool = NetworkingManager.shared.isDirty {
         didSet {
             if indicator {
-                elements.netIndicator.image = IndicatorImages.disconnect.uiImage
+                headerView.netIndicator.image = IndicatorImages.disconnect.uiImage
             } else {
-                elements.netIndicator.image = IndicatorImages.connect.uiImage
+                headerView.netIndicator.image = IndicatorImages.connect.uiImage
             }
         }
     }
 
     // view
     let elements = ViewElementsForMainScreen()
+    let headerView = CustomTableViewHeader(frame: CGRect(x: 0, y: 0, width: 0, height: 50 / Aligners.modelHight * Aligners.height))
     var completedItemsCount = DataManager.shared.completedItems.count
     var showCompletedToDoItems = false
 
@@ -60,12 +61,12 @@ class MainScreenViewController: UIViewController, NetworkingService {
 
     }
     // MARK: - objc methods
-    @objc func showButtonTapped() {
+    @objc func showButtonTapped(button: UIButton) {
         showCompletedToDoItems.toggle()
         if showCompletedToDoItems {
-            elements.showButton.setTitle("Скрыть", for: .normal)
+            button.setTitle("Скрыть", for: .normal)
         } else {
-            elements.showButton.setTitle("Показать", for: .normal)
+            button.setTitle("Показать", for: .normal)
         }
        updateTable()
     }
@@ -125,42 +126,30 @@ class MainScreenViewController: UIViewController, NetworkingService {
             navigationBar.layoutMargins.left = 32 / Aligners.modelWidth * Aligners.width
             navigationBar.preservesSuperviewLayoutMargins = true
         }
-        view.addSubview(elements.netIndicator)
-        elements.netIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            elements.netIndicator.topAnchor.constraint(equalTo: view.topAnchor, constant: 100 / Aligners.modelHight * Aligners.height),
-            elements.netIndicator.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32 / Aligners.modelWidth * Aligners.width)
-        ])
     }
+
     func infPanelSettings() {
-        let label = elements.completedLabel
-        label.text = "Выполнено — \(completedItemsCount)"
-        let button = elements.showButton
-        button.addTarget(self, action: #selector(showButtonTapped), for: .touchUpInside)
-        view.addSubview(elements.informationView)
-        elements.informationView.addArrangedSubview(label)
-        elements.informationView.addArrangedSubview(elements.showButton)
-        NSLayoutConstraint.activate([
-            elements.informationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8 / Aligners.modelHight * Aligners.height),
-            elements.informationView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            ])
+        headerView.completedLabel.text = "Выполнено — \(completedItemsCount)"
+        headerView.showButton.addTarget(self, action: #selector(showButtonTapped), for: .touchUpInside)
+
     }
     func tableSettings() {
         view.addSubview(elements.tableView)
         elements.tableView.delegate = self
         elements.tableView.dataSource = self
+        elements.tableView.tableHeaderView = headerView
         elements.tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
         elements.tableView.register(CustomCompletedTableViewCell.self, forCellReuseIdentifier: "CustomCompletedCell")
         elements.tableView.register(SpecialTableViewCell.self, forCellReuseIdentifier: "SpecialCell")
 
-        elements.tableView.isScrollEnabled = true
         elements.tableView.showsVerticalScrollIndicator = false
         elements.tableView.backgroundColor = .clear
         elements.tableView.layer.cornerRadius = 16
         NSLayoutConstraint.activate([
-            elements.tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 52 / Aligners.modelHight * Aligners.height),
-            elements.tableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            elements.tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            elements.tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            elements.tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            elements.tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width),
+            elements.tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width)
         ])
     }
     func newItemButtonSettings() {
