@@ -55,8 +55,9 @@ class MainScreenViewController: UIViewController, NetworkingService {
         infPanelSettings()
         tableSettings()
         newItemButtonSettings()
+        updateTable()
 
-        networkStart()
+       // networkStart()
         updateTable()
 
     }
@@ -77,7 +78,7 @@ class MainScreenViewController: UIViewController, NetworkingService {
         present(navVC, animated: true, completion: nil)
     }
     // MARK: - views settings
-    func networkStart () {
+    @objc func networkStart () {
         networkingService.getCorrectInfFromNet()
         networkingService.updateListFromNet { [self] success in
             if success {
@@ -129,9 +130,12 @@ class MainScreenViewController: UIViewController, NetworkingService {
     }
 
     func infPanelSettings() {
+        headerView.netIndicator.image = IndicatorImages.disconnect.uiImage
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(networkStart))
+        headerView.netIndicator.isUserInteractionEnabled = true
+        headerView.netIndicator.addGestureRecognizer(tapGesture)
         headerView.completedLabel.text = "Выполнено — \(completedItemsCount)"
         headerView.showButton.addTarget(self, action: #selector(showButtonTapped), for: .touchUpInside)
-
     }
     func tableSettings() {
         view.addSubview(elements.tableView)
@@ -427,7 +431,16 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
                         }
                         self.updateTable()
                     }
-                } else { self.indicator = true }
+                } else {
+                    DispatchQueue.main.async {
+                        for item in self.networkingService.netToDoItems {
+                            self.itemsFromNet.append(item)
+                        }
+                        self.updateTable()
+                    }
+                    self.indicator = true
+                    
+                }
             }
         }
     }
@@ -456,7 +469,15 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
                         }
                         self.updateTable()
                     }
-                } else { self.indicator = true }
+                } else {
+                    self.indicator = true
+                    DispatchQueue.main.async {
+                        for item in self.networkingService.netToDoItems {
+                            self.itemsFromNet.append(item)
+                        }
+                        self.updateTable()
+                    }
+                }
             }
         }
     }

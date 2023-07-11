@@ -174,8 +174,6 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         fileCache.deleteToDoItem(itemsID: correctId)
         // пересохраняю файл уже без элемента
         fileCache.saveJsonToDoItemInFile(file: fileName)
-        delegate?.updateTable()
-        cancelButtonTapped()
         // удаляю из сети
         networkingService.deleteToDoItemFromNet(id: correctId) { success in
             if success {
@@ -195,6 +193,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
             }
         }
         // выхожу
+        delegate?.updateTable()
         cancelButtonTapped()
     }
     // MARK: - views settings
