@@ -59,7 +59,6 @@ class MainScreenViewController: UIViewController, NetworkingService {
 
        // networkStart()
         updateTable()
-
     }
     // MARK: - objc methods
     @objc func showButtonTapped(button: UIButton) {
@@ -79,19 +78,21 @@ class MainScreenViewController: UIViewController, NetworkingService {
     }
     // MARK: - views settings
     @objc func networkStart () {
-        networkingService.getCorrectInfFromNet()
-        networkingService.updateListFromNet { [self] success in
-            if success {
-                indicator = false
-                DispatchQueue.main.async { [self] in
-                    for item in networkingService.netToDoItems {
-                        itemsFromNet.append(item)
-                    }
-                    updateTable()
+        networkingService.getCorrectInfFromNet { isSuccess in
+            if isSuccess {
+                self.networkingService.updateListFromNet { [self] success in
+                    if success {
+                        indicator = false
+                        DispatchQueue.main.async { [self] in
+                            for item in networkingService.netToDoItems {
+                                itemsFromNet.append(item)
+                            }
+                            updateTable()
+                        }
+                    } else { indicator = true }
                 }
-            } else { indicator = true }
+            } else { return }
         }
-
     }
     func updateTable() {
         // Объединение массивов
@@ -420,7 +421,12 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             networkingService.updateToDoItemFromNet(id: newCompletedToDoItem.id, item: newCompletedToDoItem) { success in
                 if success {
                     self.indicator = false
-                } else { self.indicator = true }
+                } else {
+                    DispatchQueue.main.async {
+                        self.indicator = true
+                        self.updateTable()
+                    }
+                }
             }
             networkingService.updateListFromNet { success in
                 if success {
@@ -428,20 +434,20 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
                     DispatchQueue.main.async {
                         for item in self.networkingService.netToDoItems {
                             self.itemsFromNet.append(item)
+                            self.updateTable()
                         }
-                        self.updateTable()
                     }
                 } else {
                     DispatchQueue.main.async {
                         for item in self.networkingService.netToDoItems {
                             self.itemsFromNet.append(item)
+                            self.updateTable()
                         }
-                        self.updateTable()
                     }
                     self.indicator = true
-                    
                 }
             }
+            updateTable()
         }
     }
     // пометить item как ожидающий
@@ -458,7 +464,12 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             networkingService.updateToDoItemFromNet(id: newPendingToDoItem.id, item: newPendingToDoItem) { success in
                 if success {
                     self.indicator = false
-                } else { self.indicator = true }
+                } else {
+                    DispatchQueue.main.async {
+                        self.updateTable()
+                        self.indicator = true
+                    }
+                }
             }
             networkingService.updateListFromNet() { success in
                 if success {
@@ -466,19 +477,20 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
                     DispatchQueue.main.async {
                         for item in self.networkingService.netToDoItems {
                             self.itemsFromNet.append(item)
+                            self.updateTable()
                         }
-                        self.updateTable()
                     }
                 } else {
                     self.indicator = true
                     DispatchQueue.main.async {
                         for item in self.networkingService.netToDoItems {
                             self.itemsFromNet.append(item)
+                            self.updateTable()
                         }
-                        self.updateTable()
                     }
                 }
             }
+            updateTable()
         }
     }
 }

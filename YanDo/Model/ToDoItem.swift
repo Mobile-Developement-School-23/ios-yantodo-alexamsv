@@ -35,23 +35,22 @@ struct ToDoItem {
         self.createdDate = createdDate
         self.dateОfСhange = dateОfСhange
     }
-    // for json format
-  private enum Keys {
-        static let id = "id"
-        static let text = "text"
-        static let importance = "importance"
-        static let deadline = "deadline"
-        static let isCompleted = "is_completed"
-        static let createdDate = "created_date"
-        static let dateOfChange = "date_of_change"
-    }
 }
-
 enum Importance: String {
     case low
     case basic
     case important
 }
+// for databases
+enum Keys {
+      static let id = "id"
+      static let text = "text"
+      static let importance = "importance"
+      static let deadline = "deadline"
+      static let isCompleted = "done"
+      static let createdDate = "created_at"
+      static let dateOfChange = "changed_at"
+  }
 
 extension ToDoItem {
     // json format

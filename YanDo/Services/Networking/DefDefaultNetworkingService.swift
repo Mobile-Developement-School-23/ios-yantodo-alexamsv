@@ -16,10 +16,8 @@ class DefaultNetworkingService {
    private let networkingManager = NetworkingManager.shared
    var netToDoItems: [ToDoItem] = []
     
-    @discardableResult
-    func getCorrectInfFromNet() -> Bool {
-        var isSuccess = false
-        
+    // пробная реализация, без рабочего бэка не проверю
+    func getCorrectInfFromNet(completion: @escaping (Bool) -> Void) {
         let group = DispatchGroup()
 
         group.enter()
@@ -32,18 +30,17 @@ class DefaultNetworkingService {
                 case .success:
                     print("POST: Запрос выполнен успешно")
                     self.networkingManager.isDirty = false
-                    isSuccess = true
+                    completion(true)
                 case .failure(let error):
                     print("POST: Произошла ошибка при выполнении запроса: \(error)")
                     self.networkingManager.isDirty = true
+                    completion(false)
                 }
             }
         }
-        group.wait()
-
-        return isSuccess
+        group.notify(queue: DispatchQueue.main) { }
     }
-    
+
     func updateListFromNet(completion: @escaping (Bool) -> Void) {
         patch { result in
             switch result {

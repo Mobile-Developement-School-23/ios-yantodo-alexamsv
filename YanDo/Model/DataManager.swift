@@ -9,8 +9,12 @@ import Foundation
 
 class DataManager {
     static let shared = DataManager()
+    // json
     let fileCache = FileCache()
     let fileName = "YanDoFile"
+    // sql
+    let sql = SQLData()
+    // items collections
     var completedItems: [ToDoItem] = []
     var pendingItems: [ToDoItem] = []
     private init() {}
