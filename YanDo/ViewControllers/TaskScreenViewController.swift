@@ -24,8 +24,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     var itemsFromNet = NetworkingManager.shared.toDoItemsFromNet
     var indicator = NetworkingManager.shared.isDirty
     // model
-    let fileCache = DataManager.shared.fileCache
-    let fileName = DataManager.shared.fileName
+    let sql = DataManager.shared.sql
     var completedItems = DataManager.shared.completedItems
     var pendingItems = DataManager.shared.pendingItems
     var correctId = ""
@@ -66,8 +65,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
             if let item = toDoItem {
                 let newItem = ToDoItem(id: item.id, text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
                 // добавляю в файл
-                fileCache.deleteToDoItem(itemsID: item.id)
-                fileCache.addNewToDoItem(newItem)
+                sql.updateItemInSQLDatabase(id: item.id, item: newItem)
                 // добавляю в сеть
                 networkingService.updateToDoItemFromNet(id: newItem.id, item: newItem) { success in
                     if success {
@@ -77,7 +75,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
             } else {
                 let newItem = ToDoItem( text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
                 // добавляю в файл
-                fileCache.addNewToDoItem(newItem)
+                sql.addItemToSQLdatabase(item: newItem)
                 // добавляю в сеть
                 networkingService.addNewToDoItemToNet(item: newItem) { success in
                     if success {
@@ -86,9 +84,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                 }
             }
             }
-        fileCache.saveJsonToDoItemInFile(file: fileName)
         delegate?.updateTable()
-        cancelButtonTapped()
         cancelButtonTapped()
             // обновляю данные
         networkingService.updateListFromNet { success in
@@ -171,9 +167,8 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     }
     // delete
     @objc func deleteButtonTapped() {
-        fileCache.deleteToDoItem(itemsID: correctId)
-        // пересохраняю файл уже без элемента
-        fileCache.saveJsonToDoItemInFile(file: fileName)
+        // удаляю из базы данных
+        sql.removeItemFromSQLDatabase(id: correctId)
         // удаляю из сети
         networkingService.deleteToDoItemFromNet(id: correctId) { success in
             if success {
@@ -230,7 +225,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         navigationItem.rightBarButtonItem = rightNavButton
     }
     func loadItem() {
-        fileCache.toDoItemsFromJsonFile(file: fileName)
+       // sql.toDoItemsFromSQLdatabase()
         if let item = toDoItem {
             // изменение вида
             elements.placeholder.isHidden = true

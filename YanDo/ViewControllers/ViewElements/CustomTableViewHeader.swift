@@ -13,8 +13,6 @@ class CustomTableViewHeader: UIView {
         let icon = UIImageView()
         icon.contentMode = .scaleAspectFit
         icon.translatesAutoresizingMaskIntoConstraints = false
-        icon.widthAnchor.constraint(equalToConstant: 20 / Aligners.modelWidth * Aligners.width).isActive = true
-        icon.heightAnchor.constraint(equalToConstant: 20 / Aligners.modelHight * Aligners.height).isActive = true
         return icon
     }()
     let completedLabel: UILabel = {

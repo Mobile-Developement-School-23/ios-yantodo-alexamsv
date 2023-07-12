@@ -14,8 +14,7 @@
 import UIKit
 
 class MainScreenViewController: UIViewController, NetworkingService {
-    let fileCache = DataManager.shared.fileCache
-    let fileName = DataManager.shared.fileName
+    let sql = DataManager.shared.sql
     var pendingItems = DataManager.shared.pendingItems
     var completedItems: [ToDoItem] = DataManager.shared.completedItems {
         didSet {
@@ -50,7 +49,7 @@ class MainScreenViewController: UIViewController, NetworkingService {
         self.view.tintColor = UIColor.blueColor
 
         viewSettings()
-        fileCache.toDoItemsFromJsonFile(file: fileName)
+        sql.toDoItemsFromSQLdatabase()
 
         infPanelSettings()
         tableSettings()
@@ -96,9 +95,9 @@ class MainScreenViewController: UIViewController, NetworkingService {
     }
     func updateTable() {
         // Объединение массивов
-        var combinedItems = Array(fileCache.itemsCollection.values) + itemsFromNet
+        var combinedItems = sql.itemsCollection + itemsFromNet
         if NetworkingManager.shared.isDirty {
-             combinedItems = itemsFromNet + Array(fileCache.itemsCollection.values)
+            combinedItems = itemsFromNet + sql.itemsCollection
         }
         // Удаление дублирующихся элементов на основе id
         var uniqueItems = [ToDoItem]()
@@ -332,8 +331,7 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 toDoItem = self.pendingItems[indexPath.row]
             }
-            self.fileCache.deleteToDoItem(itemsID: toDoItem.id)
-            self.fileCache.saveJsonToDoItemInFile(file: self.fileName)
+            self.sql.removeItemFromSQLDatabase(id: toDoItem.id)
             // удаляем из сети
             networkingService.deleteToDoItemFromNet(id: toDoItem.id) { success in
                 if success {
@@ -414,9 +412,7 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             }
             // перезаписываем item
             let newCompletedToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: true, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
-            fileCache.deleteToDoItem(itemsID: item.id)
-            fileCache.addNewToDoItem(newCompletedToDoItem)
-            fileCache.saveJsonToDoItemInFile(file: fileName)
+            sql.updateItemInSQLDatabase(id: item.id, item: newCompletedToDoItem)
             // изменяем в сети
             networkingService.updateToDoItemFromNet(id: newCompletedToDoItem.id, item: newCompletedToDoItem) { success in
                 if success {
@@ -457,9 +453,7 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             let item = completedItems[indexPath.row]
             // перезаписываем item
             let newPendingToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: false, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
-            fileCache.deleteToDoItem(itemsID: item.id)
-            fileCache.addNewToDoItem(newPendingToDoItem)
-            fileCache.saveJsonToDoItemInFile(file: fileName)
+            sql.updateItemInSQLDatabase(id: item.id, item: newPendingToDoItem)
             // изменяем в сети
             networkingService.updateToDoItemFromNet(id: newPendingToDoItem.id, item: newPendingToDoItem) { success in
                 if success {
