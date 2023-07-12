@@ -8,8 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		330DEF022A5DE2620077D8CA /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 330DEF012A5DE2620077D8CA /* SQLite */; };
-		330DEF042A5DE2C80077D8CA /* SQL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330DEF032A5DE2C80077D8CA /* SQL.swift */; };
+		330DEF042A5DE2C80077D8CA /* SQLBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330DEF032A5DE2C80077D8CA /* SQLBase.swift */; };
 		330DEF0A2A5DF6050077D8CA /* yandoDatabase.db in Resources */ = {isa = PBXBuildFile; fileRef = 330DEF092A5DF6050077D8CA /* yandoDatabase.db */; };
+		330FC01D2A5EE80200D7A468 /* yandoCoredata.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 330FC01B2A5EE80200D7A468 /* yandoCoredata.xcdatamodeld */; };
+		330FC01F2A5EFD0F00D7A468 /* CoreDataBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330FC01E2A5EFD0F00D7A468 /* CoreDataBase.swift */; };
 		333028D92A5C85A60008D3AE /* CustomTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333028D82A5C85A60008D3AE /* CustomTableViewHeader.swift */; };
 		333911412A5721AD0031E8C8 /* NetToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333911402A5721AD0031E8C8 /* NetToDoItem.swift */; };
 		333911432A57242D0031E8C8 /* NetCollections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 333911422A57242D0031E8C8 /* NetCollections.swift */; };
@@ -27,7 +29,7 @@
 		338BFD412A58FDE0003AFAF3 /* DefDefaultNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338BFD402A58FDE0003AFAF3 /* DefDefaultNetworkingService.swift */; };
 		339600822A48623D00725B0E /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600812A48623D00725B0E /* ToDoItem.swift */; };
 		339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600852A4862B300725B0E /* DateFormatterExtension.swift */; };
-		339600882A4862E800725B0E /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600872A4862E800725B0E /* FileCache.swift */; };
+		339600882A4862E800725B0E /* FileCache(disabled).swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600872A4862E800725B0E /* FileCache(disabled).swift */; };
 		3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600892A48648B00725B0E /* TaskScreenViewController.swift */; };
 		3396008C2A4864BB00725B0E /* ViewElementsForTaskScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396008B2A4864BB00725B0E /* ViewElementsForTaskScreen.swift */; };
 		339600912A48668600725B0E /* SFProDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 339600902A48668600725B0E /* SFProDisplay-Bold.ttf */; };
@@ -70,8 +72,10 @@
 
 /* Begin PBXFileReference section */
 		105F97A6AB51FF1352992CDF /* Pods-YanDo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YanDo.debug.xcconfig"; path = "Target Support Files/Pods-YanDo/Pods-YanDo.debug.xcconfig"; sourceTree = "<group>"; };
-		330DEF032A5DE2C80077D8CA /* SQL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQL.swift; sourceTree = "<group>"; };
+		330DEF032A5DE2C80077D8CA /* SQLBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLBase.swift; sourceTree = "<group>"; };
 		330DEF092A5DF6050077D8CA /* yandoDatabase.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = yandoDatabase.db; sourceTree = "<group>"; };
+		330FC01C2A5EE80200D7A468 /* yandoCoredata.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = yandoCoredata.xcdatamodel; sourceTree = "<group>"; };
+		330FC01E2A5EFD0F00D7A468 /* CoreDataBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataBase.swift; sourceTree = "<group>"; };
 		333028D82A5C85A60008D3AE /* CustomTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewHeader.swift; sourceTree = "<group>"; };
 		333911402A5721AD0031E8C8 /* NetToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetToDoItem.swift; sourceTree = "<group>"; };
 		333911422A57242D0031E8C8 /* NetCollections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetCollections.swift; sourceTree = "<group>"; };
@@ -86,7 +90,7 @@
 		338BFD402A58FDE0003AFAF3 /* DefDefaultNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefDefaultNetworkingService.swift; sourceTree = "<group>"; };
 		339600812A48623D00725B0E /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
 		339600852A4862B300725B0E /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
-		339600872A4862E800725B0E /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
+		339600872A4862E800725B0E /* FileCache(disabled).swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileCache(disabled).swift"; sourceTree = "<group>"; };
 		339600892A48648B00725B0E /* TaskScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskScreenViewController.swift; sourceTree = "<group>"; };
 		3396008B2A4864BB00725B0E /* ViewElementsForTaskScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewElementsForTaskScreen.swift; sourceTree = "<group>"; };
 		339600902A48668600725B0E /* SFProDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Bold.ttf"; sourceTree = "<group>"; };
@@ -151,11 +155,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		330FC0202A5F069F00D7A468 /* Databases */ = {
+			isa = PBXGroup;
+			children = (
+				330FC01B2A5EE80200D7A468 /* yandoCoredata.xcdatamodeld */,
+				330DEF092A5DF6050077D8CA /* yandoDatabase.db */,
+			);
+			path = Databases;
+			sourceTree = "<group>";
+		};
 		3339113B2A56E8420031E8C8 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				339600872A4862E800725B0E /* FileCache.swift */,
-				330DEF032A5DE2C80077D8CA /* SQL.swift */,
+				330DEF032A5DE2C80077D8CA /* SQLBase.swift */,
+				330FC01E2A5EFD0F00D7A468 /* CoreDataBase.swift */,
+				339600872A4862E800725B0E /* FileCache(disabled).swift */,
 				338BFD3F2A58F7FF003AFAF3 /* Networking */,
 			);
 			path = Services;
@@ -265,7 +279,6 @@
 		33E33F072A46EC2B00D4E63C = {
 			isa = PBXGroup;
 			children = (
-				330DEF092A5DF6050077D8CA /* yandoDatabase.db */,
 				33E33F122A46EC2B00D4E63C /* YanDo */,
 				33E33F292A46EC2D00D4E63C /* YanDoTests */,
 				33E33F332A46EC2D00D4E63C /* YanDoUITests */,
@@ -295,6 +308,7 @@
 				3396007D2A4861C000725B0E /* Extensions */,
 				334055882A4F94E3003076F5 /* Logger */,
 				3396007C2A4861B100725B0E /* Assets */,
+				330FC0202A5F069F00D7A468 /* Databases */,
 				33E33F1E2A46EC2D00D4E63C /* LaunchScreen.storyboard */,
 				33E33F212A46EC2D00D4E63C /* Info.plist */,
 			);
@@ -580,6 +594,7 @@
 			files = (
 				339600A42A4D9A8E00725B0E /* DataManager.swift in Sources */,
 				3340558C2A4F9582003076F5 /* Logger.swift in Sources */,
+				330FC01D2A5EE80200D7A468 /* yandoCoredata.xcdatamodeld in Sources */,
 				338BFD332A58EE5E003AFAF3 /* SystemImages.swift in Sources */,
 				333911412A5721AD0031E8C8 /* NetToDoItem.swift in Sources */,
 				33E33F182A46EC2B00D4E63C /* MainScreenViewController.swift in Sources */,
@@ -587,8 +602,9 @@
 				33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */,
 				3396009B2A4B6BF900725B0E /* AlignersForScreens.swift in Sources */,
 				334055792A4F4CC8003076F5 /* UIFontsExtension.swift in Sources */,
-				339600882A4862E800725B0E /* FileCache.swift in Sources */,
+				339600882A4862E800725B0E /* FileCache(disabled).swift in Sources */,
 				339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */,
+				330FC01F2A5EFD0F00D7A468 /* CoreDataBase.swift in Sources */,
 				3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */,
 				334B59522A549F4C008CE597 /* URLSessionExtension .swift in Sources */,
 				339600822A48623D00725B0E /* ToDoItem.swift in Sources */,
@@ -599,7 +615,7 @@
 				333911432A57242D0031E8C8 /* NetCollections.swift in Sources */,
 				3396008C2A4864BB00725B0E /* ViewElementsForTaskScreen.swift in Sources */,
 				338BFD412A58FDE0003AFAF3 /* DefDefaultNetworkingService.swift in Sources */,
-				330DEF042A5DE2C80077D8CA /* SQL.swift in Sources */,
+				330DEF042A5DE2C80077D8CA /* SQLBase.swift in Sources */,
 				333028D92A5C85A60008D3AE /* CustomTableViewHeader.swift in Sources */,
 				33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */,
 				334055772A4F3C27003076F5 /* UIColorExtension.swift in Sources */,
@@ -990,6 +1006,19 @@
 			productName = CocoaLumberjackSwiftLogBackend;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		330FC01B2A5EE80200D7A468 /* yandoCoredata.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				330FC01C2A5EE80200D7A468 /* yandoCoredata.xcdatamodel */,
+			);
+			currentVersion = 330FC01C2A5EE80200D7A468 /* yandoCoredata.xcdatamodel */;
+			path = yandoCoredata.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 33E33F082A46EC2B00D4E63C /* Project object */;
 }

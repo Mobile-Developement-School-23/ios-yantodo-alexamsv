@@ -7,7 +7,7 @@
 
 import Foundation
 import CocoaLumberjackSwift
-
+/// this class is disabled. SQL and CoreData are used
 final class FileCache {
     private(set) var itemsCollection: [String: ToDoItem] = [:]
     @discardableResult

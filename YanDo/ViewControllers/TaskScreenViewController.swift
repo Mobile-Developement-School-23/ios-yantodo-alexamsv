@@ -25,6 +25,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     var indicator = NetworkingManager.shared.isDirty
     // model
     let sql = DataManager.shared.sql
+    let coredata = DataManager.shared.coredata
     var completedItems = DataManager.shared.completedItems
     var pendingItems = DataManager.shared.pendingItems
     var correctId = ""
@@ -64,8 +65,9 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         if !elements.textView.text.isEmpty {
             if let item = toDoItem {
                 let newItem = ToDoItem(id: item.id, text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
-                // добавляю в файл
+                // добавляю в бд
                 sql.updateItemInSQLDatabase(id: item.id, item: newItem)
+                coredata.updateItemInCoreDataBase(id: item.id, item: newItem)
                 // добавляю в сеть
                 networkingService.updateToDoItemFromNet(id: newItem.id, item: newItem) { success in
                     if success {
@@ -74,8 +76,9 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                 }
             } else {
                 let newItem = ToDoItem( text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
-                // добавляю в файл
+                // добавляю в бд
                 sql.addItemToSQLdatabase(item: newItem)
+                coredata.addItemToCoreDatabase(item: newItem)
                 // добавляю в сеть
                 networkingService.addNewToDoItemToNet(item: newItem) { success in
                     if success {
@@ -167,8 +170,9 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     }
     // delete
     @objc func deleteButtonTapped() {
-        // удаляю из базы данных
-        sql.removeItemFromSQLDatabase(id: correctId)
+        // удаляю из бд
+        sql.deleteItemFromSQLDatabase(id: correctId)
+        coredata.deleteItemFromCoreDatabase(id: correctId)
         // удаляю из сети
         networkingService.deleteToDoItemFromNet(id: correctId) { success in
             if success {
@@ -177,6 +181,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                     self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
                     self.completedItems = self.completedItems.filter { $0.id != self.correctId }
                     self.itemsFromNet = self.itemsFromNet.filter { $0.id != self.correctId }
+                    self.delegate?.updateTable()
                 }
             } else {
                 self.indicator = true
@@ -184,6 +189,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                     self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
                     self.completedItems = self.completedItems.filter { $0.id != self.correctId }
                     self.itemsFromNet = self.itemsFromNet.filter { $0.id != self.correctId }
+                    self.delegate?.updateTable()
                 }
             }
         }
@@ -225,7 +231,6 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         navigationItem.rightBarButtonItem = rightNavButton
     }
     func loadItem() {
-       // sql.toDoItemsFromSQLdatabase()
         if let item = toDoItem {
             // изменение вида
             elements.placeholder.isHidden = true

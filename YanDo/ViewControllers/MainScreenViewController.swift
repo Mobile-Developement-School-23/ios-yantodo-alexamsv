@@ -15,6 +15,7 @@ import UIKit
 
 class MainScreenViewController: UIViewController, NetworkingService {
     let sql = DataManager.shared.sql
+    let coredata = DataManager.shared.coredata
     var pendingItems = DataManager.shared.pendingItems
     var completedItems: [ToDoItem] = DataManager.shared.completedItems {
         didSet {
@@ -49,14 +50,16 @@ class MainScreenViewController: UIViewController, NetworkingService {
         self.view.tintColor = UIColor.blueColor
 
         viewSettings()
+
         sql.toDoItemsFromSQLdatabase()
+        coredata.toDoItemsFromCoreDatabase()
 
         infPanelSettings()
         tableSettings()
         newItemButtonSettings()
         updateTable()
 
-       // networkStart()
+        networkStart()
         updateTable()
     }
     // MARK: - objc methods
@@ -95,9 +98,9 @@ class MainScreenViewController: UIViewController, NetworkingService {
     }
     func updateTable() {
         // Объединение массивов
-        var combinedItems = sql.itemsCollection + itemsFromNet
+        var combinedItems = coredata.itemsCollection + sql.itemsCollection + itemsFromNet //and this
         if NetworkingManager.shared.isDirty {
-            combinedItems = itemsFromNet + sql.itemsCollection
+            combinedItems = itemsFromNet + coredata.itemsCollection + sql.itemsCollection
         }
         // Удаление дублирующихся элементов на основе id
         var uniqueItems = [ToDoItem]()
@@ -320,7 +323,7 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
                 completion(false)
                 return
             }
-            // обрабатываем удаление через модель
+            // обрабатываем удаление в бд
             let toDoItem: ToDoItem
             if self.showCompletedToDoItems {
                 if indexPath.row < self.completedItems.count {
@@ -331,7 +334,8 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 toDoItem = self.pendingItems[indexPath.row]
             }
-            self.sql.removeItemFromSQLDatabase(id: toDoItem.id)
+            self.sql.deleteItemFromSQLDatabase(id: toDoItem.id)
+            self.coredata.deleteItemFromCoreDatabase(id: toDoItem.id)
             // удаляем из сети
             networkingService.deleteToDoItemFromNet(id: toDoItem.id) { success in
                 if success {
@@ -413,6 +417,7 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             // перезаписываем item
             let newCompletedToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: true, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
             sql.updateItemInSQLDatabase(id: item.id, item: newCompletedToDoItem)
+            coredata.updateItemInCoreDataBase(id: item.id, item: newCompletedToDoItem)
             // изменяем в сети
             networkingService.updateToDoItemFromNet(id: newCompletedToDoItem.id, item: newCompletedToDoItem) { success in
                 if success {
@@ -454,6 +459,7 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             // перезаписываем item
             let newPendingToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: false, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
             sql.updateItemInSQLDatabase(id: item.id, item: newPendingToDoItem)
+            coredata.updateItemInCoreDataBase(id: item.id, item: newPendingToDoItem)
             // изменяем в сети
             networkingService.updateToDoItemFromNet(id: newPendingToDoItem.id, item: newPendingToDoItem) { success in
                 if success {

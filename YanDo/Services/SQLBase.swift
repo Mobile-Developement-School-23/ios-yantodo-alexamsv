@@ -1,5 +1,5 @@
 //
-//  SQL.swift
+//  SQLBase.swift
 //  YanDo
 //
 //  Created by Александра Маслова on 11.07.2023.
@@ -10,7 +10,7 @@ import Foundation
 import CocoaLumberjackSwift
 import SQLite
 
-final class SQLData {
+final class SQLBase {
     private(set) var itemsCollection: [ToDoItem] = []
     var sqlBase: Connection?
 
@@ -84,7 +84,7 @@ final class SQLData {
         } catch { DDLogError("SQL: \(error)") }
     }
 
-    func removeItemFromSQLDatabase(id: String) {
+    func deleteItemFromSQLDatabase(id: String) {
         guard let databasePath = getDatabasePath() else { return }
 
         do {
@@ -101,7 +101,7 @@ final class SQLData {
     }
 
     func updateItemInSQLDatabase(id: String, item: ToDoItem) {
-        removeItemFromSQLDatabase(id: id)
+        deleteItemFromSQLDatabase(id: id)
         let updatedItem = ToDoItem(id: id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: item.isCompleted, createdDate: item.createdDate, dateОfСhange: Date())
         addItemToSQLdatabase(item: updatedItem)
     }

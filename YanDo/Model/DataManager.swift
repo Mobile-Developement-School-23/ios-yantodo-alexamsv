@@ -13,7 +13,9 @@ class DataManager {
     let fileCache = FileCache()
     let fileName = "YanDoFile"
     // sql
-    let sql = SQLData()
+    let sql = SQLBase()
+    // coredata
+    let coredata = CoreDataBase()
     // items collections
     var completedItems: [ToDoItem] = []
     var pendingItems: [ToDoItem] = []
