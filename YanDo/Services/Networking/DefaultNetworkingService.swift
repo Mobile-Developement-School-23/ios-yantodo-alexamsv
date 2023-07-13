@@ -101,10 +101,25 @@ class DefaultNetworkingService {
     }
     
     func updateToDoItemFromNet(id: String, item: ToDoItem, completion: @escaping (Bool) -> Void) {
-        put(withId: id, newItem: item) { result in
+        delete(withId: id) { result in
             switch result {
             case .success:
-                print("PUT: Обновление выполнено успешно")
+                self.post(item: item) { result in
+                    switch result {
+                    case .success:
+                        print("POST: Обновление выполнено успешно")
+                        DispatchQueue.main.async {
+                            completion(true)
+                            self.networkingManager.isDirty = false
+                        }
+                    case .failure(let error):
+                        print("POST: Произошла ошибка при обновлении: \(error)")
+                        DispatchQueue.main.async {
+                            completion(false)
+                            self.networkingManager.isDirty = true
+                        }
+                    }
+                }
                 DispatchQueue.main.async {
                     completion(true)
                     self.networkingManager.isDirty = false
@@ -261,7 +276,6 @@ class DefaultNetworkingService {
             completion(.failure(NetworkingError.invalidURL))
             return
         }
-        print(networkingManager.revision)
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
         request.allHTTPHeaderFields = [
@@ -290,49 +304,6 @@ class DefaultNetworkingService {
 
             task.resume()
         }
-    
-  private func put(withId id: String, newItem: ToDoItem, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let url = URL(string: "\(networkingManager.baseURL)/list/\(id)") else {
-            completion(.failure(NetworkingError.invalidURL))
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        
-        if let jsonData = createJSONElement(from: NetToDoItem(from: newItem), revision: NetworkingManager.shared.revision) {
-            request.httpBody = jsonData
-        } else {
-            completion(.failure(NetworkingError.jsonSerializationFailed))
-            return
-        }
-        
-        request.allHTTPHeaderFields = [
-            "Authorization": "Bearer \(networkingManager.token)",
-            "X-Last-Known-Revision": "\(NetworkingManager.shared.revision)"
-        ]
-        
-        let task = networkingManager.urlSession.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                if httpResponse.statusCode == 200 {
-                    self.networkingManager.revision += 1
-                    completion(.success(()))
-                } else {
-                    let error = NSError(domain: "NetworkingError", code: httpResponse.statusCode, userInfo: nil)
-                    completion(.failure(error))
-                }
-            } else {
-                completion(.failure(NetworkingError.invalidResponse))
-            }
-        }
-        
-        task.resume()
-    }
 
   private func createJSONElement(from netToDoItem: NetToDoItem, revision: Int) -> Data? {
         let encoder = JSONEncoder()

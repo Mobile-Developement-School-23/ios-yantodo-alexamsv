@@ -26,7 +26,7 @@
 		338BFD2F2A58DCAC003AFAF3 /* TextHightHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338BFD2E2A58DCAC003AFAF3 /* TextHightHelper.swift */; };
 		338BFD332A58EE5E003AFAF3 /* SystemImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338BFD322A58EE5E003AFAF3 /* SystemImages.swift */; };
 		338BFD3C2A58F7B1003AFAF3 /* NetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338BFD3B2A58F7B1003AFAF3 /* NetworkingService.swift */; };
-		338BFD412A58FDE0003AFAF3 /* DefDefaultNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338BFD402A58FDE0003AFAF3 /* DefDefaultNetworkingService.swift */; };
+		338BFD412A58FDE0003AFAF3 /* DefaultNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338BFD402A58FDE0003AFAF3 /* DefaultNetworkingService.swift */; };
 		339600822A48623D00725B0E /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600812A48623D00725B0E /* ToDoItem.swift */; };
 		339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600852A4862B300725B0E /* DateFormatterExtension.swift */; };
 		339600882A4862E800725B0E /* FileCache(disabled).swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600872A4862E800725B0E /* FileCache(disabled).swift */; };
@@ -87,7 +87,7 @@
 		338BFD2E2A58DCAC003AFAF3 /* TextHightHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextHightHelper.swift; sourceTree = "<group>"; };
 		338BFD322A58EE5E003AFAF3 /* SystemImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemImages.swift; sourceTree = "<group>"; };
 		338BFD3B2A58F7B1003AFAF3 /* NetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingService.swift; sourceTree = "<group>"; };
-		338BFD402A58FDE0003AFAF3 /* DefDefaultNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefDefaultNetworkingService.swift; sourceTree = "<group>"; };
+		338BFD402A58FDE0003AFAF3 /* DefaultNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNetworkingService.swift; sourceTree = "<group>"; };
 		339600812A48623D00725B0E /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
 		339600852A4862B300725B0E /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
 		339600872A4862E800725B0E /* FileCache(disabled).swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileCache(disabled).swift"; sourceTree = "<group>"; };
@@ -197,7 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				338BFD3B2A58F7B1003AFAF3 /* NetworkingService.swift */,
-				338BFD402A58FDE0003AFAF3 /* DefDefaultNetworkingService.swift */,
+				338BFD402A58FDE0003AFAF3 /* DefaultNetworkingService.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -614,7 +614,7 @@
 				338BFD2F2A58DCAC003AFAF3 /* TextHightHelper.swift in Sources */,
 				333911432A57242D0031E8C8 /* NetCollections.swift in Sources */,
 				3396008C2A4864BB00725B0E /* ViewElementsForTaskScreen.swift in Sources */,
-				338BFD412A58FDE0003AFAF3 /* DefDefaultNetworkingService.swift in Sources */,
+				338BFD412A58FDE0003AFAF3 /* DefaultNetworkingService.swift in Sources */,
 				330DEF042A5DE2C80077D8CA /* SQLBase.swift in Sources */,
 				333028D92A5C85A60008D3AE /* CustomTableViewHeader.swift in Sources */,
 				33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */,

@@ -173,26 +173,16 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         // удаляю из бд
         sql.deleteItemFromSQLDatabase(id: correctId)
         coredata.deleteItemFromCoreDatabase(id: correctId)
+        delegate?.updateTable()
         // удаляю из сети
         networkingService.deleteToDoItemFromNet(id: correctId) { success in
             if success {
                 self.indicator = false
-                DispatchQueue.main.async {
-                    self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
-                    self.completedItems = self.completedItems.filter { $0.id != self.correctId }
-                    self.itemsFromNet = self.itemsFromNet.filter { $0.id != self.correctId }
-                    self.delegate?.updateTable()
-                }
-            } else {
-                self.indicator = true
-                DispatchQueue.main.async {
-                    self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
-                    self.completedItems = self.completedItems.filter { $0.id != self.correctId }
-                    self.itemsFromNet = self.itemsFromNet.filter { $0.id != self.correctId }
-                    self.delegate?.updateTable()
-                }
-            }
+            } else { self.indicator = true }
         }
+        pendingItems = pendingItems.filter { $0.id != correctId }
+        completedItems = completedItems.filter { $0.id != correctId }
+        itemsFromNet = itemsFromNet.filter { $0.id != correctId }
         // выхожу
         delegate?.updateTable()
         cancelButtonTapped()
@@ -237,6 +227,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
             componentsOn()
             // достаем нужные значения
             correctId = item.id
+            importanceLevel = item.importance
             elements.textView.text = item.text
             let lines = item.text.components(separatedBy: "\n").count
             // еще изменение вида (высота предстваления)

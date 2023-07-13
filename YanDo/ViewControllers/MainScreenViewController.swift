@@ -98,10 +98,7 @@ class MainScreenViewController: UIViewController, NetworkingService {
     }
     func updateTable() {
         // Объединение массивов
-        var combinedItems = coredata.itemsCollection + sql.itemsCollection + itemsFromNet //and this
-        if NetworkingManager.shared.isDirty {
-            combinedItems = itemsFromNet + coredata.itemsCollection + sql.itemsCollection
-        }
+        var combinedItems = coredata.itemsCollection + sql.itemsCollection + itemsFromNet
         // Удаление дублирующихся элементов на основе id
         var uniqueItems = [ToDoItem]()
         var encounteredIDs = Set<String>()
