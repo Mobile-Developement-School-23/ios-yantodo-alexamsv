@@ -15,13 +15,12 @@ import UIKit
 
 class MainScreenViewController: UIViewController, NetworkingService {
     let fileCache = DataManager.shared.fileCache
-    let fileName = DataManager.shared.fileName
     var pendingItems = DataManager.shared.pendingItems
     var completedItems: [ToDoItem] = DataManager.shared.completedItems {
         didSet {
             completedItemsCount = completedItems.count
             DispatchQueue.main.async {
-                self.elements.completedLabel.text = "Выполнено — \(self.completedItemsCount)"
+                self.headerView.completedLabel.text = Text.doneCounter + String(self.completedItemsCount)
             }
         }
     }
@@ -31,15 +30,16 @@ class MainScreenViewController: UIViewController, NetworkingService {
     var indicator: Bool = NetworkingManager.shared.isDirty {
         didSet {
             if indicator {
-                elements.netIndicator.image = IndicatorImages.disconnect.uiImage
+                headerView.netIndicator.image = SystemImages.disconnect.uiImage
             } else {
-                elements.netIndicator.image = IndicatorImages.connect.uiImage
+                headerView.netIndicator.image = SystemImages.connect.uiImage
             }
         }
     }
 
     // view
     let elements = ViewElementsForMainScreen()
+    let headerView = CustomTableViewHeader(frame: CGRect(x: 0, y: 0, width: 0, height: 50 / Aligners.modelHight * Aligners.height))
     var completedItemsCount = DataManager.shared.completedItems.count
     var showCompletedToDoItems = false
 
@@ -49,23 +49,24 @@ class MainScreenViewController: UIViewController, NetworkingService {
         self.view.tintColor = UIColor.blueColor
 
         viewSettings()
-        fileCache.toDoItemsFromJsonFile(file: fileName)
+
+        fileCache.toDoItemsFromDatabases()
 
         infPanelSettings()
         tableSettings()
         newItemButtonSettings()
+        updateTable()
 
         networkStart()
         updateTable()
-
     }
     // MARK: - objc methods
-    @objc func showButtonTapped() {
+    @objc func showButtonTapped(button: UIButton) {
         showCompletedToDoItems.toggle()
         if showCompletedToDoItems {
-            elements.showButton.setTitle("Скрыть", for: .normal)
+            button.setTitle(Text.hide, for: .normal)
         } else {
-            elements.showButton.setTitle("Показать", for: .normal)
+            button.setTitle(Text.show, for: .normal)
         }
        updateTable()
     }
@@ -76,27 +77,26 @@ class MainScreenViewController: UIViewController, NetworkingService {
         present(navVC, animated: true, completion: nil)
     }
     // MARK: - views settings
-    func networkStart () {
-        networkingService.getCorrectInfFromNet()
-        networkingService.updateListFromNet { [self] success in
-            if success {
-                indicator = false
-                DispatchQueue.main.async { [self] in
-                    for item in networkingService.netToDoItems {
-                        itemsFromNet.append(item)
-                    }
-                    updateTable()
+    @objc func networkStart () {
+        networkingService.getCorrectInfFromNet { isSuccess in
+            if isSuccess {
+                self.networkingService.updateListFromNet { [self] success in
+                    if success {
+                        indicator = false
+                        DispatchQueue.main.async { [self] in
+                            for item in networkingService.netToDoItems {
+                                itemsFromNet.append(item)
+                            }
+                            updateTable()
+                        }
+                    } else { indicator = true }
                 }
-            } else { indicator = true }
+            } else { return }
         }
-
     }
     func updateTable() {
         // Объединение массивов
-        var combinedItems = Array(fileCache.itemsCollection.values) + itemsFromNet
-        if NetworkingManager.shared.isDirty {
-             combinedItems = itemsFromNet + Array(fileCache.itemsCollection.values)
-        }
+        let combinedItems = fileCache.itemsCollection + itemsFromNet
         // Удаление дублирующихся элементов на основе id
         var uniqueItems = [ToDoItem]()
         var encounteredIDs = Set<String>()
@@ -118,49 +118,40 @@ class MainScreenViewController: UIViewController, NetworkingService {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.primaryLabel!]
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.title = "Мои дела"
+        navigationItem.title = Text.title
 
         if let navigationBar = navigationController?.navigationBar {
             navigationBar.layoutMargins.top = 44 / Aligners.modelHight * Aligners.height
             navigationBar.layoutMargins.left = 32 / Aligners.modelWidth * Aligners.width
             navigationBar.preservesSuperviewLayoutMargins = true
         }
-        view.addSubview(elements.netIndicator)
-        elements.netIndicator.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            elements.netIndicator.topAnchor.constraint(equalTo: view.topAnchor, constant: 100 / Aligners.modelHight * Aligners.height),
-            elements.netIndicator.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32 / Aligners.modelWidth * Aligners.width)
-        ])
     }
+
     func infPanelSettings() {
-        let label = elements.completedLabel
-        label.text = "Выполнено — \(completedItemsCount)"
-        let button = elements.showButton
-        button.addTarget(self, action: #selector(showButtonTapped), for: .touchUpInside)
-        view.addSubview(elements.informationView)
-        elements.informationView.addArrangedSubview(label)
-        elements.informationView.addArrangedSubview(elements.showButton)
-        NSLayoutConstraint.activate([
-            elements.informationView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8 / Aligners.modelHight * Aligners.height),
-            elements.informationView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
-            ])
+        headerView.netIndicator.image = SystemImages.disconnect.uiImage
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(networkStart))
+        headerView.netIndicator.isUserInteractionEnabled = true
+        headerView.netIndicator.addGestureRecognizer(tapGesture)
+        headerView.completedLabel.text =  Text.doneCounter + String(completedItemsCount)
+        headerView.showButton.addTarget(self, action: #selector(showButtonTapped), for: .touchUpInside)
     }
     func tableSettings() {
         view.addSubview(elements.tableView)
         elements.tableView.delegate = self
         elements.tableView.dataSource = self
+        elements.tableView.tableHeaderView = headerView
         elements.tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomCell")
         elements.tableView.register(CustomCompletedTableViewCell.self, forCellReuseIdentifier: "CustomCompletedCell")
         elements.tableView.register(SpecialTableViewCell.self, forCellReuseIdentifier: "SpecialCell")
 
-        elements.tableView.isScrollEnabled = true
         elements.tableView.showsVerticalScrollIndicator = false
         elements.tableView.backgroundColor = .clear
         elements.tableView.layer.cornerRadius = 16
         NSLayoutConstraint.activate([
-            elements.tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 52 / Aligners.modelHight * Aligners.height),
-            elements.tableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            elements.tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            elements.tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            elements.tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            elements.tableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16 / Aligners.modelWidth * Aligners.width),
+            elements.tableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16 / Aligners.modelWidth * Aligners.width)
         ])
     }
     func newItemButtonSettings() {
@@ -307,10 +298,10 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             completion(true)
         }
         if toDoItem.isCompleted {
-            completedAction.image = UIImage(systemName: "arrow.turn.left.down")
+            completedAction.image = SystemImages.arrow.uiImage
             completedAction.backgroundColor = UIColor.grayLightColor
         } else {
-            completedAction.image = UIImage(named: "Complete")
+            completedAction.image = Images.complete.uiImage
             completedAction.backgroundColor = UIColor.greenColor
         }
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [completedAction])
@@ -321,25 +312,26 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
         guard indexPath.row != tableView.numberOfRows(inSection: 0) - 1 else {
             return nil
         }
+        let toDoItem: ToDoItem
+        if self.showCompletedToDoItems {
+            if indexPath.row < self.completedItems.count {
+                toDoItem = self.completedItems[indexPath.row]
+            } else {
+                toDoItem = self.pendingItems[indexPath.row - self.completedItems.count]
+            }
+        } else {
+            toDoItem = self.pendingItems[indexPath.row]
+        }
         // красная иконка
         let deleteAction = UIContextualAction(style: .destructive, title: nil) { [weak self] (action, view, completion) in
             guard let self = self else {
                 completion(false)
                 return
             }
-            // обрабатываем удаление через модель
-            let toDoItem: ToDoItem
-            if self.showCompletedToDoItems {
-                if indexPath.row < self.completedItems.count {
-                    toDoItem = self.completedItems[indexPath.row]
-                } else {
-                    toDoItem = self.pendingItems[indexPath.row - self.completedItems.count]
-                }
-            } else {
-                toDoItem = self.pendingItems[indexPath.row]
-            }
-            self.fileCache.deleteToDoItem(itemsID: toDoItem.id)
-            self.fileCache.saveJsonToDoItemInFile(file: self.fileName)
+            // обрабатываем удаление в бд
+            self.fileCache.deleteItemFromDatabases(id: toDoItem.id)
+            // удаляем уведомление
+            cancelNotification(identifier: toDoItem.id)
             // удаляем из сети
             networkingService.deleteToDoItemFromNet(id: toDoItem.id) { success in
                 if success {
@@ -373,33 +365,23 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             }, completion: nil)
             completion(true)
         }
-        deleteAction.image = UIImage(named: "Delete")
+        deleteAction.image = Images.delete.uiImage
         deleteAction.backgroundColor = UIColor.redColor
         // серая иконка
         let showAction = UIContextualAction(style: .destructive, title: nil) { [weak self] (action, view, completion) in
-            guard let self = self else {
+            guard self != nil else {
                 completion(false)
                 return
             }
-            let toDoItem: ToDoItem
-            if self.showCompletedToDoItems {
-                if indexPath.row < self.completedItems.count {
-                    toDoItem = self.completedItems[indexPath.row]
-                } else {
-                    toDoItem = self.pendingItems[indexPath.row - self.completedItems.count]
-                }
-            } else {
-                toDoItem = self.pendingItems[indexPath.row]
-            }
-            let tvc = TaskScreenViewController(toDoItem: toDoItem)
-            tvc.delegate = self
-            let navVC = UINavigationController(rootViewController: tvc)
-            self.present(navVC, animated: true, completion: nil)
-            completion(true)
         }
-        showAction.image = UIImage(named: "Show")
+        var actions = [deleteAction]
+        if !toDoItem.isCompleted { actions.append(showAction) }
+        if toDoItem.timing != nil {
+            showAction.image = SystemImages.bell.uiImage
+        } else { showAction.image = SystemImages.slashBell.uiImage }
         showAction.backgroundColor = UIColor.grayLightColor
-        let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction, showAction])
+        showAction.backgroundColor = UIColor.grayLightColor
+        let swipeConfiguration = UISwipeActionsConfiguration(actions: actions)
         swipeConfiguration.performsFirstActionWithFullSwipe = true
         return swipeConfiguration
     }
@@ -418,16 +400,21 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             } else {
                  item = pendingItems[indexPath.row - completedItems.count]
             }
+            // удаляем уведомление
+            cancelNotification(identifier: item.id)
             // перезаписываем item
-            let newCompletedToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: true, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
-            fileCache.deleteToDoItem(itemsID: item.id)
-            fileCache.addNewToDoItem(newCompletedToDoItem)
-            fileCache.saveJsonToDoItemInFile(file: fileName)
+            let newCompletedToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, timing: item.timing, isCompleted: true, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
+            fileCache.updateItemInDatabases(id: item.id, item: newCompletedToDoItem)
             // изменяем в сети
             networkingService.updateToDoItemFromNet(id: newCompletedToDoItem.id, item: newCompletedToDoItem) { success in
                 if success {
                     self.indicator = false
-                } else { self.indicator = true }
+                } else {
+                    DispatchQueue.main.async {
+                        self.indicator = true
+                        self.updateTable()
+                    }
+                }
             }
             networkingService.updateListFromNet { success in
                 if success {
@@ -435,11 +422,20 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
                     DispatchQueue.main.async {
                         for item in self.networkingService.netToDoItems {
                             self.itemsFromNet.append(item)
+                            self.updateTable()
                         }
-                        self.updateTable()
                     }
-                } else { self.indicator = true }
+                } else {
+                    DispatchQueue.main.async {
+                        for item in self.networkingService.netToDoItems {
+                            self.itemsFromNet.append(item)
+                            self.updateTable()
+                        }
+                    }
+                    self.indicator = true
+                }
             }
+            updateTable()
         }
     }
     // пометить item как ожидающий
@@ -447,16 +443,25 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
         // получаем item
         if let indexPath = elements.tableView.indexPath(for: cell) {
             let item = completedItems[indexPath.row]
+            // включаем уведомление
+            if let date = item.deadline {
+                if let time = item.timing {
+                    scheduleNotification(date: date, time: time, text: item.text, identifier: item.id)
+                }
+            }
             // перезаписываем item
-            let newPendingToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: false, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
-            fileCache.deleteToDoItem(itemsID: item.id)
-            fileCache.addNewToDoItem(newPendingToDoItem)
-            fileCache.saveJsonToDoItemInFile(file: fileName)
+            let newPendingToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, timing: item.timing, isCompleted: false, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
+            fileCache.updateItemInDatabases(id: item.id, item: newPendingToDoItem)
             // изменяем в сети
             networkingService.updateToDoItemFromNet(id: newPendingToDoItem.id, item: newPendingToDoItem) { success in
                 if success {
                     self.indicator = false
-                } else { self.indicator = true }
+                } else {
+                    DispatchQueue.main.async {
+                        self.updateTable()
+                        self.indicator = true
+                    }
+                }
             }
             networkingService.updateListFromNet() { success in
                 if success {
@@ -464,11 +469,20 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
                     DispatchQueue.main.async {
                         for item in self.networkingService.netToDoItems {
                             self.itemsFromNet.append(item)
+                            self.updateTable()
                         }
-                        self.updateTable()
                     }
-                } else { self.indicator = true }
+                } else {
+                    self.indicator = true
+                    DispatchQueue.main.async {
+                        for item in self.networkingService.netToDoItems {
+                            self.itemsFromNet.append(item)
+                            self.updateTable()
+                        }
+                    }
+                }
             }
+            updateTable()
         }
     }
 }

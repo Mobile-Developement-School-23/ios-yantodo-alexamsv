@@ -15,6 +15,7 @@ struct ToDoItem {
     let text: String
     let importance: Importance
     let deadline: Date?
+    let timing: Date?
     let isCompleted: Bool
     let createdDate: Date
     let dateОfСhange: Date?
@@ -23,6 +24,7 @@ struct ToDoItem {
         text: String,
         importance: Importance,
         deadline: Date?,
+        timing: Date?,
         isCompleted: Bool,
         createdDate: Date,
         dateОfСhange: Date?
@@ -31,26 +33,37 @@ struct ToDoItem {
         self.text = text
         self.importance = importance
         self.deadline = deadline
+        self.timing = timing
         self.isCompleted = isCompleted
         self.createdDate = createdDate
         self.dateОfСhange = dateОfСhange
     }
-    // for json format
-  private enum Keys {
-        static let id = "id"
-        static let text = "text"
-        static let importance = "importance"
-        static let deadline = "deadline"
-        static let isCompleted = "is_completed"
-        static let createdDate = "created_date"
-        static let dateOfChange = "date_of_change"
-    }
 }
-
 enum Importance: String {
     case low
     case basic
     case important
+}
+// for databases
+enum Keys {
+    static let id = "id"
+    static let text = "text"
+    static let importance = "importance"
+    static let deadline = "deadline"
+    static let timing = "timing"
+    static let isCompleted = "done"
+    static let createdDate = "created_at"
+    static let dateOfChange = "changed_at"
+
+    static let sqlQuery: String = """
+       \(Keys.id),
+       \(Keys.text),
+       \(Keys.importance),
+       \(Keys.deadline),
+       \(Keys.isCompleted),
+       \(Keys.createdDate),
+       \(Keys.dateOfChange),
+       """
 }
 
 extension ToDoItem {
@@ -66,15 +79,16 @@ extension ToDoItem {
         else {return nil}
         let importance = (jsonData[Keys.importance] as? String).flatMap(Importance.init(rawValue:)) ?? .basic
         let deadline = (jsonData[Keys.deadline] as? Int).flatMap({Date(timeIntervalSince1970: TimeInterval($0))})
+        let timing = (jsonData[Keys.timing] as? Int).flatMap({Date(timeIntervalSince1970: TimeInterval($0))})
         let isCompleted = (jsonData[Keys.isCompleted] as? Bool) ?? false
         let dateОfСhange = (jsonData[Keys.dateOfChange] as? Int).flatMap({Date(timeIntervalSince1970: TimeInterval($0))})
-        return ToDoItem(id: id, text: text, importance: importance, deadline: deadline, isCompleted: isCompleted, createdDate: createdDate, dateОfСhange: dateОfСhange)
+        return ToDoItem(id: id, text: text, importance: importance, deadline: deadline, timing: timing, isCompleted: isCompleted, createdDate: createdDate, dateОfСhange: dateОfСhange)
     }
     var json: Any {
         var jsn: [String: Any] = [:]
         jsn[Keys.id] = id
         jsn[Keys.text] = text
-       if importance != .basic {jsn[Keys.importance] = importance.rawValue}
+        if importance != .basic {jsn[Keys.importance] = importance.rawValue}
         if let deadline = deadline {jsn[Keys.deadline] = Int(deadline.timeIntervalSince1970)}
         jsn[Keys.isCompleted] = isCompleted
         jsn[Keys.createdDate] = Int(createdDate.timeIntervalSince1970)
@@ -92,14 +106,15 @@ extension ToDoItem {
         let text = components[1]
         let importance = Importance(rawValue: components[2]) ?? .basic
         let deadline = DateFormatter.csvDateFormatter.date(from: components[3])
-        let isCompleted = Bool(components[4]) ?? false
-        let createdDate = DateFormatter.csvDateFormatter.date(from: components[5]) ?? Date()
-        let dateОfСhange = DateFormatter.csvDateFormatter.date(from: components[6])
-        return ToDoItem(id: id, text: text, importance: importance, deadline: deadline, isCompleted: isCompleted, createdDate: createdDate, dateОfСhange: dateОfСhange)
+        let timing = DateFormatter.csvDateFormatter.date(from: components[4])
+        let isCompleted = Bool(components[5]) ?? false
+        let createdDate = DateFormatter.csvDateFormatter.date(from: components[6]) ?? Date()
+        let dateОfСhange = DateFormatter.csvDateFormatter.date(from: components[7])
+        return ToDoItem(id: id, text: text, importance: importance, deadline: deadline, timing: timing, isCompleted: isCompleted, createdDate: createdDate, dateОfСhange: dateОfСhange)
     }
-     var csv: String {
+    var csv: String {
         var csvString = "\(id);\(text);"
-         if importance != .basic {
+        if importance != .basic {
             csvString += "\(importance.rawValue);"
         } else {
             csvString += ";"
@@ -109,10 +124,26 @@ extension ToDoItem {
         } else {
             csvString += ";"
         }
+        if let timing = timing {
+            csvString += "\(DateFormatter.csvDateFormatter.string(from: timing));"
+        } else {
+            csvString += ";"
+        }
         csvString += "\(isCompleted);\(DateFormatter.csvDateFormatter.string(from: createdDate));"
         if let dateОfСhange = dateОfСhange {csvString += "\(DateFormatter.csvDateFormatter.string(from: dateОfСhange));"}
         return csvString
     }
-}
+    // sql format
+    var sqlReplaceStatement: String {
+        "REPLACE INTO list (\(Keys.sqlQuery)) VALUES ('\(self.id)', '\(self.text)', '\(self.importance)', \(self.deadline.flatMap({ String($0.timeIntervalSince1970)}) ?? "NULL"), \(self.isCompleted ? 1 : 0), \(self.createdDate.timeIntervalSince1970), \(self.dateОfСhange.flatMap({ String($0.timeIntervalSince1970)}) ?? "NULL"), '')"
+    }
 
+    var sqlDeleteStatement: String {
+        "DELETE FROM list WHERE \(Keys.id) = '\(self.id)'"
+    }
+
+    var sqlInsertStatement: String {
+        "INSERT INTO list (\(Keys.sqlQuery)) VALUES ('\(self.id)', '\(self.text)', '\(self.importance)', \(self.deadline.flatMap({ String($0.timeIntervalSince1970)}) ?? "NULL"), \(self.isCompleted ? 1 : 0), \(self.createdDate.timeIntervalSince1970), \(self.dateОfСhange.flatMap({ String($0.timeIntervalSince1970)}) ?? "NULL"))"
+    }
+}
 // swiftlint:enable line_length

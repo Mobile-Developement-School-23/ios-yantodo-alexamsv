@@ -7,11 +7,11 @@
 
 import Foundation
 
-class DataManager {
+final class DataManager {
     static let shared = DataManager()
     let fileCache = FileCache()
-    let fileName = "YanDoFile"
+    // items collections
     var completedItems: [ToDoItem] = []
     var pendingItems: [ToDoItem] = []
-    private init() {}
+    private init() { }
 }

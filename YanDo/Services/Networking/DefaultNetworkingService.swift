@@ -12,14 +12,11 @@
 import Foundation
 import UIKit
 
-class DefaultNetworkingService {
+final class DefaultNetworkingService {
    private let networkingManager = NetworkingManager.shared
    var netToDoItems: [ToDoItem] = []
     
-    @discardableResult
-    func getCorrectInfFromNet() -> Bool {
-        var isSuccess = false
-        
+    func getCorrectInfFromNet(completion: @escaping (Bool) -> Void) {
         let group = DispatchGroup()
 
         group.enter()
@@ -30,31 +27,30 @@ class DefaultNetworkingService {
                 }
                 switch result {
                 case .success:
-                    print("POST: Запрос выполнен успешно")
+                    print("POST: Request completed successfully")
                     self.networkingManager.isDirty = false
-                    isSuccess = true
+                    completion(true)
                 case .failure(let error):
-                    print("POST: Произошла ошибка при выполнении запроса: \(error)")
+                    print("POST: An error occurred while executing the request: \(error)")
                     self.networkingManager.isDirty = true
+                    completion(false)
                 }
             }
         }
-        group.wait()
-
-        return isSuccess
+        group.notify(queue: DispatchQueue.main) { }
     }
-    
+
     func updateListFromNet(completion: @escaping (Bool) -> Void) {
         patch { result in
             switch result {
             case .success:
-                print("PATCH: Обновление выполнено успешно")
+                print("PATCH: information collection completed successfully")
                 DispatchQueue.main.async {
                     completion(true)
                     self.networkingManager.isDirty = false
                 }
             case .failure(let error):
-                print("PATCH: Произошла ошибка при обновлении: \(error)")
+                print("PATCH: An error occurred while writing collecting information: \(error)")
                 DispatchQueue.main.async {
                     completion(false)
                     self.networkingManager.isDirty = true
@@ -67,53 +63,66 @@ class DefaultNetworkingService {
         post(item: item) { result in
             switch result {
             case .success:
-                print("POST: Обновление выполнено успешно")
+                print("POST: The addition was completed successfully")
                 DispatchQueue.main.async {
                     completion(true)
                     self.networkingManager.isDirty = false
                 }
             case .failure(let error):
-                print("POST: Произошла ошибка при обновлении: \(error)")
+                print("POST: An error occurred when adding: \(error)")
                 DispatchQueue.main.async {
                     completion(false)
                     self.networkingManager.isDirty = true
                 }
             }
         }
-        
     }
     
     func deleteToDoItemFromNet(id: String, completion: @escaping (Bool) -> Void) {
         delete(withId: id) { result in
             switch result {
             case .success:
-                print("DELETE: Обновление выполнено успешно")
+                print("DELETE: Deletion completed successfully")
                 DispatchQueue.main.async {
                     completion(true)
                     self.networkingManager.isDirty = false
                 }
             case .failure(let error):
-                print("DELETE: Произошла ошибка при обновлении: \(error)")
+                print("DELETE: An error occurred while deleting: \(error)")
                 DispatchQueue.main.async {
                     completion(false)
                     self.networkingManager.isDirty = true
                 }
             }
         }
-        
     }
     
     func updateToDoItemFromNet(id: String, item: ToDoItem, completion: @escaping (Bool) -> Void) {
-        put(withId: id, newItem: item) { result in
+        delete(withId: id) { result in
             switch result {
             case .success:
-                print("PUT: Обновление выполнено успешно")
+                self.post(item: item) { result in
+                    switch result {
+                    case .success:
+                        print("POST: Update completed successfullо")
+                        DispatchQueue.main.async {
+                            completion(true)
+                            self.networkingManager.isDirty = false
+                        }
+                    case .failure(let error):
+                        print("POST: An error occurred while updating: \(error)")
+                        DispatchQueue.main.async {
+                            completion(false)
+                            self.networkingManager.isDirty = true
+                        }
+                    }
+                }
                 DispatchQueue.main.async {
                     completion(true)
                     self.networkingManager.isDirty = false
                 }
             case .failure(let error):
-                print("PUT: Произошла ошибка при обновлении: \(error)")
+                print("PUT: An error occurred while updating: \(error)")
                 DispatchQueue.main.async {
                     completion(false)
                     self.networkingManager.isDirty = true
@@ -165,7 +174,6 @@ class DefaultNetworkingService {
                 completion(.failure(error))
             }
         }
-
         task.resume()
     }
 
@@ -202,7 +210,7 @@ class DefaultNetworkingService {
                             id: netToDoItem.id,
                             text: netToDoItem.text,
                             importance: Importance(rawValue: netToDoItem.importance) ?? .low,
-                            deadline: netToDoItem.deadline.map { Date(timeIntervalSince1970: TimeInterval($0)) },
+                            deadline: netToDoItem.deadline.map { Date(timeIntervalSince1970: TimeInterval($0)) }, timing: nil,
                             isCompleted: netToDoItem.isCompleted,
                             createdDate: Date(timeIntervalSince1970: TimeInterval(netToDoItem.createdDate)),
                             dateОfСhange: Date(timeIntervalSince1970: TimeInterval(netToDoItem.dateОfСhange))
@@ -264,7 +272,6 @@ class DefaultNetworkingService {
             completion(.failure(NetworkingError.invalidURL))
             return
         }
-        print(networkingManager.revision)
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
         request.allHTTPHeaderFields = [
@@ -290,52 +297,8 @@ class DefaultNetworkingService {
                     completion(.failure(NetworkingError.invalidResponse))
                 }
             }
-
             task.resume()
         }
-    
-  private func put(withId id: String, newItem: ToDoItem, completion: @escaping (Result<Void, Error>) -> Void) {
-        guard let url = URL(string: "\(networkingManager.baseURL)/list/\(id)") else {
-            completion(.failure(NetworkingError.invalidURL))
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
-        
-        if let jsonData = createJSONElement(from: NetToDoItem(from: newItem), revision: NetworkingManager.shared.revision) {
-            request.httpBody = jsonData
-        } else {
-            completion(.failure(NetworkingError.jsonSerializationFailed))
-            return
-        }
-        
-        request.allHTTPHeaderFields = [
-            "Authorization": "Bearer \(networkingManager.token)",
-            "X-Last-Known-Revision": "\(NetworkingManager.shared.revision)"
-        ]
-        
-        let task = networkingManager.urlSession.dataTask(with: request) { (data, response, error) in
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                if httpResponse.statusCode == 200 {
-                    self.networkingManager.revision += 1
-                    completion(.success(()))
-                } else {
-                    let error = NSError(domain: "NetworkingError", code: httpResponse.statusCode, userInfo: nil)
-                    completion(.failure(error))
-                }
-            } else {
-                completion(.failure(NetworkingError.invalidResponse))
-            }
-        }
-        
-        task.resume()
-    }
 
   private func createJSONElement(from netToDoItem: NetToDoItem, revision: Int) -> Data? {
         let encoder = JSONEncoder()
@@ -345,9 +308,9 @@ class DefaultNetworkingService {
             let jsonData = try encoder.encode(netToDoItem)
             let json = try JSONSerialization.jsonObject(with: jsonData, options: [])
             let jsonObject: [String: Any] = [
-                "status": "ok",
-                "element": json,
-                "revision": revision
+                NetKeys.status: "ok",
+                NetKeys.element: json,
+                NetKeys.revision: revision
             ]
             return try JSONSerialization.data(withJSONObject: jsonObject, options: [.prettyPrinted])
         } catch {

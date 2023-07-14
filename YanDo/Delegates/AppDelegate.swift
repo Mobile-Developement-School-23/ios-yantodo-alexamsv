@@ -5,15 +5,24 @@
 //  Created by Александра Маслова on 24.06.2023.
 //
 // swiftlint:disable line_length
+// swiftlint:disable unused_closure_parameter
 
 import UIKit
 import CocoaLumberjack
+import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         LoggerConfig.configureLogger()
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+                    if granted {
+                        print("Разрешение на отправку уведомлений получено")
+                    } else {
+                        print("Разрешение на отправку уведомлений отклонено")
+                    }
+                }
         return true
     }
 
@@ -44,3 +53,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 // swiftlint:enable line_length
+// swiftlint:enable unused_closure_parameter

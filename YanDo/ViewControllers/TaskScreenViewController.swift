@@ -6,6 +6,7 @@
 //
 // swiftlint:disable line_length
 // swiftlint:disable type_body_length
+// swiftlint:disable file_length
 
 import UIKit
 
@@ -25,22 +26,26 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     var indicator = NetworkingManager.shared.isDirty
     // model
     let fileCache = DataManager.shared.fileCache
-    let fileName = DataManager.shared.fileName
     var completedItems = DataManager.shared.completedItems
     var pendingItems = DataManager.shared.pendingItems
     var correctId = ""
+    // params
     private var importanceLevel = Importance.basic
     private var deadlineDate: Date?
+    private var timing: Date?
     private let ind = ViewElementsForTaskScreen.cellsCount - 1
     // view
     let contentView = UIScrollView()
     let elements = ViewElementsForTaskScreen()
     var settingsZoneHeight = 148 / Aligners.modelHight * Aligners.height
-    let leftNavButton = UIBarButtonItem(title: "Отменить")
-    let rightNavButton = UIBarButtonItem(title: "Сохранить")
+    let leftNavButton = UIBarButtonItem(title: Text.cancel)
+    let rightNavButton = UIBarButtonItem(title: Text.save)
     let toggle = UISwitch()
+
     private var showCalendarLabel = false
     private var showCalendarView = false
+    private var showNotification = false
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.primaryBack
@@ -61,13 +66,16 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         dismiss(animated: true, completion: nil)
     }
     @objc func saveButtonTapped() {
+        if let date = deadlineDate, let time = timing, let item = toDoItem {
+                    cancelNotification(identifier: item.id)
+                    scheduleNotification(date: date, time: time, text: elements.textView.text, identifier: item.id)
+        }
         // добавляю локально
         if !elements.textView.text.isEmpty {
             if let item = toDoItem {
-                let newItem = ToDoItem(id: item.id, text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
-                // добавляю в файл
-                fileCache.deleteToDoItem(itemsID: item.id)
-                fileCache.addNewToDoItem(newItem)
+                let newItem = ToDoItem(id: item.id, text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, timing: timing, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
+                // добавляю в бд
+                fileCache.updateItemInDatabases(id: item.id, item: newItem)
                 // добавляю в сеть
                 networkingService.updateToDoItemFromNet(id: newItem.id, item: newItem) { success in
                     if success {
@@ -75,9 +83,9 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                     } else { self.indicator = true }
                 }
             } else {
-                let newItem = ToDoItem( text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
-                // добавляю в файл
-                fileCache.addNewToDoItem(newItem)
+                let newItem = ToDoItem( text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, timing: timing, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
+                // добавляю в бд
+                fileCache.addItemToDatabases(item: newItem)
                 // добавляю в сеть
                 networkingService.addNewToDoItemToNet(item: newItem) { success in
                     if success {
@@ -86,9 +94,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                 }
             }
             }
-        fileCache.saveJsonToDoItemInFile(file: fileName)
         delegate?.updateTable()
-        cancelButtonTapped()
         cancelButtonTapped()
             // обновляю данные
         networkingService.updateListFromNet { success in
@@ -114,13 +120,18 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     // deadline
     @objc func dateManager() {
         showCalendarLabel.toggle()
-        showCalendarView = false
         let VStack = UIStackView()
         VStack.axis = .vertical
         VStack.alignment = .leading
         VStack.addArrangedSubview(elements.labels[ind])
-        VStack.addArrangedSubview(elements.calendarButton)
+        let HStask = elements.horizontalStacksForDate
+        HStask.addArrangedSubview(elements.calendarButton)
+        HStask.addArrangedSubview(elements.slash)
+        HStask.addArrangedSubview(elements.timerButton)
+        VStack.addArrangedSubview(HStask)
+
         elements.calendarButton.addTarget(self, action: #selector(calendarManager), for: .touchUpInside)
+        elements.timerButton.addTarget(self, action: #selector(timerManager), for: .touchUpInside)
         if showCalendarLabel {
             // добавляем стэк на место label
             elements.horizontalStacksForCells[ind].removeArrangedSubview(elements.labels[ind])
@@ -132,15 +143,24 @@ class TaskScreenViewController: UIViewController, NetworkingService {
             let nextDate = Calendar.current.date(byAdding: dateComponents, to: currentDate)
             deadlineDate = nextDate
         } else {
-            // Устанавливаем значение nil в переменную deadlineDate и возвращаем прежнее состояние
+            // Устанавливаем значение nil и возвращаем прежнее состояние
+            showCalendarView = true
+            calendarManager()
+            showNotification = true
+            timerManager()
             deadlineDate = nil
+            timing = nil
+            elements.timerButton.setTitle(Text.remind, for: .normal)
+            elements.timerButton.setTitleColor(.grayLightColor, for: .normal)
             elements.horizontalStacksForCells[ind].removeArrangedSubview(VStack)
             elements.horizontalStacksForCells[ind].insertArrangedSubview(self.elements.labels[ind], at: 0)
         }
     }
     @objc func calendarManager() {
         showCalendarView.toggle()
-        if showCalendarView && showCalendarLabel {
+        if showCalendarView {
+            showNotification = true
+            timerManager()
             updateScrollViewContentSize(by: settingsZoneHeight + elements.calendar.frame.height)
             hideKeyBoard()
             elements.verticalStackView.addArrangedSubview(elements.dividers[ind])
@@ -152,6 +172,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                 self.elements.calendar.alpha = 1.0
             }, completion: nil)
         } else {
+            cancelNotification(identifier: correctId)
             updateScrollViewContentSize(by: settingsZoneHeight - elements.calendar.frame.height)
             // удаление элементов с анимацией
             UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveEaseOut, animations: {
@@ -165,36 +186,61 @@ class TaskScreenViewController: UIViewController, NetworkingService {
             self.elements.calendar.alpha = self.showCalendarLabel ? 1.0 : 0.0
         }, completion: nil)
     }
+    @objc func timerManager() {
+        showNotification.toggle()
+        if showNotification {
+            showCalendarView = true
+            calendarManager()
+            updateScrollViewContentSize(by: settingsZoneHeight + elements.timer.frame.height)
+            hideKeyBoard()
+            elements.verticalStackView.addArrangedSubview(elements.dividers[ind])
+            elements.verticalStackView.addArrangedSubview(elements.timer)
+            elements.timer.addTarget(self, action: #selector(timePickerValueChanged(_:)), for: .valueChanged)
+            // Анимация для таймера
+            elements.timer.alpha = 0.0
+            UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveEaseOut, animations: {
+                self.elements.timer.alpha = 1.0
+            }, completion: nil)
+        } else {
+            updateScrollViewContentSize(by: settingsZoneHeight - elements.timer.frame.height)
+            // удаление элементов с анимацией
+            UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveEaseOut, animations: {
+                self.elements.timer.alpha = 0.0
+            }, completion: { _ in
+                self.elements.timer.removeFromSuperview()
+                self.elements.dividers[self.ind].removeFromSuperview()
+            })
+        }
+        UIView.transition(with: view, duration: 0.5, options: .layoutSubviews, animations: {
+            self.elements.timer.alpha = self.showCalendarLabel ? 1.0 : 0.0
+        }, completion: nil)
+    }
+
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         selectDate(date: sender.date)
-        calendarManager()
+    }
+    @objc func timePickerValueChanged(_ sender: UIDatePicker) {
+        elements.timerButton.setTitleColor(.blueColor, for: .normal)
+        selectTime(time: sender.date)
     }
     // delete
     @objc func deleteButtonTapped() {
-        fileCache.deleteToDoItem(itemsID: correctId)
-        // пересохраняю файл уже без элемента
-        fileCache.saveJsonToDoItemInFile(file: fileName)
+        // удаляю из бд
+        fileCache.deleteItemFromDatabases(id: correctId)
         delegate?.updateTable()
-        cancelButtonTapped()
         // удаляю из сети
         networkingService.deleteToDoItemFromNet(id: correctId) { success in
             if success {
                 self.indicator = false
-                DispatchQueue.main.async {
-                    self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
-                    self.completedItems = self.completedItems.filter { $0.id != self.correctId }
-                    self.itemsFromNet = self.itemsFromNet.filter { $0.id != self.correctId }
-                }
-            } else {
-                self.indicator = true
-                DispatchQueue.main.async {
-                    self.pendingItems = self.pendingItems.filter { $0.id != self.correctId }
-                    self.completedItems = self.completedItems.filter { $0.id != self.correctId }
-                    self.itemsFromNet = self.itemsFromNet.filter { $0.id != self.correctId }
-                }
-            }
+            } else { self.indicator = true }
         }
+        pendingItems = pendingItems.filter { $0.id != correctId }
+        completedItems = completedItems.filter { $0.id != correctId }
+        itemsFromNet = itemsFromNet.filter { $0.id != correctId }
+        // удаляю уведомление
+        cancelNotification(identifier: correctId)
         // выхожу
+        delegate?.updateTable()
         cancelButtonTapped()
     }
     // MARK: - views settings
@@ -211,7 +257,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     }
     func navBarSettings() {
         // Заголовок
-        navigationItem.title = "Дело"
+        navigationItem.title = Text.toDo
         let font = UIFont.headline
         let titleAttributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.primaryBack!,
@@ -231,17 +277,17 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         navigationItem.rightBarButtonItem = rightNavButton
     }
     func loadItem() {
-        fileCache.toDoItemsFromJsonFile(file: fileName)
         if let item = toDoItem {
             // изменение вида
             elements.placeholder.isHidden = true
             componentsOn()
             // достаем нужные значения
             correctId = item.id
+            importanceLevel = item.importance
             elements.textView.text = item.text
             let lines = item.text.components(separatedBy: "\n").count
             // еще изменение вида (высота предстваления)
-            var size = settingsZoneHeight + Double(CGFloat(lines * 22) / Aligners.modelHight * Aligners.height)
+            let size = settingsZoneHeight + Double(CGFloat(lines * 22) / Aligners.modelHight * Aligners.height)
             // продолжаем достовать значения
             let index: Int = {
                 var ind = 1
@@ -255,7 +301,11 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                 dateManager()
                 elements.calendar.setDate(date, animated: true)
                 selectDate(date: date)
-                size += elements.calendar.frame.height
+                if let time = item.timing {
+                    elements.timer.setDate(time, animated: true)
+                    elements.timerButton.setTitleColor(.blueColor, for: .normal)
+                    selectTime(time: time)
+                }
             }
             updateScrollViewContentSize(by: size)
         }
@@ -283,7 +333,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(hideKeyBoard))
+        let doneButton = UIBarButtonItem(title: Text.done, style: .done, target: self, action: #selector(hideKeyBoard))
         toolbar.items = [flexibleSpace, doneButton]
         elements.textView.delegate = self
         elements.textView.inputAccessoryView = toolbar
@@ -333,6 +383,14 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         if nextDateFormatted.hasPrefix("0") {nextDateFormatted.removeFirst()} // если число с 1 по 9 включительно
         elements.calendarButton.setTitle(nextDateFormatted, for: .normal)
     }
+    func selectTime(time: Date) {
+        timing = time
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        let formattedTime = dateFormatter.string(from: time)
+        elements.timerButton.setTitle(formattedTime, for: .normal)
+    }
+
     func deletePanelSettings() {
         contentView.addSubview(elements.deleteButton)
         elements.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)
@@ -389,3 +447,4 @@ extension TaskScreenViewController: UITextViewDelegate {
 }
 // swiftlint:enable line_length
 // swiftlint:enable type_body_length
+// swiftlint:enable file_length
