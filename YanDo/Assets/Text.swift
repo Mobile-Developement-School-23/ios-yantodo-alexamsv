@@ -18,7 +18,7 @@ enum Text {
     static let slash = "/"
     static let remind = "Напомнить"
     static let delete = "Удалить"
-    static let doneCounter = "Выполнено —"
+    static let doneCounter = "Выполнено — "
     static let title = "Мои дела"
     static let cancel = "Отменить"
     static let save = "Сохранить"

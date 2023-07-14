@@ -14,8 +14,7 @@
 import UIKit
 
 class MainScreenViewController: UIViewController, NetworkingService {
-    let sql = DataManager.shared.sql
-    let coredata = DataManager.shared.coredata
+    let fileCache = DataManager.shared.fileCache
     var pendingItems = DataManager.shared.pendingItems
     var completedItems: [ToDoItem] = DataManager.shared.completedItems {
         didSet {
@@ -51,8 +50,7 @@ class MainScreenViewController: UIViewController, NetworkingService {
 
         viewSettings()
 
-        sql.toDoItemsFromSQLdatabase()
-        coredata.toDoItemsFromCoreDatabase()
+        fileCache.toDoItemsFromDatabases()
 
         infPanelSettings()
         tableSettings()
@@ -98,7 +96,7 @@ class MainScreenViewController: UIViewController, NetworkingService {
     }
     func updateTable() {
         // Объединение массивов
-        let combinedItems = coredata.itemsCollection + sql.itemsCollection + itemsFromNet
+        let combinedItems = fileCache.itemsCollection + itemsFromNet
         // Удаление дублирующихся элементов на основе id
         var uniqueItems = [ToDoItem]()
         var encounteredIDs = Set<String>()
@@ -331,8 +329,7 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             // обрабатываем удаление в бд
-            self.sql.deleteItemFromSQLDatabase(id: toDoItem.id)
-            self.coredata.deleteItemFromCoreDatabase(id: toDoItem.id)
+            self.fileCache.deleteItemFromDatabases(id: toDoItem.id)
             // удаляем уведомление
             cancelNotification(identifier: toDoItem.id)
             // удаляем из сети
@@ -372,14 +369,14 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
         deleteAction.backgroundColor = UIColor.redColor
         // серая иконка
         let showAction = UIContextualAction(style: .destructive, title: nil) { [weak self] (action, view, completion) in
-            guard let self = self else {
+            guard self != nil else {
                 completion(false)
                 return
             }
         }
         var actions = [deleteAction]
         if !toDoItem.isCompleted { actions.append(showAction) }
-        if let timing = toDoItem.timing {
+        if toDoItem.timing != nil {
             showAction.image = SystemImages.bell.uiImage
         } else { showAction.image = SystemImages.slashBell.uiImage }
         showAction.backgroundColor = UIColor.grayLightColor
@@ -407,8 +404,7 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             cancelNotification(identifier: item.id)
             // перезаписываем item
             let newCompletedToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, timing: item.timing, isCompleted: true, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
-            sql.updateItemInSQLDatabase(id: item.id, item: newCompletedToDoItem)
-            coredata.updateItemInCoreDataBase(id: item.id, item: newCompletedToDoItem)
+            fileCache.updateItemInDatabases(id: item.id, item: newCompletedToDoItem)
             // изменяем в сети
             networkingService.updateToDoItemFromNet(id: newCompletedToDoItem.id, item: newCompletedToDoItem) { success in
                 if success {
@@ -455,8 +451,7 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             }
             // перезаписываем item
             let newPendingToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, timing: item.timing, isCompleted: false, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
-            sql.updateItemInSQLDatabase(id: item.id, item: newPendingToDoItem)
-            coredata.updateItemInCoreDataBase(id: item.id, item: newPendingToDoItem)
+            fileCache.updateItemInDatabases(id: item.id, item: newPendingToDoItem)
             // изменяем в сети
             networkingService.updateToDoItemFromNet(id: newPendingToDoItem.id, item: newPendingToDoItem) { success in
                 if success {

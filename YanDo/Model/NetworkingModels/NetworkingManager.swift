@@ -7,7 +7,7 @@
 
 import Foundation
 
-class NetworkingManager {
+final class NetworkingManager {
     static let shared = NetworkingManager()
     let urlSession: URLSession = URLSession(configuration: .default)
     let baseURL = "https://beta.mrdekk.ru/todobackend"

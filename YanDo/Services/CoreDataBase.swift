@@ -10,8 +10,8 @@ import UIKit
 import CocoaLumberjackSwift
 import CoreData
 
-class CoreDataBase {
-    private(set) var itemsCollection: [ToDoItem] = []
+final class CoreDataBase {
+    var itemsCollection: [ToDoItem] = []
 
     func toDoItemsFromCoreDatabase() {
         let fetchRequest: NSFetchRequest<CoreDataItem> = CoreDataItem.fetchRequest()

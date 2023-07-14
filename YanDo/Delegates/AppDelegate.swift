@@ -5,6 +5,7 @@
 //  Created by Александра Маслова on 24.06.2023.
 //
 // swiftlint:disable line_length
+// swiftlint:disable unused_closure_parameter
 
 import UIKit
 import CocoaLumberjack
@@ -52,3 +53,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 // swiftlint:enable line_length
+// swiftlint:enable unused_closure_parameter

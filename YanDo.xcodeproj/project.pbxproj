@@ -29,7 +29,6 @@
 		338BFD412A58FDE0003AFAF3 /* DefaultNetworkingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 338BFD402A58FDE0003AFAF3 /* DefaultNetworkingService.swift */; };
 		339600822A48623D00725B0E /* ToDoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600812A48623D00725B0E /* ToDoItem.swift */; };
 		339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600852A4862B300725B0E /* DateFormatterExtension.swift */; };
-		339600882A4862E800725B0E /* FileCache(disabled).swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600872A4862E800725B0E /* FileCache(disabled).swift */; };
 		3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600892A48648B00725B0E /* TaskScreenViewController.swift */; };
 		3396008C2A4864BB00725B0E /* ViewElementsForTaskScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396008B2A4864BB00725B0E /* ViewElementsForTaskScreen.swift */; };
 		339600912A48668600725B0E /* SFProDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 339600902A48668600725B0E /* SFProDisplay-Bold.ttf */; };
@@ -43,6 +42,7 @@
 		33E0B0E62A618301009FC61C /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0E52A618301009FC61C /* Text.swift */; };
 		33E0B0E82A618707009FC61C /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0E72A618707009FC61C /* Images.swift */; };
 		33E0B0EB2A6190DD009FC61C /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0EA2A6190DD009FC61C /* NotificationCenter.swift */; };
+		33E0B0ED2A620295009FC61C /* FileCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0EC2A620295009FC61C /* FileCache.swift */; };
 		33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F132A46EC2B00D4E63C /* AppDelegate.swift */; };
 		33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */; };
 		33E33F182A46EC2B00D4E63C /* MainScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F172A46EC2B00D4E63C /* MainScreenViewController.swift */; };
@@ -93,7 +93,6 @@
 		338BFD402A58FDE0003AFAF3 /* DefaultNetworkingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultNetworkingService.swift; sourceTree = "<group>"; };
 		339600812A48623D00725B0E /* ToDoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoItem.swift; sourceTree = "<group>"; };
 		339600852A4862B300725B0E /* DateFormatterExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterExtension.swift; sourceTree = "<group>"; };
-		339600872A4862E800725B0E /* FileCache(disabled).swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileCache(disabled).swift"; sourceTree = "<group>"; };
 		339600892A48648B00725B0E /* TaskScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskScreenViewController.swift; sourceTree = "<group>"; };
 		3396008B2A4864BB00725B0E /* ViewElementsForTaskScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewElementsForTaskScreen.swift; sourceTree = "<group>"; };
 		339600902A48668600725B0E /* SFProDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Bold.ttf"; sourceTree = "<group>"; };
@@ -107,6 +106,7 @@
 		33E0B0E52A618301009FC61C /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
 		33E0B0E72A618707009FC61C /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		33E0B0EA2A6190DD009FC61C /* NotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenter.swift; sourceTree = "<group>"; };
+		33E0B0EC2A620295009FC61C /* FileCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileCache.swift; sourceTree = "<group>"; };
 		33E33F102A46EC2B00D4E63C /* YanDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YanDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33E33F132A46EC2B00D4E63C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -173,9 +173,9 @@
 		3339113B2A56E8420031E8C8 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				33E0B0EC2A620295009FC61C /* FileCache.swift */,
 				330DEF032A5DE2C80077D8CA /* SQLBase.swift */,
 				330FC01E2A5EFD0F00D7A468 /* CoreDataBase.swift */,
-				339600872A4862E800725B0E /* FileCache(disabled).swift */,
 				338BFD3F2A58F7FF003AFAF3 /* Networking */,
 			);
 			path = Services;
@@ -622,7 +622,6 @@
 				334055792A4F4CC8003076F5 /* UIFontsExtension.swift in Sources */,
 				33E0B0E82A618707009FC61C /* Images.swift in Sources */,
 				33E0B0E62A618301009FC61C /* Text.swift in Sources */,
-				339600882A4862E800725B0E /* FileCache(disabled).swift in Sources */,
 				339600862A4862B300725B0E /* DateFormatterExtension.swift in Sources */,
 				330FC01F2A5EFD0F00D7A468 /* CoreDataBase.swift in Sources */,
 				3396008A2A48648B00725B0E /* TaskScreenViewController.swift in Sources */,
@@ -638,6 +637,7 @@
 				330DEF042A5DE2C80077D8CA /* SQLBase.swift in Sources */,
 				333028D92A5C85A60008D3AE /* CustomTableViewHeader.swift in Sources */,
 				33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */,
+				33E0B0ED2A620295009FC61C /* FileCache.swift in Sources */,
 				334055772A4F3C27003076F5 /* UIColorExtension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

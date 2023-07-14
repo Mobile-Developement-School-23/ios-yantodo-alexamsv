@@ -15,7 +15,6 @@ func scheduleNotification(date: Date, time: Date, text: String, identifier: Stri
 
         let lines = text.split(separator: "\n")
         let trimmedText = lines.prefix(3).joined(separator: "\n")
-        
         content.body = trimmedText
 
     var notificationComponents = Calendar.current.dateComponents([.year, .month, .day], from: date)

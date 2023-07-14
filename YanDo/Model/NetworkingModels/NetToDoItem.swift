@@ -31,7 +31,7 @@ struct NetToDoItem: Codable {
         self.deviceId = UIDevice.current.identifierForVendor?.uuidString ?? ""
     }
 
-    enum CodingKeys: String, CodingKey {
+    private enum CodingKeys: String, CodingKey {
         case id
         case text
         case importance

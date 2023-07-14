@@ -54,6 +54,16 @@ enum Keys {
     static let isCompleted = "done"
     static let createdDate = "created_at"
     static let dateOfChange = "changed_at"
+
+    static let sqlQuery: String = """
+       \(Keys.id),
+       \(Keys.text),
+       \(Keys.importance),
+       \(Keys.deadline),
+       \(Keys.isCompleted),
+       \(Keys.createdDate),
+       \(Keys.dateOfChange),
+       """
 }
 
 extension ToDoItem {
@@ -122,6 +132,18 @@ extension ToDoItem {
         csvString += "\(isCompleted);\(DateFormatter.csvDateFormatter.string(from: createdDate));"
         if let dateОfСhange = dateОfСhange {csvString += "\(DateFormatter.csvDateFormatter.string(from: dateОfСhange));"}
         return csvString
+    }
+    // sql format
+    var sqlReplaceStatement: String {
+        "REPLACE INTO list (\(Keys.sqlQuery)) VALUES ('\(self.id)', '\(self.text)', '\(self.importance)', \(self.deadline.flatMap({ String($0.timeIntervalSince1970)}) ?? "NULL"), \(self.isCompleted ? 1 : 0), \(self.createdDate.timeIntervalSince1970), \(self.dateОfСhange.flatMap({ String($0.timeIntervalSince1970)}) ?? "NULL"), '')"
+    }
+
+    var sqlDeleteStatement: String {
+        "DELETE FROM list WHERE \(Keys.id) = '\(self.id)'"
+    }
+
+    var sqlInsertStatement: String {
+        "INSERT INTO list (\(Keys.sqlQuery)) VALUES ('\(self.id)', '\(self.text)', '\(self.importance)', \(self.deadline.flatMap({ String($0.timeIntervalSince1970)}) ?? "NULL"), \(self.isCompleted ? 1 : 0), \(self.createdDate.timeIntervalSince1970), \(self.dateОfСhange.flatMap({ String($0.timeIntervalSince1970)}) ?? "NULL"))"
     }
 }
 // swiftlint:enable line_length

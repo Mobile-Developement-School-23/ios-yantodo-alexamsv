@@ -10,9 +10,10 @@ import Foundation
 import CocoaLumberjackSwift
 import SQLite
 
+// Для выполнения тз реализован extension ToDoItem: предусмотрен формат sqlReplaceStatement, но для использования настаиваю на использовани представленного формата, тк в базу можно записывать не только в виде строки. В итоге код читаемый и с ним проще работать
 final class SQLBase {
-    private(set) var itemsCollection: [ToDoItem] = []
-    var sqlBase: Connection?
+    var itemsCollection: [ToDoItem] = []
+    private var sqlBase: Connection?
 
     func toDoItemsFromSQLdatabase() {
         guard let databasePath = getDatabasePath() else { return }

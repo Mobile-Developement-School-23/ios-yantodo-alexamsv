@@ -12,7 +12,7 @@
 import Foundation
 import UIKit
 
-class DefaultNetworkingService {
+final class DefaultNetworkingService {
    private let networkingManager = NetworkingManager.shared
    var netToDoItems: [ToDoItem] = []
     
