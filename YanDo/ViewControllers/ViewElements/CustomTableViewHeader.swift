@@ -24,7 +24,7 @@ class CustomTableViewHeader: UIView {
     }()
     let showButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Показать", for: .normal)
+        button.setTitle(Text.show, for: .normal)
         button.titleLabel?.font = UIFont.subhead
         button.setTitleColor(UIColor.blueColor, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false

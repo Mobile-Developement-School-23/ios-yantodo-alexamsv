@@ -29,7 +29,7 @@ class ViewElementsForTaskScreen {
     }()
     let placeholder: UILabel = {
         let text = UILabel()
-        text.text = "Что надо сделать?"
+        text.text = Text.placeholder
         text.font = UIFont.body
         text.textColor = UIColor.tertiaryLabel
         text.translatesAutoresizingMaskIntoConstraints = false
@@ -79,7 +79,7 @@ class ViewElementsForTaskScreen {
     }()
     let labels: [UILabel] = {
         var arr = [UILabel]()
-        let titles = ["Важность", "Сделать до"]
+        let titles = [Text.importance, Text.deadline]
         for title in titles {
             let label = UILabel()
             label.text = title
@@ -94,9 +94,9 @@ class ViewElementsForTaskScreen {
     }()
     let segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl()
-        segmentedControl.insertSegment(with: UIImage(named: "ImportanceLow")?.withRenderingMode(.alwaysOriginal), at: 0, animated: true)
-        segmentedControl.insertSegment(withTitle: "нет", at: 1, animated: true)
-        segmentedControl.insertSegment(with: UIImage(named: "ImportanceHight")?.withRenderingMode(.alwaysOriginal), at: 2, animated: true)
+        segmentedControl.insertSegment(with: Images.importanceLow.uiImage.withRenderingMode(.alwaysOriginal), at: 0, animated: true)
+            segmentedControl.insertSegment(withTitle: Text.no, at: 1, animated: true)
+        segmentedControl.insertSegment(with: Images.importanceHight.uiImage.withRenderingMode(.alwaysOriginal), at: 2, animated: true)
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.heightAnchor.constraint(equalToConstant: 36 / Aligners.modelHight * Aligners.height).isActive = true
         segmentedControl.widthAnchor.constraint(equalToConstant: 150 / Aligners.modelWidth * Aligners.width).isActive = true
@@ -154,7 +154,7 @@ class ViewElementsForTaskScreen {
     let deleteButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.secondaryBack
-        button.setTitle("Удалить", for: .normal)
+        button.setTitle(Text.delete, for: .normal)
         button.titleLabel?.font = UIFont.body
         button.setTitleColor(UIColor.tertiaryLabel, for: .normal)
         button.layer.cornerRadius = 16

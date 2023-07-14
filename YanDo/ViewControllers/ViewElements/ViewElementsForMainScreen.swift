@@ -59,7 +59,7 @@ class ViewElementsForMainScreen {
         stack.axis = .horizontal
         stack.alignment = .center
         stack.translatesAutoresizingMaskIntoConstraints = false
-        let icon = UIImageView(image: UIImage(systemName: "calendar"))
+        let icon = UIImageView(image: SystemImages.calendar.uiImage)
         icon.tintColor = UIColor.tertiaryLabel
         icon.translatesAutoresizingMaskIntoConstraints = false
         stack.addArrangedSubview(icon)
@@ -74,7 +74,7 @@ class ViewElementsForMainScreen {
     }()
      let chevronIcon: UIImageView = {
         let icon = UIImageView()
-        icon.image = UIImage(named: "Chevron")
+         icon.image = Images.chevron.uiImage
         icon.translatesAutoresizingMaskIntoConstraints = false
         icon.widthAnchor.constraint(equalToConstant: 7 / Aligners.modelWidth * Aligners.width).isActive = true
         icon.heightAnchor.constraint(equalToConstant: 12 / Aligners.modelHight * Aligners.height).isActive = true
@@ -82,7 +82,7 @@ class ViewElementsForMainScreen {
     }()
     // add item
     let newItemButton: UIImageView = {
-        let imageView = UIImageView(image: UIImage(named: "Plus"))
+        let imageView = UIImageView(image: Images.plus.uiImage)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.heightAnchor.constraint(equalToConstant: 44).isActive = true
         imageView.widthAnchor.constraint(equalToConstant: 44).isActive = true
@@ -94,7 +94,7 @@ class ViewElementsForMainScreen {
     }()
     let newItemCell: UILabel = {
         let text = UILabel()
-        text.text = "Новое"
+        text.text = Text.new
         text.font = UIFont.body
         text.textColor = UIColor.tertiaryLabel
         text.translatesAutoresizingMaskIntoConstraints = false

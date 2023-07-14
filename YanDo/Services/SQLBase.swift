@@ -134,5 +134,4 @@ final class SQLBase {
     }
 
 }
-
 // swiftlint:enable line_length

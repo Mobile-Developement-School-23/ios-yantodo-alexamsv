@@ -8,15 +8,21 @@
 import Foundation
 import UIKit
 
-enum IndicatorImages {
+enum SystemImages {
     case connect
     case disconnect
+    case calendar
+    case arrow
     var uiImage: UIImage {
         switch self {
         case .connect:
             return UIImage(systemName: "icloud.fill")!
         case .disconnect:
             return UIImage(systemName: "icloud.slash.fill")!
+        case .calendar:
+            return UIImage(systemName: "calendar")!
+        case .arrow:
+            return UIImage(systemName: "arrow.turn.left.down")!
         }
     }
 }

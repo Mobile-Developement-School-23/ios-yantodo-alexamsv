@@ -36,8 +36,8 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     let contentView = UIScrollView()
     let elements = ViewElementsForTaskScreen()
     var settingsZoneHeight = 148 / Aligners.modelHight * Aligners.height
-    let leftNavButton = UIBarButtonItem(title: "Отменить")
-    let rightNavButton = UIBarButtonItem(title: "Сохранить")
+    let leftNavButton = UIBarButtonItem(title: Text.cancel)
+    let rightNavButton = UIBarButtonItem(title: Text.save)
     let toggle = UISwitch()
     private var showCalendarLabel = false
     private var showCalendarView = false
@@ -201,7 +201,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     }
     func navBarSettings() {
         // Заголовок
-        navigationItem.title = "Дело"
+        navigationItem.title = Text.toDo
         let font = UIFont.headline
         let titleAttributes: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.primaryBack!,
@@ -273,7 +273,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneButton = UIBarButtonItem(title: "Готово", style: .done, target: self, action: #selector(hideKeyBoard))
+        let doneButton = UIBarButtonItem(title: Text.done, style: .done, target: self, action: #selector(hideKeyBoard))
         toolbar.items = [flexibleSpace, doneButton]
         elements.textView.delegate = self
         elements.textView.inputAccessoryView = toolbar

@@ -48,11 +48,11 @@ class CustomTableViewCell: UITableViewCell {
         guard let item = item else { return }
         if !item.isCompleted {
             if item.importance ==  .important {
-                elements.markerButton.setImage(UIImage(named: "RedMarker"), for: .normal)
-                elements.importanceIcon.image = UIImage(named: "ImportanceHight")
+                elements.markerButton.setImage(Images.redMarker.uiImage, for: .normal)
+                elements.importanceIcon.image = Images.importanceHight.uiImage
                 elements.cellsInf.addArrangedSubview(elements.importanceIcon)
             } else {
-                elements.markerButton.setImage(UIImage(named: "PendingMarker"), for: .normal)
+                elements.markerButton.setImage(Images.pendingMarker.uiImage, for: .normal)
             }
             elements.title.text = item.text
             elements.cellsLabel.addArrangedSubview(elements.title)
@@ -112,7 +112,7 @@ class CustomCompletedTableViewCell: UITableViewCell {
     func configureCell() {
         guard let item = item else { return }
         if item.isCompleted {
-            elements.markerButton.setImage(UIImage(named: "CompletedMarker"), for: .normal)
+            elements.markerButton.setImage(Images.completedMarker.uiImage, for: .normal)
             elements.title.text = item.text
             let attributedString = NSAttributedString(string: item.text, attributes: [
                 NSAttributedString.Key.strikethroughStyle: NSUnderlineStyle.single.rawValue,

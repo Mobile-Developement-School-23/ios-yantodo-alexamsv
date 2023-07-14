@@ -113,5 +113,4 @@ extension ToDoItem {
         return csvString
     }
 }
-
 // swiftlint:enable line_length

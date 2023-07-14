@@ -21,7 +21,7 @@ class MainScreenViewController: UIViewController, NetworkingService {
         didSet {
             completedItemsCount = completedItems.count
             DispatchQueue.main.async {
-                self.headerView.completedLabel.text = "Выполнено — \(self.completedItemsCount)"
+                self.headerView.completedLabel.text = Text.doneCounter + String(self.completedItemsCount)
             }
         }
     }
@@ -31,9 +31,9 @@ class MainScreenViewController: UIViewController, NetworkingService {
     var indicator: Bool = NetworkingManager.shared.isDirty {
         didSet {
             if indicator {
-                headerView.netIndicator.image = IndicatorImages.disconnect.uiImage
+                headerView.netIndicator.image = SystemImages.disconnect.uiImage
             } else {
-                headerView.netIndicator.image = IndicatorImages.connect.uiImage
+                headerView.netIndicator.image = SystemImages.connect.uiImage
             }
         }
     }
@@ -66,9 +66,9 @@ class MainScreenViewController: UIViewController, NetworkingService {
     @objc func showButtonTapped(button: UIButton) {
         showCompletedToDoItems.toggle()
         if showCompletedToDoItems {
-            button.setTitle("Скрыть", for: .normal)
+            button.setTitle(Text.hide, for: .normal)
         } else {
-            button.setTitle("Показать", for: .normal)
+            button.setTitle(Text.show, for: .normal)
         }
        updateTable()
     }
@@ -120,7 +120,7 @@ class MainScreenViewController: UIViewController, NetworkingService {
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.primaryLabel!]
         navigationItem.largeTitleDisplayMode = .always
-        navigationItem.title = "Мои дела"
+        navigationItem.title = Text.title
 
         if let navigationBar = navigationController?.navigationBar {
             navigationBar.layoutMargins.top = 44 / Aligners.modelHight * Aligners.height
@@ -130,11 +130,11 @@ class MainScreenViewController: UIViewController, NetworkingService {
     }
 
     func infPanelSettings() {
-        headerView.netIndicator.image = IndicatorImages.disconnect.uiImage
+        headerView.netIndicator.image = SystemImages.disconnect.uiImage
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(networkStart))
         headerView.netIndicator.isUserInteractionEnabled = true
         headerView.netIndicator.addGestureRecognizer(tapGesture)
-        headerView.completedLabel.text = "Выполнено — \(completedItemsCount)"
+        headerView.completedLabel.text =  Text.doneCounter + String(completedItemsCount)
         headerView.showButton.addTarget(self, action: #selector(showButtonTapped), for: .touchUpInside)
     }
     func tableSettings() {
@@ -300,10 +300,10 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             completion(true)
         }
         if toDoItem.isCompleted {
-            completedAction.image = UIImage(systemName: "arrow.turn.left.down")
+            completedAction.image = SystemImages.arrow.uiImage
             completedAction.backgroundColor = UIColor.grayLightColor
         } else {
-            completedAction.image = UIImage(named: "Complete")
+            completedAction.image = Images.complete.uiImage
             completedAction.backgroundColor = UIColor.greenColor
         }
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [completedAction])
@@ -366,7 +366,7 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             }, completion: nil)
             completion(true)
         }
-        deleteAction.image = UIImage(named: "Delete")
+        deleteAction.image = Images.delete.uiImage
         deleteAction.backgroundColor = UIColor.redColor
         // серая иконка
         let showAction = UIContextualAction(style: .destructive, title: nil) { [weak self] (action, view, completion) in
@@ -390,7 +390,7 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
             self.present(navVC, animated: true, completion: nil)
             completion(true)
         }
-        showAction.image = UIImage(named: "Show")
+        showAction.image = Images.show.uiImage
         showAction.backgroundColor = UIColor.grayLightColor
         let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction, showAction])
         swipeConfiguration.performsFirstActionWithFullSwipe = true
