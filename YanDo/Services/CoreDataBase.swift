@@ -29,6 +29,7 @@ class CoreDataBase {
         coreDataItem.text = item.text
         coreDataItem.importance = item.importance.rawValue
         coreDataItem.deadline = item.deadline
+        coreDataItem.timing = item.timing
         coreDataItem.done = item.isCompleted
         coreDataItem.created_at = item.createdDate
         coreDataItem.changed_at = item.dateОfСhange
@@ -53,7 +54,7 @@ class CoreDataBase {
     }
     func updateItemInCoreDataBase(id: String, item: ToDoItem) {
         deleteItemFromCoreDatabase(id: id)
-        let updatedItem = ToDoItem(id: id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: item.isCompleted, createdDate: item.createdDate, dateОfСhange: Date())
+        let updatedItem = ToDoItem(id: id, text: item.text, importance: item.importance, deadline: item.deadline, timing: item.timing, isCompleted: item.isCompleted, createdDate: item.createdDate, dateОfСhange: Date())
         addItemToCoreDatabase(item: updatedItem)
     }
 
@@ -64,6 +65,7 @@ class CoreDataBase {
             text: coreDataItem.text ?? "",
             importance: importance,
             deadline: coreDataItem.deadline,
+            timing: coreDataItem.timing,
             isCompleted: coreDataItem.done,
             createdDate: coreDataItem.created_at ?? Date(),
             dateОfСhange: coreDataItem.changed_at

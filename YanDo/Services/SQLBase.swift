@@ -44,7 +44,7 @@ final class SQLBase {
                     id: idValue,
                     text: textValue,
                     importance: Importance(rawValue: importanceValue) ?? .basic,
-                    deadline: deadlineValue != 0 ? Date(timeIntervalSince1970: TimeInterval(deadlineValue)) : nil,
+                    deadline: deadlineValue != 0 ? Date(timeIntervalSince1970: TimeInterval(deadlineValue)) : nil, timing: nil,
                     isCompleted: isCompletedValue,
                     createdDate: Date(timeIntervalSince1970: TimeInterval(createdDateValue)),
                     dateОfСhange: Date(timeIntervalSince1970: TimeInterval(dateOfChangeValue))
@@ -102,7 +102,7 @@ final class SQLBase {
 
     func updateItemInSQLDatabase(id: String, item: ToDoItem) {
         deleteItemFromSQLDatabase(id: id)
-        let updatedItem = ToDoItem(id: id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: item.isCompleted, createdDate: item.createdDate, dateОfСhange: Date())
+        let updatedItem = ToDoItem(id: id, text: item.text, importance: item.importance, deadline: item.deadline, timing: nil, isCompleted: item.isCompleted, createdDate: item.createdDate, dateОfСhange: Date())
         addItemToSQLdatabase(item: updatedItem)
     }
 

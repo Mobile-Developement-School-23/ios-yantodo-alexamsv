@@ -8,12 +8,20 @@
 
 import UIKit
 import CocoaLumberjack
+import UserNotifications
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         LoggerConfig.configureLogger()
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
+                    if granted {
+                        print("Разрешение на отправку уведомлений получено")
+                    } else {
+                        print("Разрешение на отправку уведомлений отклонено")
+                    }
+                }
         return true
     }
 

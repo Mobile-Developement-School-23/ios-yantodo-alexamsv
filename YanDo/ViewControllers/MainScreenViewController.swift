@@ -98,7 +98,7 @@ class MainScreenViewController: UIViewController, NetworkingService {
     }
     func updateTable() {
         // Объединение массивов
-        var combinedItems = coredata.itemsCollection + sql.itemsCollection + itemsFromNet
+        let combinedItems = coredata.itemsCollection + sql.itemsCollection + itemsFromNet
         // Удаление дублирующихся элементов на основе id
         var uniqueItems = [ToDoItem]()
         var encounteredIDs = Set<String>()
@@ -314,6 +314,16 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
         guard indexPath.row != tableView.numberOfRows(inSection: 0) - 1 else {
             return nil
         }
+        let toDoItem: ToDoItem
+        if self.showCompletedToDoItems {
+            if indexPath.row < self.completedItems.count {
+                toDoItem = self.completedItems[indexPath.row]
+            } else {
+                toDoItem = self.pendingItems[indexPath.row - self.completedItems.count]
+            }
+        } else {
+            toDoItem = self.pendingItems[indexPath.row]
+        }
         // красная иконка
         let deleteAction = UIContextualAction(style: .destructive, title: nil) { [weak self] (action, view, completion) in
             guard let self = self else {
@@ -321,18 +331,10 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
                 return
             }
             // обрабатываем удаление в бд
-            let toDoItem: ToDoItem
-            if self.showCompletedToDoItems {
-                if indexPath.row < self.completedItems.count {
-                    toDoItem = self.completedItems[indexPath.row]
-                } else {
-                    toDoItem = self.pendingItems[indexPath.row - self.completedItems.count]
-                }
-            } else {
-                toDoItem = self.pendingItems[indexPath.row]
-            }
             self.sql.deleteItemFromSQLDatabase(id: toDoItem.id)
             self.coredata.deleteItemFromCoreDatabase(id: toDoItem.id)
+            // удаляем уведомление
+            cancelNotification(identifier: toDoItem.id)
             // удаляем из сети
             networkingService.deleteToDoItemFromNet(id: toDoItem.id) { success in
                 if success {
@@ -374,25 +376,15 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
                 completion(false)
                 return
             }
-            let toDoItem: ToDoItem
-            if self.showCompletedToDoItems {
-                if indexPath.row < self.completedItems.count {
-                    toDoItem = self.completedItems[indexPath.row]
-                } else {
-                    toDoItem = self.pendingItems[indexPath.row - self.completedItems.count]
-                }
-            } else {
-                toDoItem = self.pendingItems[indexPath.row]
-            }
-            let tvc = TaskScreenViewController(toDoItem: toDoItem)
-            tvc.delegate = self
-            let navVC = UINavigationController(rootViewController: tvc)
-            self.present(navVC, animated: true, completion: nil)
-            completion(true)
         }
-        showAction.image = Images.show.uiImage
+        var actions = [deleteAction]
+        if !toDoItem.isCompleted { actions.append(showAction) }
+        if let timing = toDoItem.timing {
+            showAction.image = SystemImages.bell.uiImage
+        } else { showAction.image = SystemImages.slashBell.uiImage }
         showAction.backgroundColor = UIColor.grayLightColor
-        let swipeConfiguration = UISwipeActionsConfiguration(actions: [deleteAction, showAction])
+        showAction.backgroundColor = UIColor.grayLightColor
+        let swipeConfiguration = UISwipeActionsConfiguration(actions: actions)
         swipeConfiguration.performsFirstActionWithFullSwipe = true
         return swipeConfiguration
     }
@@ -411,8 +403,10 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
             } else {
                  item = pendingItems[indexPath.row - completedItems.count]
             }
+            // удаляем уведомление
+            cancelNotification(identifier: item.id)
             // перезаписываем item
-            let newCompletedToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: true, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
+            let newCompletedToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, timing: item.timing, isCompleted: true, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
             sql.updateItemInSQLDatabase(id: item.id, item: newCompletedToDoItem)
             coredata.updateItemInCoreDataBase(id: item.id, item: newCompletedToDoItem)
             // изменяем в сети
@@ -453,8 +447,14 @@ extension MainScreenViewController: CustomTableViewCellDelegate {
         // получаем item
         if let indexPath = elements.tableView.indexPath(for: cell) {
             let item = completedItems[indexPath.row]
+            // включаем уведомление
+            if let date = item.deadline {
+                if let time = item.timing {
+                    scheduleNotification(date: date, time: time, text: item.text, identifier: item.id)
+                }
+            }
             // перезаписываем item
-            let newPendingToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, isCompleted: false, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
+            let newPendingToDoItem = ToDoItem(id: item.id, text: item.text, importance: item.importance, deadline: item.deadline, timing: item.timing, isCompleted: false, createdDate: item.createdDate, dateОfСhange: item.dateОfСhange)
             sql.updateItemInSQLDatabase(id: item.id, item: newPendingToDoItem)
             coredata.updateItemInCoreDataBase(id: item.id, item: newPendingToDoItem)
             // изменяем в сети

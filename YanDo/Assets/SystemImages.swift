@@ -13,6 +13,8 @@ enum SystemImages {
     case disconnect
     case calendar
     case arrow
+    case slashBell
+    case bell
     var uiImage: UIImage {
         switch self {
         case .connect:
@@ -23,6 +25,10 @@ enum SystemImages {
             return UIImage(systemName: "calendar")!
         case .arrow:
             return UIImage(systemName: "arrow.turn.left.down")!
+        case .slashBell:
+            return UIImage(systemName: "bell.slash.fill")!
+        case .bell:
+            return UIImage(systemName: "bell.fill")!
         }
     }
 }

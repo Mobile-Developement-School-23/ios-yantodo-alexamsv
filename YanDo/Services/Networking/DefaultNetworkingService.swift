@@ -210,7 +210,7 @@ class DefaultNetworkingService {
                             id: netToDoItem.id,
                             text: netToDoItem.text,
                             importance: Importance(rawValue: netToDoItem.importance) ?? .low,
-                            deadline: netToDoItem.deadline.map { Date(timeIntervalSince1970: TimeInterval($0)) },
+                            deadline: netToDoItem.deadline.map { Date(timeIntervalSince1970: TimeInterval($0)) }, timing: nil,
                             isCompleted: netToDoItem.isCompleted,
                             createdDate: Date(timeIntervalSince1970: TimeInterval(netToDoItem.createdDate)),
                             dateОfСhange: Date(timeIntervalSince1970: TimeInterval(netToDoItem.dateОfСhange))

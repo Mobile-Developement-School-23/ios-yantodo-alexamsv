@@ -42,6 +42,7 @@
 		339600A42A4D9A8E00725B0E /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600A32A4D9A8E00725B0E /* DataManager.swift */; };
 		33E0B0E62A618301009FC61C /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0E52A618301009FC61C /* Text.swift */; };
 		33E0B0E82A618707009FC61C /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0E72A618707009FC61C /* Images.swift */; };
+		33E0B0EB2A6190DD009FC61C /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0EA2A6190DD009FC61C /* NotificationCenter.swift */; };
 		33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F132A46EC2B00D4E63C /* AppDelegate.swift */; };
 		33E33F162A46EC2B00D4E63C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */; };
 		33E33F182A46EC2B00D4E63C /* MainScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E33F172A46EC2B00D4E63C /* MainScreenViewController.swift */; };
@@ -105,6 +106,7 @@
 		339600A32A4D9A8E00725B0E /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		33E0B0E52A618301009FC61C /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
 		33E0B0E72A618707009FC61C /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
+		33E0B0EA2A6190DD009FC61C /* NotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenter.swift; sourceTree = "<group>"; };
 		33E33F102A46EC2B00D4E63C /* YanDo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YanDo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33E33F132A46EC2B00D4E63C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		33E33F152A46EC2B00D4E63C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -282,6 +284,14 @@
 			path = ViewElements;
 			sourceTree = "<group>";
 		};
+		33E0B0E92A619097009FC61C /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				33E0B0EA2A6190DD009FC61C /* NotificationCenter.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
 		33E33F072A46EC2B00D4E63C = {
 			isa = PBXGroup;
 			children = (
@@ -312,6 +322,7 @@
 				3339113B2A56E8420031E8C8 /* Services */,
 				3396007E2A4861CF00725B0E /* ViewControllers */,
 				3396007D2A4861C000725B0E /* Extensions */,
+				33E0B0E92A619097009FC61C /* Notifications */,
 				334055882A4F94E3003076F5 /* Logger */,
 				3396007C2A4861B100725B0E /* Assets */,
 				330FC0202A5F069F00D7A468 /* Databases */,
@@ -605,6 +616,7 @@
 				333911412A5721AD0031E8C8 /* NetToDoItem.swift in Sources */,
 				33E33F182A46EC2B00D4E63C /* MainScreenViewController.swift in Sources */,
 				338BFD3C2A58F7B1003AFAF3 /* NetworkingService.swift in Sources */,
+				33E0B0EB2A6190DD009FC61C /* NotificationCenter.swift in Sources */,
 				33E33F142A46EC2B00D4E63C /* AppDelegate.swift in Sources */,
 				3396009B2A4B6BF900725B0E /* AlignersForScreens.swift in Sources */,
 				334055792A4F4CC8003076F5 /* UIFontsExtension.swift in Sources */,

@@ -31,6 +31,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     var correctId = ""
     private var importanceLevel = Importance.basic
     private var deadlineDate: Date?
+    private var timing: Date?
     private let ind = ViewElementsForTaskScreen.cellsCount - 1
     // view
     let contentView = UIScrollView()
@@ -41,6 +42,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     let toggle = UISwitch()
     private var showCalendarLabel = false
     private var showCalendarView = false
+    private var showNotification = false
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.primaryBack
@@ -61,10 +63,20 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         dismiss(animated: true, completion: nil)
     }
     @objc func saveButtonTapped() {
+        if let date = deadlineDate {
+            if let time = timing {
+                if let item = toDoItem {
+                    cancelNotification(identifier: item.id)
+                    scheduleNotification(date: date, time: time, text: elements.textView.text, identifier: item.id)
+                }
+            }
+            
+        }
+        
         // добавляю локально
         if !elements.textView.text.isEmpty {
             if let item = toDoItem {
-                let newItem = ToDoItem(id: item.id, text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
+                let newItem = ToDoItem(id: item.id, text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, timing: timing, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
                 // добавляю в бд
                 sql.updateItemInSQLDatabase(id: item.id, item: newItem)
                 coredata.updateItemInCoreDataBase(id: item.id, item: newItem)
@@ -75,7 +87,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                     } else { self.indicator = true }
                 }
             } else {
-                let newItem = ToDoItem( text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
+                let newItem = ToDoItem( text: elements.textView.text, importance: importanceLevel, deadline: deadlineDate, timing: timing, isCompleted: false, createdDate: Date(), dateОfСhange: nil)
                 // добавляю в бд
                 sql.addItemToSQLdatabase(item: newItem)
                 coredata.addItemToCoreDatabase(item: newItem)
@@ -113,13 +125,21 @@ class TaskScreenViewController: UIViewController, NetworkingService {
     // deadline
     @objc func dateManager() {
         showCalendarLabel.toggle()
-        showCalendarView = false
+        //showCalendarView.toggle()
+        //calendarManager()
+        
         let VStack = UIStackView()
         VStack.axis = .vertical
         VStack.alignment = .leading
         VStack.addArrangedSubview(elements.labels[ind])
-        VStack.addArrangedSubview(elements.calendarButton)
+        let HStask = elements.horizontalStacksForDate
+        HStask.addArrangedSubview(elements.calendarButton)
+        HStask.addArrangedSubview(elements.slash)
+        HStask.addArrangedSubview(elements.timerButton)
+        VStack.addArrangedSubview(HStask)
+        
         elements.calendarButton.addTarget(self, action: #selector(calendarManager), for: .touchUpInside)
+        elements.timerButton.addTarget(self, action: #selector(timerManager), for: .touchUpInside)
         if showCalendarLabel {
             // добавляем стэк на место label
             elements.horizontalStacksForCells[ind].removeArrangedSubview(elements.labels[ind])
@@ -131,15 +151,24 @@ class TaskScreenViewController: UIViewController, NetworkingService {
             let nextDate = Calendar.current.date(byAdding: dateComponents, to: currentDate)
             deadlineDate = nextDate
         } else {
-            // Устанавливаем значение nil в переменную deadlineDate и возвращаем прежнее состояние
+            // Устанавливаем значение nil и возвращаем прежнее состояние
+            showCalendarView = true
+            calendarManager()
+            showNotification = true
+            timerManager()
             deadlineDate = nil
+            timing = nil
+            elements.timerButton.setTitle(Text.remind, for: .normal)
+            elements.timerButton.setTitleColor(.grayLightColor, for: .normal)
             elements.horizontalStacksForCells[ind].removeArrangedSubview(VStack)
             elements.horizontalStacksForCells[ind].insertArrangedSubview(self.elements.labels[ind], at: 0)
         }
     }
     @objc func calendarManager() {
         showCalendarView.toggle()
-        if showCalendarView && showCalendarLabel {
+        if showCalendarView {
+            showNotification = true
+            timerManager()
             updateScrollViewContentSize(by: settingsZoneHeight + elements.calendar.frame.height)
             hideKeyBoard()
             elements.verticalStackView.addArrangedSubview(elements.dividers[ind])
@@ -151,6 +180,7 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                 self.elements.calendar.alpha = 1.0
             }, completion: nil)
         } else {
+            cancelNotification(identifier: correctId)
             updateScrollViewContentSize(by: settingsZoneHeight - elements.calendar.frame.height)
             // удаление элементов с анимацией
             UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveEaseOut, animations: {
@@ -164,9 +194,42 @@ class TaskScreenViewController: UIViewController, NetworkingService {
             self.elements.calendar.alpha = self.showCalendarLabel ? 1.0 : 0.0
         }, completion: nil)
     }
+    @objc func timerManager() {
+        showNotification.toggle()
+        if showNotification {
+            showCalendarView = true
+            calendarManager()
+            updateScrollViewContentSize(by: settingsZoneHeight + elements.timer.frame.height)
+            hideKeyBoard()
+            elements.verticalStackView.addArrangedSubview(elements.dividers[ind])
+            elements.verticalStackView.addArrangedSubview(elements.timer)
+            elements.timer.addTarget(self, action: #selector(timePickerValueChanged(_:)), for: .valueChanged)
+            // Анимация для таймера
+            elements.timer.alpha = 0.0
+            UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveEaseOut, animations: {
+                self.elements.timer.alpha = 1.0
+            }, completion: nil)
+        } else {
+            updateScrollViewContentSize(by: settingsZoneHeight - elements.timer.frame.height)
+            // удаление элементов с анимацией
+            UIView.animate(withDuration: 0.5, delay: 0.1, options: .curveEaseOut, animations: {
+                self.elements.timer.alpha = 0.0
+            }, completion: { _ in
+                self.elements.timer.removeFromSuperview()
+                self.elements.dividers[self.ind].removeFromSuperview()
+            })
+        }
+        UIView.transition(with: view, duration: 0.5, options: .layoutSubviews, animations: {
+            self.elements.timer.alpha = self.showCalendarLabel ? 1.0 : 0.0
+        }, completion: nil)
+    }
+    
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
         selectDate(date: sender.date)
-        calendarManager()
+    }
+    @objc func timePickerValueChanged(_ sender: UIDatePicker) {
+        elements.timerButton.setTitleColor(.blueColor, for: .normal)
+        selectTime(time: sender.date)
     }
     // delete
     @objc func deleteButtonTapped() {
@@ -183,6 +246,8 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         pendingItems = pendingItems.filter { $0.id != correctId }
         completedItems = completedItems.filter { $0.id != correctId }
         itemsFromNet = itemsFromNet.filter { $0.id != correctId }
+        // удаляю уведомление
+        cancelNotification(identifier: correctId)
         // выхожу
         delegate?.updateTable()
         cancelButtonTapped()
@@ -245,7 +310,11 @@ class TaskScreenViewController: UIViewController, NetworkingService {
                 dateManager()
                 elements.calendar.setDate(date, animated: true)
                 selectDate(date: date)
-                size += elements.calendar.frame.height
+                if let time = item.timing {
+                    elements.timer.setDate(time, animated: true)
+                    elements.timerButton.setTitleColor(.blueColor, for: .normal)
+                    selectTime(time: time)
+                }
             }
             updateScrollViewContentSize(by: size)
         }
@@ -323,6 +392,15 @@ class TaskScreenViewController: UIViewController, NetworkingService {
         if nextDateFormatted.hasPrefix("0") {nextDateFormatted.removeFirst()} // если число с 1 по 9 включительно
         elements.calendarButton.setTitle(nextDateFormatted, for: .normal)
     }
+    func selectTime(time: Date) {
+        timing = time
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm"
+        let formattedTime = dateFormatter.string(from: time)
+        
+        elements.timerButton.setTitle(formattedTime, for: .normal)
+    }
+
     func deletePanelSettings() {
         contentView.addSubview(elements.deleteButton)
         elements.deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchUpInside)

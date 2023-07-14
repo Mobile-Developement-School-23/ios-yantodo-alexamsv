@@ -43,7 +43,6 @@ enum Images {
             return UIImage(named: "RedMarker")!
         case .plus:
             return UIImage(named: "Plus")!
-        
         }
     }
 }
