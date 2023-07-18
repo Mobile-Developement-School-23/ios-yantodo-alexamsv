@@ -200,6 +200,13 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
                     cell.item = toDoItem
                     cell.delegate = self
                     cell.backgroundColor = UIColor.secondaryBack
+
+                    if indexPath.row == 0 {
+                        let maskLayer = CAShapeLayer()
+                        maskLayer.path = UIBezierPath(roundedRect: cell.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 16, height: 16)).cgPath
+                        cell.layer.mask = maskLayer
+                        cell.layoutMargins = UIEdgeInsets.zero
+                            }
                     return cell
                 } else {
                     let toDoItem = pendingItems[indexPath.row - completedItems.count]
@@ -207,6 +214,13 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
                     cell.item = toDoItem
                     cell.delegate = self
                     cell.backgroundColor = UIColor.secondaryBack
+
+                    if indexPath.row == 0 {
+                        let maskLayer = CAShapeLayer()
+                        maskLayer.path = UIBezierPath(roundedRect: cell.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 16, height: 16)).cgPath
+                        cell.layer.mask = maskLayer
+                        cell.layoutMargins = UIEdgeInsets.zero
+                            }
                     return cell
                 }
             } else {
@@ -215,6 +229,13 @@ extension MainScreenViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.item = toDoItem
                 cell.delegate = self
                 cell.backgroundColor = UIColor.secondaryBack
+
+                if indexPath.row == 0 {
+                    let maskLayer = CAShapeLayer()
+                    maskLayer.path = UIBezierPath(roundedRect: cell.bounds, byRoundingCorners: [.topLeft, .topRight], cornerRadii: CGSize(width: 16, height: 16)).cgPath
+                    cell.layer.mask = maskLayer
+                    cell.layoutMargins = UIEdgeInsets.zero
+                        }
                 return cell
             }
         }

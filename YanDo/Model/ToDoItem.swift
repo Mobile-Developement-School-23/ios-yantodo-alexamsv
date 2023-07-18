@@ -4,8 +4,6 @@
 //
 //  Created by Александра Маслова on 12.06.2023.
 //
-
-// MARK: Так как создана библиотека на основе ToDoItem его код не нужен
 // swiftlint:disable line_length
 
 import Foundation
