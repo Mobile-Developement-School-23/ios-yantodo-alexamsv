@@ -11,13 +11,13 @@ struct CellView: View {
     var item: ToDoItem
     
     var body: some View {
-        VStack {
-            HStack(spacing: 12){
+        VStack(spacing: 0) {
+            HStack(spacing: 12) {
                 marker
-                VStack(alignment: .leading){
+                VStack(alignment: .leading) {
                     HStack(alignment: .top, spacing: 5) {
                         importance
-                        VStack(alignment: .leading, spacing: 5) {
+                        VStack(alignment: .leading, spacing: 3) {
                             text
                             deadline
                         }
@@ -27,13 +27,12 @@ struct CellView: View {
                 Images.chevron.uiImage
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .background(Color.secondaryBack)
+            .padding(.vertical, 20)
             .onTapGesture {
                 // task screen
             }
             Divider().padding(.leading, 52)
-        }
+        }.background(Color.secondaryBack)
     }
     
     @ViewBuilder
@@ -55,10 +54,12 @@ struct CellView: View {
         if !item.isCompleted {
             if item.importance == .important {
             Images.importanceHight.uiImage
+                    .padding(.top, 2)
         } else if item.importance == .low {
             Images.importanceLow.uiImage
+                .padding(.top, 2)
         }
-    }
+        }
     }
     @ViewBuilder
     var text: some View {

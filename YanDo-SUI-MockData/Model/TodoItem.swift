@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ToDoItem {
+struct ToDoItem: Identifiable {
     let id: String
     let text: String
     let importance: Importance

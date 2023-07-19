@@ -47,6 +47,7 @@
 		33B4A5CD2A6723E8008E6EDB /* TodoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4A5CC2A6723E8008E6EDB /* TodoItem.swift */; };
 		33B4A5D02A6724E7008E6EDB /* AssetsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4A5CF2A6724E7008E6EDB /* AssetsHelper.swift */; };
 		33B4A5DF2A680298008E6EDB /* CellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4A5DE2A680298008E6EDB /* CellView.swift */; };
+		33B4A5E82A68888C008E6EDB /* SpecialCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4A5E72A68888B008E6EDB /* SpecialCell.swift */; };
 		33E0B0E62A618301009FC61C /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0E52A618301009FC61C /* Text.swift */; };
 		33E0B0E82A618707009FC61C /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0E72A618707009FC61C /* Images.swift */; };
 		33E0B0EB2A6190DD009FC61C /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0EA2A6190DD009FC61C /* NotificationCenter.swift */; };
@@ -120,6 +121,7 @@
 		33B4A5CC2A6723E8008E6EDB /* TodoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItem.swift; sourceTree = "<group>"; };
 		33B4A5CF2A6724E7008E6EDB /* AssetsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsHelper.swift; sourceTree = "<group>"; };
 		33B4A5DE2A680298008E6EDB /* CellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellView.swift; sourceTree = "<group>"; };
+		33B4A5E72A68888B008E6EDB /* SpecialCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialCell.swift; sourceTree = "<group>"; };
 		33E0B0E52A618301009FC61C /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
 		33E0B0E72A618707009FC61C /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		33E0B0EA2A6190DD009FC61C /* NotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenter.swift; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 			children = (
 				33B4A5C02A6723C0008E6EDB /* MainScreen.swift */,
 				33B4A5DE2A680298008E6EDB /* CellView.swift */,
+				33B4A5E72A68888B008E6EDB /* SpecialCell.swift */,
 			);
 			path = MainScreen;
 			sourceTree = "<group>";
@@ -717,6 +720,7 @@
 				33B4A5DF2A680298008E6EDB /* CellView.swift in Sources */,
 				33B4A5CD2A6723E8008E6EDB /* TodoItem.swift in Sources */,
 				33B4A5D02A6724E7008E6EDB /* AssetsHelper.swift in Sources */,
+				33B4A5E82A68888C008E6EDB /* SpecialCell.swift in Sources */,
 				33B4A5BF2A6723C0008E6EDB /* YanDo_SUI_MockDataApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
