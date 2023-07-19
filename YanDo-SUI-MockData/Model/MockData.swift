@@ -22,7 +22,7 @@ final class MockData {
 Глазированные сырки
 """, importance: .basic, deadline: nil, isCompleted: false, createdDate: Date(), dateОfСhange: nil),
         ToDoItem(text: "Покормить кота", importance: .important, deadline: Date(), isCompleted: false, createdDate: Date(), dateОfСhange: nil),
-        ToDoItem(text: "Найти appicon для этого приложения", importance: .basic, deadline: nil, isCompleted: false, createdDate: Date(timeIntervalSince1970: 1690485892), dateОfСhange: nil)
+        ToDoItem(text: "Найти appicon для этого приложения", importance: .basic, deadline: Date(timeIntervalSince1970: 1690485892), isCompleted: false, createdDate: Date(), dateОfСhange: nil)
     ]
 }
 // swiftlint:enable line_length

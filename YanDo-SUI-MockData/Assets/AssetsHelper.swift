@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-// MARK: -  Text and font
+// MARK: -  Text
 
 enum Label {
     static let new = "Новое"
@@ -27,14 +27,6 @@ enum Label {
     static let done = "Готово"
 }
 
-extension UIFont {
-    static let largeTitle = UIFont(name: "SFProDisplay-Bold", size: 38)
-    static let title = UIFont(name: "SFProDisplay-Semibold", size: 20)
-    static let headline = UIFont(name: "SFProText-Semibold", size: 17)
-    static let body = UIFont(name: "SFProText-Regular", size: 17)
-    static let subhead = UIFont(name: "SFProText-Regular", size: 15)
-    static let footnote = UIFont(name: "SFProDisplay-Semibold", size: 13)
-}
 // MARK: -  Images
 
 enum Images {
@@ -49,30 +41,30 @@ enum Images {
     case pendingMarker
     case redMarker
     case plus
-    var uiImage: UIImage {
+    var uiImage: Image {
         switch self {
         case .complete:
-            return UIImage(named: "Complete")!
+            return Image("Complete")
         case .delete:
-            return UIImage(named: "Delete")!
+            return Image("Delete")
         case .show:
-            return UIImage(named: "Show")!
+            return Image("Show")
         case .chevron:
-            return UIImage(named: "Chevron")!
+            return Image("Chevron")
         case .deadline:
-            return UIImage(named: "Deadline")!
+            return Image("Deadline")
         case .importanceHight:
-            return UIImage(named: "ImportanceHight")!
+            return Image("ImportanceHight")
         case .importanceLow:
-            return UIImage(named: "ImportanceLow")!
+            return Image("ImportanceLow")
         case .completedMarker:
-            return UIImage(named: "CompletedMarker")!
+            return Image("CompletedMarker")
         case .pendingMarker:
-            return UIImage(named: "PendingMarker")!
+            return Image("PendingMarker")
         case .redMarker:
-            return UIImage(named: "RedMarker")!
+            return Image("RedMarker")
         case .plus:
-            return UIImage(named: "Plus")!
+            return Image("Plus")
         }
     }
 }
@@ -84,45 +76,52 @@ enum SystemImages {
     case arrow
     case slashBell
     case bell
-    var uiImage: UIImage {
+    var uiImage: Image {
         switch self {
         case .connect:
-            return UIImage(systemName: "icloud.fill")!
+            return Image(systemName: "icloud.fill")
         case .disconnect:
-            return UIImage(systemName: "icloud.slash.fill")!
+            return Image(systemName: "icloud.slash.fill")
         case .calendar:
-            return UIImage(systemName: "calendar")!
+            return Image(systemName: "calendar")
         case .arrow:
-            return UIImage(systemName: "arrow.turn.left.down")!
+            return Image(systemName: "arrow.turn.left.down")
         case .slashBell:
-            return UIImage(systemName: "bell.slash.fill")!
+            return Image(systemName: "bell.slash.fill")
         case .bell:
-            return UIImage(systemName: "bell.fill")!
+            return Image(systemName: "bell.fill")
         }
     }
 }
 // MARK: - Colors
 
-extension UIColor {
+extension Color {
     // color
-    static let blueColor = UIColor(named: "BlueColor")
-    static let grayColor = UIColor(named: "GrayColor")
-    static let grayLightColor = UIColor(named: "GrayLightColor")
-    static let greenColor = UIColor(named: "GreenColor")
-    static let redColor = UIColor(named: "RedColor")
-    static let whiteColor = UIColor(named: "WhiteColor")
+    static let blueColor = Color("BlueColor")
+    static let grayColor = Color("GrayColor")
+    static let grayLightColor = Color("GrayLightColor")
+    static let greenColor = Color("GreenColor")
+    static let redColor = Color("RedColor")
+    static let whiteColor = Color("WhiteColor")
     // back
-    static let elevatedBack = UIColor(named: "ElevatedBack")
-    static let iOSPrimaryBack = UIColor(named: "iOSPrimaryBack")
-    static let primaryBack = UIColor(named: "PrimaryBack")
-    static let secondaryBack = UIColor(named: "SecondaryBack")
+    static let elevatedBack = Color("ElevatedBack")
+    static let iOSPrimaryBack = Color("iOSPrimaryBack")
+    static let primaryBack = Color("PrimaryBack")
+    static let secondaryBack = Color("SecondaryBack")
     // label
-    static let disableLabel = UIColor(named: "DisableLabel")
-    static let primaryLabel = UIColor(named: "PrimaryLabel")
-    static let secondaryLabel = UIColor(named: "SecondaryLabel")
-    static let tertiaryLabel = UIColor(named: "TertiaryLabel")
+    static let disableLabel = Color("DisableLabel")
+    static let primaryLabel = Color("PrimaryLabel")
+    static let secondaryLabel = Color("SecondaryLabel")
+    static let tertiaryLabel = Color("TertiaryLabel")
     // support
-    static let navBarBlurSupport = UIColor(named: "NavBarBlurSupport")
-    static let overlaySupport = UIColor(named: "OverlaySupport")
-    static let separatorSupport = UIColor(named: "SeparatorSupport")
+    static let navBarBlurSupport = Color("NavBarBlurSupport")
+    static let overlaySupport = Color("OverlaySupport")
+    static let separatorSupport = Color("SeparatorSupport")
+}
+
+enum Aligners {
+    static let height = UIScreen.main.bounds.height
+    static let width = UIScreen.main.bounds.width
+    static let modelHight: CGFloat = 812
+    static let modelWidth: CGFloat = 375
 }

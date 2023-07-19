@@ -11,7 +11,7 @@ import SwiftUI
 struct YanDo_SUI_MockDataApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainScreen()
         }
     }
 }

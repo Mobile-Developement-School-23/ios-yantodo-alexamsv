@@ -40,16 +40,13 @@
 		339600A02A4C7F5A00725B0E /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3396009F2A4C7F5A00725B0E /* CustomTableViewCell.swift */; };
 		339600A42A4D9A8E00725B0E /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 339600A32A4D9A8E00725B0E /* DataManager.swift */; };
 		33B4A5BF2A6723C0008E6EDB /* YanDo_SUI_MockDataApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4A5BE2A6723C0008E6EDB /* YanDo_SUI_MockDataApp.swift */; };
-		33B4A5C12A6723C0008E6EDB /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4A5C02A6723C0008E6EDB /* ContentView.swift */; };
+		33B4A5C12A6723C0008E6EDB /* MainScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4A5C02A6723C0008E6EDB /* MainScreen.swift */; };
 		33B4A5C32A6723C1008E6EDB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33B4A5C22A6723C1008E6EDB /* Assets.xcassets */; };
 		33B4A5C62A6723C1008E6EDB /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33B4A5C52A6723C1008E6EDB /* Preview Assets.xcassets */; };
 		33B4A5CB2A6723D2008E6EDB /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4A5CA2A6723D2008E6EDB /* MockData.swift */; };
 		33B4A5CD2A6723E8008E6EDB /* TodoItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4A5CC2A6723E8008E6EDB /* TodoItem.swift */; };
 		33B4A5D02A6724E7008E6EDB /* AssetsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4A5CF2A6724E7008E6EDB /* AssetsHelper.swift */; };
-		33B4A5D72A672520008E6EDB /* SFProText-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33B4A5D32A672520008E6EDB /* SFProText-Semibold.ttf */; };
-		33B4A5D82A672520008E6EDB /* SFProText-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33B4A5D42A672520008E6EDB /* SFProText-Regular.ttf */; };
-		33B4A5D92A672520008E6EDB /* SFProDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33B4A5D52A672520008E6EDB /* SFProDisplay-Bold.ttf */; };
-		33B4A5DA2A672520008E6EDB /* SFProDisplay-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33B4A5D62A672520008E6EDB /* SFProDisplay-Semibold.ttf */; };
+		33B4A5DF2A680298008E6EDB /* CellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4A5DE2A680298008E6EDB /* CellView.swift */; };
 		33E0B0E62A618301009FC61C /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0E52A618301009FC61C /* Text.swift */; };
 		33E0B0E82A618707009FC61C /* Images.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0E72A618707009FC61C /* Images.swift */; };
 		33E0B0EB2A6190DD009FC61C /* NotificationCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33E0B0EA2A6190DD009FC61C /* NotificationCenter.swift */; };
@@ -116,16 +113,13 @@
 		339600A32A4D9A8E00725B0E /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		33B4A5BC2A6723C0008E6EDB /* YanDo-SUI-MockData.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "YanDo-SUI-MockData.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		33B4A5BE2A6723C0008E6EDB /* YanDo_SUI_MockDataApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YanDo_SUI_MockDataApp.swift; sourceTree = "<group>"; };
-		33B4A5C02A6723C0008E6EDB /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		33B4A5C02A6723C0008E6EDB /* MainScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreen.swift; sourceTree = "<group>"; };
 		33B4A5C22A6723C1008E6EDB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		33B4A5C52A6723C1008E6EDB /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		33B4A5CA2A6723D2008E6EDB /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		33B4A5CC2A6723E8008E6EDB /* TodoItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoItem.swift; sourceTree = "<group>"; };
 		33B4A5CF2A6724E7008E6EDB /* AssetsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetsHelper.swift; sourceTree = "<group>"; };
-		33B4A5D32A672520008E6EDB /* SFProText-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Semibold.ttf"; sourceTree = "<group>"; };
-		33B4A5D42A672520008E6EDB /* SFProText-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProText-Regular.ttf"; sourceTree = "<group>"; };
-		33B4A5D52A672520008E6EDB /* SFProDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Bold.ttf"; sourceTree = "<group>"; };
-		33B4A5D62A672520008E6EDB /* SFProDisplay-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SFProDisplay-Semibold.ttf"; sourceTree = "<group>"; };
+		33B4A5DE2A680298008E6EDB /* CellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellView.swift; sourceTree = "<group>"; };
 		33E0B0E52A618301009FC61C /* Text.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
 		33E0B0E72A618707009FC61C /* Images.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Images.swift; sourceTree = "<group>"; };
 		33E0B0EA2A6190DD009FC61C /* NotificationCenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenter.swift; sourceTree = "<group>"; };
@@ -317,10 +311,10 @@
 		33B4A5BD2A6723C0008E6EDB /* YanDo-SUI-MockData */ = {
 			isa = PBXGroup;
 			children = (
+				33B4A5DB2A674BA3008E6EDB /* MainScreen */,
 				33B4A5CE2A67249A008E6EDB /* Model */,
 				33B4A5D12A6724EC008E6EDB /* Assets */,
 				33B4A5BE2A6723C0008E6EDB /* YanDo_SUI_MockDataApp.swift */,
-				33B4A5C02A6723C0008E6EDB /* ContentView.swift */,
 				33B4A5C42A6723C1008E6EDB /* Preview Content */,
 			);
 			path = "YanDo-SUI-MockData";
@@ -346,24 +340,20 @@
 		33B4A5D12A6724EC008E6EDB /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				33B4A5D22A672520008E6EDB /* UIFonts */,
 				33B4A5CF2A6724E7008E6EDB /* AssetsHelper.swift */,
 				33B4A5C22A6723C1008E6EDB /* Assets.xcassets */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
 		};
-		33B4A5D22A672520008E6EDB /* UIFonts */ = {
+		33B4A5DB2A674BA3008E6EDB /* MainScreen */ = {
 			isa = PBXGroup;
 			children = (
-				33B4A5D32A672520008E6EDB /* SFProText-Semibold.ttf */,
-				33B4A5D42A672520008E6EDB /* SFProText-Regular.ttf */,
-				33B4A5D52A672520008E6EDB /* SFProDisplay-Bold.ttf */,
-				33B4A5D62A672520008E6EDB /* SFProDisplay-Semibold.ttf */,
+				33B4A5C02A6723C0008E6EDB /* MainScreen.swift */,
+				33B4A5DE2A680298008E6EDB /* CellView.swift */,
 			);
-			name = UIFonts;
-			path = YanDo/Assets/UIFonts;
-			sourceTree = SOURCE_ROOT;
+			path = MainScreen;
+			sourceTree = "<group>";
 		};
 		33E0B0E92A619097009FC61C /* Notifications */ = {
 			isa = PBXGroup;
@@ -595,11 +585,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				33B4A5C62A6723C1008E6EDB /* Preview Assets.xcassets in Resources */,
-				33B4A5DA2A672520008E6EDB /* SFProDisplay-Semibold.ttf in Resources */,
 				33B4A5C32A6723C1008E6EDB /* Assets.xcassets in Resources */,
-				33B4A5D92A672520008E6EDB /* SFProDisplay-Bold.ttf in Resources */,
-				33B4A5D72A672520008E6EDB /* SFProText-Semibold.ttf in Resources */,
-				33B4A5D82A672520008E6EDB /* SFProText-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -726,8 +712,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33B4A5C12A6723C0008E6EDB /* ContentView.swift in Sources */,
+				33B4A5C12A6723C0008E6EDB /* MainScreen.swift in Sources */,
 				33B4A5CB2A6723D2008E6EDB /* MockData.swift in Sources */,
+				33B4A5DF2A680298008E6EDB /* CellView.swift in Sources */,
 				33B4A5CD2A6723E8008E6EDB /* TodoItem.swift in Sources */,
 				33B4A5D02A6724E7008E6EDB /* AssetsHelper.swift in Sources */,
 				33B4A5BF2A6723C0008E6EDB /* YanDo_SUI_MockDataApp.swift in Sources */,
