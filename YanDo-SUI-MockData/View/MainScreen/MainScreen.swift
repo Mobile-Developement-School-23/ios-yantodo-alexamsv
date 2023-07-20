@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct MainScreen: View {
-    @State var showCompletedItems = false
+    @State private var showCompletedItems = false
+    @State private var openClearTaskScreen = false
+    @State private var selectedItem: ToDoItem? = nil
     
     var body: some View {
         NavigationView {
@@ -19,18 +21,34 @@ struct MainScreen: View {
                         LazyVStack (spacing: 0) {
                             ForEach(itemsCollection()) { item in
                                 CellView(item: item)
+                                    .onTapGesture {
+                                        selectedItem = item
+                                    }
                             }
                             SpecialCell()
+                                .onTapGesture {
+                                    openClearTaskScreen.toggle()
+                                }
+                                
                         }
-                        .animation(.interactiveSpring())
+                        .sheet(item: $selectedItem) { item in
+                            TaskScreen(item: item)
+                        }
+                        .sheet(isPresented: $openClearTaskScreen) {
+                            TaskScreen(item: nil)
+                        }
+                        .animation(.easeInOut)
                         .cornerRadius(16)
-                         .padding(.horizontal, 16)
+                        .padding(.horizontal, 16)
                     }
                     
                 }.background(Color.primaryBack)
                     .navigationTitle(Label.title)
                     .navigationBarTitleDisplayMode(.large)
-                plusButton
+                VStack {
+                    Spacer()
+                    plusButton
+                }
             }
         }
     }
@@ -42,7 +60,7 @@ struct MainScreen: View {
             Button {
                 showCompletedItems.toggle()
             } label: {
-                if showCompletedItems {
+                if !showCompletedItems {
                     Text(Label.show)
                 } else { Text(Label.hide) }
             }.foregroundColor(.blueColor)
@@ -54,26 +72,23 @@ struct MainScreen: View {
     }
     var plusButton: some View {
         Button {
-            // new form
+          openClearTaskScreen.toggle()
         } label: {
-            VStack {
-                Spacer()
                 Images.plus.uiImage
                     .resizable()
                     .frame(width: 44, height: 44)
                     .shadow(color: Color(red: 0, green: 0.29, blue: 0.6).opacity(0.6), radius: 10, x: 0, y: 8)
                     .padding(.bottom, 20)
-                    .padding(.bottom, 20)
             }
         }
-    }
+    
     // MARK: - View Model
     func itemsCollection() -> [ToDoItem]{
         var collection = [ToDoItem]()
         if showCompletedItems {
             collection = MockData().mock
         } else { collection = MockData().mock.filter({ !$0.isCompleted }) }
-        return collection
+        return collection.sorted(by: { $0.createdDate > $1.createdDate })
     }
     func completedCount() -> Int {
         MockData().mock.filter({ $0.isCompleted }).count

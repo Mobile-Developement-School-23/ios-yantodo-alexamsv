@@ -87,15 +87,6 @@ struct CellView: View {
             }
         }
     }
-
-    func formatDate(date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMMM yyyy"
-        formatter.locale = Locale(identifier: "ru_RU")
-        var str = formatter.string(from: date)
-        if str.hasPrefix("0") { str.removeFirst() }
-        return str
-    }
 }
 
 

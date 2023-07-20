@@ -119,9 +119,20 @@ extension Color {
     static let separatorSupport = Color("SeparatorSupport")
 }
 
+// MARK: -  Screen
 enum Aligners {
     static let height = UIScreen.main.bounds.height
     static let width = UIScreen.main.bounds.width
     static let modelHight: CGFloat = 812
     static let modelWidth: CGFloat = 375
+}
+
+// MARK: -  Date
+func formatDate(date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd MMMM yyyy"
+    formatter.locale = Locale(identifier: "ru_RU")
+    var str = formatter.string(from: date)
+    if str.hasPrefix("0") { str.removeFirst() }
+    return str
 }
