@@ -8,23 +8,66 @@
 import SwiftUI
 // MARK: -  Text
 
-enum Label {
-    static let new = "Новое"
-    static let show = "Показать"
-    static let hide = "Скрыть"
-    static let placeholder = "Что надо сделать?"
-    static let importance = "Важность"
-    static let deadline = "Сделать до"
-    static let not = "нет"
-    static let slash = "/"
-    static let remind = "Напомнить"
-    static let delete = "Удалить"
-    static let doneCounter = "Выполнено — "
-    static let title = "Мои дела"
-    static let cancel = "Отменить"
-    static let save = "Сохранить"
-    static let toDo = "Дело"
-    static let done = "Готово"
+enum NavTitles {
+    static let mainTitle = "Мои дела"
+    static let taskTitle = "Дело"
+}
+enum Texts {
+    case new
+    case show
+    case hide
+    case placeholder
+    case importance
+    case deadline
+    case not
+    case delete
+    case doneCounter
+    case cancel
+    case save
+    var uiText: Text {
+        switch self {
+        case .new:
+            return Text("Новое")
+                .font(.system(size: 17))
+                .foregroundColor(.tertiaryLabel)
+        case .show:
+            return Text("Показать")
+                .foregroundColor(.blueColor)
+                .font(.system(size: 15)).bold()
+        case .hide:
+            return Text("Скрыть")
+                .foregroundColor(.blueColor)
+                .font(.system(size: 15)).bold()
+        case .placeholder:
+            return Text("Что надо сделать?")
+                .foregroundColor(.tertiaryLabel)
+                .font(.system(size: 17))
+        case .importance:
+            return Text("Важность")
+                .font(.system(size: 17))
+                .foregroundColor(.primaryLabel)
+        case .deadline:
+            return Text("Сделать до")
+                .font(.system(size: 17))
+                .foregroundColor(.primaryLabel)
+        case .not:
+            return Text("нет")
+                .font(.system(size: 15))
+                .foregroundColor(.primaryLabel)
+        case .delete:
+            return Text("Удалить")
+                .font(.system(size: 17))
+        case .doneCounter:
+            return Text("Выполнено — ")
+        case .cancel:
+            return Text("Отменить")
+                .font(.system(size: 17))
+                .foregroundColor(.blueColor)
+        case .save:
+            return Text("Сохранить")
+                .font(.system(size: 17)).bold()
+        }
+    }
 }
 
 // MARK: -  Images

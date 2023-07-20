@@ -10,9 +10,7 @@ import SwiftUI
 struct SpecialCell: View {
     var body: some View {
         HStack {
-            Text(Label.new)
-                .font(.system(size: 17))
-                .foregroundColor(.tertiaryLabel)
+            Texts.new.uiText
                 .padding(.leading, 52)
             Spacer()
         }.padding(.vertical, 20)

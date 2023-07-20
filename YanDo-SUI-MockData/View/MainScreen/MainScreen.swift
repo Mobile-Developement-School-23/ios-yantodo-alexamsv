@@ -21,15 +21,10 @@ struct MainScreen: View {
                         LazyVStack (spacing: 0) {
                             ForEach(itemsCollection()) { item in
                                 CellView(item: item)
-                                    .onTapGesture {
-                                        selectedItem = item
-                                    }
+                                    .onTapGesture { selectedItem = item }
                             }
                             SpecialCell()
-                                .onTapGesture {
-                                    openClearTaskScreen.toggle()
-                                }
-                                
+                                .onTapGesture { openClearTaskScreen.toggle() }
                         }
                         .sheet(item: $selectedItem) { item in
                             TaskScreen(item: item)
@@ -43,7 +38,7 @@ struct MainScreen: View {
                     }
                     
                 }.background(Color.primaryBack)
-                    .navigationTitle(Label.title)
+                    .navigationTitle(NavTitles.mainTitle)
                     .navigationBarTitleDisplayMode(.large)
                 VStack {
                     Spacer()
@@ -54,19 +49,21 @@ struct MainScreen: View {
     }
     var infPanel: some View {
         HStack {
-            Text(Label.doneCounter + "\(completedCount())")
-                .foregroundColor(.tertiaryLabel)
+            HStack(spacing: 0) {
+                Texts.doneCounter.uiText
+                Text(completedCount())
+                    .foregroundColor(.tertiaryLabel)
+                    .font(.system(size: 15))
+            }
             Spacer()
             Button {
                 showCompletedItems.toggle()
             } label: {
                 if !showCompletedItems {
-                    Text(Label.show)
-                } else { Text(Label.hide) }
-            }.foregroundColor(.blueColor)
-                .bold()
+                    Texts.show.uiText
+                } else { Texts.hide.uiText }
+            }
         }
-        .font(.system(size: 15))
         .padding(.vertical, 12)
         .frame(width: 310 / Aligners.modelWidth * Aligners.width)
     }
@@ -90,8 +87,8 @@ struct MainScreen: View {
         } else { collection = MockData().mock.filter({ !$0.isCompleted }) }
         return collection.sorted(by: { $0.createdDate > $1.createdDate })
     }
-    func completedCount() -> Int {
-        MockData().mock.filter({ $0.isCompleted }).count
+    func completedCount() -> String {
+        String(MockData().mock.filter({ $0.isCompleted }).count)
     }
 }
 

@@ -26,7 +26,7 @@ struct TaskScreen: View {
                     
                 }.padding(.horizontal, 16)
             }
-            .navigationTitle(Label.toDo)
+            .navigationTitle(NavTitles.taskTitle)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(leading: cancelButton, trailing: saveButton)
             
@@ -36,9 +36,7 @@ struct TaskScreen: View {
         Button {
             presentationMode.wrappedValue.dismiss()
         } label: {
-            Text(Label.cancel)
-                .font(.system(size: 17))
-                .foregroundColor(.blueColor)
+            Texts.cancel.uiText
         }
         
     }
@@ -46,8 +44,7 @@ struct TaskScreen: View {
         Button {
             presentationMode.wrappedValue.dismiss()
         } label: {
-            Text(Label.save)
-                .font(.system(size: 17)).bold()
+            Texts.save.uiText
                 .foregroundColor(saveButtonColor())
         }
         
@@ -59,13 +56,13 @@ struct TaskScreen: View {
                 // если не режим read only, то здесь TextEditor
                 if let item = item {
                     Text(item.text)
+                        .font(.system(size: 17))
                         .foregroundColor(.primaryLabel)
                 } else {
-                    Text(Label.placeholder)
-                        .foregroundColor(.tertiaryLabel)
+                    Texts.placeholder.uiText
+                        
                 }
             }
-            .font(.system(size: 17))
             .padding(.top, 12)
             .padding(.horizontal, 16)
             .padding(.bottom, 72)
@@ -79,11 +76,11 @@ struct TaskScreen: View {
     var settingsPanel: some View {
         VStack(spacing: 0) {
             HStack {
-                Text(Label.importance)
+                Texts.importance.uiText
                 Spacer()
                 Picker("", selection: $picker) {
                     Images.importanceLow.uiImage.tag(0)
-                    Text(Label.not).tag(1)
+                    Texts.not.uiText.tag(1)
                         .foregroundColor(.primaryLabel)
                     Images.importanceHight.uiImage.tag(2)
                         
@@ -100,7 +97,7 @@ struct TaskScreen: View {
             Divider()
             HStack {
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(Label.deadline)
+                    Texts.deadline.uiText
                     if let item = item {
                         if let date = item.deadline {
                             Button {
@@ -130,8 +127,6 @@ struct TaskScreen: View {
                 }
             }
         }
-        .font(.system(size: 17))
-        .foregroundColor(.primaryLabel)
         .padding(.leading, 16)
         .padding(.trailing, 12)
         .background(Color.elevatedBack)
@@ -144,8 +139,7 @@ struct TaskScreen: View {
         } label: {
             HStack {
                 Spacer()
-                Text(Label.delete)
-                    .font(.system(size: 17))
+                Texts.delete.uiText
                     .foregroundColor(deleteButtonColor())
                 Spacer()
             }
